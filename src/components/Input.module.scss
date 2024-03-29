@@ -1,4 +1,5 @@
 .input {
+  text-align: center;
   -webkit-appearance: none;
   background-color: var(--color-input-bg);
   background-image: none;
@@ -7,7 +8,6 @@
   box-sizing: border-box;
   color: inherit;
   display: inline-block;
-  font-size: inherit;
   height: 35px;
   outline: none;
   padding: 0 15px;
@@ -16,7 +16,7 @@
 }
 
 .input:focus {
-  box-shadow: rgba(66, 153, 225, 0.6) 0px 0px 0px 3px;
+  box-shadow: rgba(66, 153, 225, 0.6) 0 0 0 1px;
 }
 
 input::-webkit-outer-spin-button,

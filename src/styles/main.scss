@@ -8,6 +8,10 @@
   src: url('../../assets/Twemoji_Mozilla.ttf') format('truetype');
 }
 
+pre {
+  margin: 0;
+}
+
 .relative {
   position: relative;
 }
@@ -80,16 +84,16 @@ body {
 
     &-thumb {
       border-radius: 5px;
-      background: #306081;
+      background: rgba(23, 80, 235, 0.58);
     }
   }
 
   ::-webkit-scrollbar:vertical {
-    width: 6px;
+    width: 3px;
   }
 
   ::-webkit-scrollbar:horizontal {
-    height: 6px;
+    height: 1px;
   }
 
   margin: 0;
@@ -123,7 +127,7 @@ body {
   --color-row-odd: #282828;
   --bg-log-info-tag: #454545;
   --bg-modal: #1f1f20;
-  --bg-near-transparent: rgba(255, 255, 255, 0.1);
+  --bg-near-transparent: rgba(255, 255, 255, 0.2);
   --bg-tooltip: #111;
   --bc-tooltip: #555;
   --select-border-color: #040404;
@@ -161,7 +165,7 @@ body {
   --color-row-odd: #f5f5f5;
   --bg-log-info-tag: #888;
   --bg-modal: #fbfbfb;
-  --bg-near-transparent: rgba(0, 0, 0, 0.1);
+  --bg-near-transparent: rgba(0, 0, 0, 0.2);
   --bg-tooltip: #f0f0f0;
   --bc-tooltip: #ccc;
   --select-border-color: #999999;

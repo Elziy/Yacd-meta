@@ -3,15 +3,16 @@
 h2.sectionNameType {
   margin: 0;
   font-size: 1em;
+  display: flex;
+  align-items: center;
   @media (--breakpoint-not-small) {
     font-size: 1.3em;
   }
 
-  span:nth-child(2) {
-    font-size: 12px;
+  span:nth-last-child(1) {
     color: #777;
-    font-weight: normal;
-    margin: 0 0.3em;
+    font-size: 12px;
+    font-weight: bold;
   }
 }
 

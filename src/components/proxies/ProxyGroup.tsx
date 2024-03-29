@@ -5,12 +5,7 @@ import { useQuery } from 'react-query';
 
 import * as proxiesAPI from '~/api/proxies';
 import { fetchVersion } from '~/api/version';
-import {
-  getCollapsibleIsOpen,
-  getHideUnavailableProxies,
-  getLatencyTestUrl,
-  getProxySortBy,
-} from '~/store/app';
+import { getCollapsibleIsOpen, getHideUnavailableProxies, getLatencyTestUrl, getProxySortBy } from '~/store/app';
 import { fetchProxies, getProxies, switchProxy } from '~/store/proxies';
 
 import Button from '../Button';
@@ -31,19 +26,20 @@ function ZapWrapper() {
 }
 
 function ProxyGroupImpl({
-  name,
-  all: allItems,
-  delay,
-  hideUnavailableProxies,
-  proxySortBy,
-  proxies,
-  type,
-  now,
-  isOpen,
-  latencyTestUrl,
-  apiConfig,
-  dispatch,
-}) {
+                          name,
+                          all: allItems,
+                          delay,
+                          hideUnavailableProxies,
+                          proxySortBy,
+                          proxies,
+                          type,
+                          now,
+                          icon,
+                          isOpen,
+                          latencyTestUrl,
+                          apiConfig,
+                          dispatch
+                        }) {
   const all = useFilteredAndSorted(allItems, delay, hideUnavailableProxies, proxySortBy, proxies);
 
   const { data: version } = useQuery(['/version', apiConfig], () =>
@@ -57,7 +53,7 @@ function ProxyGroupImpl({
 
   const {
     app: { updateCollapsibleIsOpen },
-    proxies: { requestDelayForProxies },
+    proxies: { requestDelayForProxies }
   } = useStoreActions();
 
   const toggle = useCallback(() => {
@@ -103,10 +99,12 @@ function ProxyGroupImpl({
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: windowWidth > 768 ? 'start' : 'space-between',
+          justifyContent: 'space-between'
         }}
       >
-        <CollapsibleSectionHeader name={name} type={type} toggle={toggle} qty={all.length} />
+        <CollapsibleSectionHeader name={name} type={type} now={now} icon={icon} toggle={toggle} qty={all.length} />
+        <div className={s0.clickable} onClick={toggle}>
+        </div>
         <div style={{ display: 'flex' }}>
           {windowWidth > 768 ? (
             <>
@@ -157,7 +155,7 @@ function ProxyGroupImpl({
         all,
         now,
         isSelectable,
-        itemOnTapCallback,
+        itemOnTapCallback
       })}
     </div>
   );
@@ -171,7 +169,7 @@ export const ProxyGroup = connect((s, { name, delay }) => {
   const latencyTestUrl = getLatencyTestUrl(s);
 
   const group = proxies[name];
-  const { all, type, now } = group;
+  const { all, type, now, icon } = group;
   return {
     all,
     delay,
@@ -180,7 +178,8 @@ export const ProxyGroup = connect((s, { name, delay }) => {
     proxies,
     type,
     now,
+    icon,
     isOpen: collapsibleIsOpen[`proxyGroup:${name}`],
-    latencyTestUrl,
+    latencyTestUrl
   };
 })(ProxyGroupImpl);

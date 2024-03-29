@@ -1,3 +1,5 @@
+// noinspection RequiredAttributes
+
 import { Tooltip } from '@reach/tooltip';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,14 +16,7 @@ import { TextFilter } from '~/components/shared/TextFitler';
 import { connect, useStoreActions } from '~/components/StateProvider';
 import Equalizer from '~/components/svg/Equalizer';
 import { getClashAPIConfig } from '~/store/app';
-import {
-  fetchProxies,
-  getDelay,
-  getProxyGroupNames,
-  getProxyProviders,
-  getShowModalClosePrevConns,
-  proxyFilterText,
-} from '~/store/proxies';
+import { fetchProxies, getDelay, getProxyGroupNames, getProxyProviders, getShowModalClosePrevConns, proxyFilterText } from '~/store/proxies';
 import type { State } from '~/store/types';
 
 import s0 from './Proxies.module.scss';
@@ -29,13 +24,13 @@ import s0 from './Proxies.module.scss';
 const { useState, useEffect, useCallback, useRef } = React;
 
 function Proxies({
-  dispatch,
-  groupNames,
-  delay,
-  proxyProviders,
-  apiConfig,
-  showModalClosePrevConns,
-}) {
+                   dispatch,
+                   groupNames,
+                   delay,
+                   proxyProviders,
+                   apiConfig,
+                   showModalClosePrevConns
+                 }) {
   const refFetchedTimestamp = useRef<{ startAt?: number; completeAt?: number }>({});
 
   const fetchProxiesHooked = useCallback(() => {
@@ -67,7 +62,7 @@ function Proxies({
   }, []);
 
   const {
-    proxies: { closeModalClosePrevConns, closePrevConnsAndTheModal },
+    proxies: { closeModalClosePrevConns, closePrevConnsAndTheModal }
   } = useStoreActions();
 
   const { t } = useTranslation();
@@ -85,7 +80,7 @@ function Proxies({
           </div>
           <Tooltip label={t('settings')}>
             <Button kind="minimal" onClick={() => setIsSettingsModalOpen(true)}>
-              <Equalizer size={16} />
+              <Equalizer size={20} />
             </Button>
           </Tooltip>
         </div>
@@ -122,7 +117,7 @@ const mapState = (s: State) => ({
   groupNames: getProxyGroupNames(s),
   proxyProviders: getProxyProviders(s),
   delay: getDelay(s),
-  showModalClosePrevConns: getShowModalClosePrevConns(s),
+  showModalClosePrevConns: getShowModalClosePrevConns(s)
 });
 
 export default connect(mapState)(Proxies);

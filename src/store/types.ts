@@ -63,6 +63,7 @@ export type ProxyItem = {
   history: LatencyHistory;
   all?: string[];
   now?: string;
+  icon?: string;
 };
 export type ProxiesMapping = Record<string, ProxyItem>;
 export type DelayMapping = Record<string, { number?: number }>;

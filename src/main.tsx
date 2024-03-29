@@ -1,4 +1,5 @@
 import '~/styles/main.scss';
+import 'react-toastify/dist/ReactToastify.min.css';
 import './misc/i18n';
 
 import React from 'react';
@@ -18,7 +19,7 @@ root.render(<App />);
 swRegistration.register();
 
 // eslint-disable-next-line no-console
-console.log('Checkout the repo: https://github.com/MetaCubeX/yacd');
+// console.log('Checkout the repo: https://github.com/MetaCubeX/yacd');
 // eslint-disable-next-line no-console
 console.log('Version:', __VERSION__);
 
@@ -27,6 +28,7 @@ window.onload = function startup() {
   el.addEventListener('touchstart', onTouchStart, { passive: true });
   el.addEventListener('touchmove', onTouchMove, false);
   el.addEventListener('touchend', onTouchEnd, false);
+//   删除所有focus事件
 };
 
 const touchData = { touching: false, trace: [] };

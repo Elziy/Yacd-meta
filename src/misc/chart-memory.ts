@@ -1,6 +1,7 @@
 import { createAsset } from 'use-asset';
 
 import prettyBytes from './pretty-bytes';
+
 export const chartJSResource = createAsset(() => {
   return import('~/misc/chart-lib');
 });
@@ -11,7 +12,7 @@ export const memoryChartOptions: import('chart.js').ChartOptions<'line'> = {
   responsive: true,
   maintainAspectRatio: true,
   plugins: {
-    legend: { labels: { boxWidth: 20 } },
+    legend: { labels: { boxWidth: 20 } }
   },
   scales: {
     x: { display: false, type: 'category' },
@@ -21,44 +22,44 @@ export const memoryChartOptions: import('chart.js').ChartOptions<'line'> = {
       grid: {
         display: true,
         color: '#555',
-        drawTicks: false,
+        drawTicks: false
       },
       border: {
-        dash: [3, 6],
+        dash: [3, 6]
       },
       ticks: {
         maxTicksLimit: 3,
         callback(value: number) {
           return prettyBytes(value);
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 };
 
 export const chartStyles = [
   {
     inuse: {
       backgroundColor: 'rgba(81, 168, 221, 0.5)',
-      borderColor: 'rgb(81, 168, 221)',
-    },
+      borderColor: 'rgb(81, 168, 221)'
+    }
   },
   {
     inuse: {
-      backgroundColor: 'rgba(245,78,162,0.6)',
-      borderColor: 'rgba(245,78,162,1)',
-    },
+      backgroundColor: 'rgba(81, 168, 221, 0.5)',
+      borderColor: 'rgb(81, 168, 221)'
+    }
   },
   {
     inuse: {
       backgroundColor: 'rgba(94, 175, 223, 0.3)',
-      borderColor: 'rgb(94, 175, 223)',
-    },
+      borderColor: 'rgb(94, 175, 223)'
+    }
   },
   {
     inuse: {
       backgroundColor: 'rgba(242, 174, 62, 0.3)',
-      borderColor: 'rgb(242, 174, 62)',
-    },
-  },
+      borderColor: 'rgb(242, 174, 62)'
+    }
+  }
 ];

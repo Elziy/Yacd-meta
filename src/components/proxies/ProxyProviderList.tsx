@@ -8,7 +8,7 @@ export function ProxyProviderList({ items }: { items: FormattedProxyProvider[] }
   if (items.length === 0) return null;
   return (
     <>
-      <ContentHeader title="Proxy Provider" />
+      <ContentHeader title="代理资源" />
       <div>
         {items.map((item) => (
           <ProxyProvider

@@ -1,6 +1,6 @@
 import { ClashAPIConfig } from '~/types';
 
-import { buildWebSocketURL, getURLAndInit } from '../misc/request-helper';
+import { buildWebSocketURL, getURLAndInit } from '~/misc/request-helper';
 
 const endpoint = '/connections';
 
@@ -51,17 +51,21 @@ function appendData(s: string) {
   let o: ConnectionsData;
   try {
     o = JSON.parse(s);
+    if (!o.connections) {
+      return;
+    }
     o.connections.forEach(conn => {
       let m = conn.metadata;
       if (m.process == null) {
         if (m.processPath != null) {
-          m.process = m.processPath.replace(/^.*[/\\](.*)$/, "$1");
+          m.process = m.processPath.replace(/^.*[/\\](.*)$/, '$1');
         }
       }
     });
   } catch (err) {
+    console.log(err);
     // eslint-disable-next-line no-console
-    console.log('JSON.parse error', JSON.parse(s));
+    // console.log('JSON.parse error', JSON.parse(s));
   }
   subscribers.forEach((s) => s.listner(o));
 }
@@ -69,6 +73,7 @@ function appendData(s: string) {
 type UnsubscribeFn = () => void;
 
 let wsState: number;
+
 export function fetchData(
   apiConfig: ClashAPIConfig,
   listener: unknown,
@@ -78,7 +83,7 @@ export function fetchData(
     if (listener)
       return subscribe({
         listner: listener,
-        onClose,
+        onClose
       });
   }
   wsState = 1;
@@ -98,7 +103,7 @@ export function fetchData(
   if (listener)
     return subscribe({
       listner: listener,
-      onClose,
+      onClose
     });
 }
 

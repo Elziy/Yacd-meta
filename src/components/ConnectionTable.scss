@@ -17,7 +17,11 @@
   td.uploadSpeedCurr,
   td.download,
   td.upload {
-    min-width: 7em;
+    min-width: 5em;
     text-align: center;
+  }
+
+  td.chains {
+    max-width: 14em;
   }
 }

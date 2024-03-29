@@ -6,7 +6,7 @@ const { useCallback, useState, useMemo } = React;
 
 export function useTextInut(
   x: RecoilState<string>
-): [(e: React.ChangeEvent<HTMLInputElement>) => void, string] {
+): [(e: React.ChangeEvent<HTMLInputElement>) => void, () => void, string] {
   const [, setTextGlobal] = useRecoilState(x);
   const [text, setText] = useState('');
   const setTextDebounced = useMemo(() => debounce(setTextGlobal, 300), [setTextGlobal]);
@@ -17,5 +17,12 @@ export function useTextInut(
     },
     [setTextDebounced]
   );
-  return [onChange, text];
+  const clear = useCallback(
+    () => {
+      setText('');
+      setTextDebounced('');
+    },
+    [setTextDebounced]
+  );
+  return [onChange, clear, text];
 }

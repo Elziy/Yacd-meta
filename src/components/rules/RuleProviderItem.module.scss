@@ -1,6 +1,8 @@
+@import '~/styles/utils/custom-media';
+
 .RuleProviderItem {
   display: grid;
-  grid-template-columns: 40px 1fr 46px;
+  grid-template-columns: 40px 1fr 95px;
   height: 100%;
 }
 
@@ -12,22 +14,39 @@
 }
 
 .middle {
-  display: grid;
-  grid-template-rows: 1fr auto auto;
-  align-items: center;
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
 }
 
-.gray {
+.update_time {
+  width: 200px;
+  font-size: 0.8em;
   color: #777;
+  padding-top: 0.3em;
 }
 
 .refreshButtonWrapper {
-  display: grid;
+  display: flex;
   place-items: center;
   opacity: 0;
   transition: opacity 0.2s;
+  gap: 0.5em;
 }
 
 .RuleProviderItem:hover .refreshButtonWrapper {
   opacity: 1;
+}
+
+.button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  place-items: center;
+  margin-right: 0.2em;
+
+  @media (--breakpoint-not-small) {
+    width: 40px;
+    height: 40px;
+  }
 }

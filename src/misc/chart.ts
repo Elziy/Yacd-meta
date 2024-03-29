@@ -1,6 +1,7 @@
 import { createAsset } from 'use-asset';
 
 import prettyBytes from './pretty-bytes';
+
 export const chartJSResource = createAsset(() => {
   return import('~/misc/chart-lib');
 });
@@ -48,11 +49,11 @@ export const chartStyles = [
     },
   },
   {
-    up: {
-      backgroundColor: 'rgba(245,78,162,0.6)',
-      borderColor: 'rgba(245,78,162,1)',
-    },
     down: {
+      backgroundColor: 'rgba(81, 168, 221, 0.5)',
+      borderColor: 'rgb(81, 168, 221)',
+    },
+    up: {
       backgroundColor: 'rgba(123,59,140,0.6)',
       borderColor: 'rgba(66,33,142,1)',
     },

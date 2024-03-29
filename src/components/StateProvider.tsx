@@ -45,7 +45,7 @@ export default function Provider({ initialState, actions = {}, children }) {
       if (stateNext !== stateRef.current) {
         if (process.env.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
-          console.log(actionId, stateNext);
+          // console.log(actionId, stateNext);
         }
         stateRef.current = stateNext;
         setState(stateNext);

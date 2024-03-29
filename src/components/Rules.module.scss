@@ -2,14 +2,50 @@
 
 .header {
   display: grid;
-  grid-template-columns: 1fr minmax(auto, 290px);
+  grid-template-columns: 1fr minmax(auto, auto) minmax(auto, auto) minmax(auto, auto) minmax(auto, auto);
   align-items: center;
-  padding-right: 15px;
+
+  @media (--breakpoint-not-small) {
+    padding-right: 32px;
+  }
 }
 
 .RuleProviderItemWrapper {
-  padding: 6px 15px;
+  padding: 6px 10px;
   @media (--breakpoint-not-small) {
     padding: 10px 40px;
   }
+}
+
+.addRuleButton {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.update {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 2em;
+}
+
+.updateRuleButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.qty {
+  font-family: var(--font-normal);
+  font-size: 0.75em;
+  margin-left: 3px;
+  padding: 2px 7px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-near-transparent);
+  border-radius: 30px;
+  cursor: pointer;
 }

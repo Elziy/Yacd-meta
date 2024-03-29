@@ -3,7 +3,7 @@
 .rule {
   display: flex;
   align-items: center;
-  padding: 6px 15px;
+  padding: 6px 10px;
   @media (--breakpoint-not-small) {
     padding: 10px 40px;
   }
@@ -11,16 +11,25 @@
 
 .left {
   width: 40px;
-  padding-right: 15px;
+  align-items: center;
   color: var(--color-text-secondary);
   opacity: 0.4;
 }
 
+.right {
+  flex-grow: 1;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .a {
+  margin-top: 0.5em;
   display: flex;
   align-items: center;
   font-size: 1em;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .b {
@@ -34,15 +43,56 @@
 }
 
 .type {
-  width: 110px;
+  width: 150px;
   color: #3b5f76;
+  font-weight: 500;
+}
+
+.selector {
+  height: 1.8em;
 }
 
 .size {
   width: 110px;
 }
 
+.payload {
+  max-width: 8em;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  @media (--breakpoint-not-small) {
+    font-weight: bold;
+    max-width: 200em;
+  }
+}
+
 .payloadAndSize {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+}
+
+.button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  place-items: center;
+  margin-right: 0.2em;
+
+  @media (--breakpoint-not-small) {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.buttonWrapper {
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.rule:hover .buttonWrapper {
+  opacity: 1;
 }

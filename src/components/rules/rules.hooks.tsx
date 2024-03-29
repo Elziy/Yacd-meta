@@ -2,11 +2,7 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
 
-import {
-  fetchRuleProviders,
-  refreshRuleProviderByName,
-  updateRuleProviders,
-} from '~/api/rule-provider';
+import { fetchRuleProviders, refreshRuleProviderByName, updateRuleProviders } from '~/api/rule-provider';
 import { fetchRules } from '~/api/rules';
 import { ruleFilterText } from '~/store/rules';
 import type { ClashAPIConfig } from '~/types';
@@ -17,11 +13,12 @@ export function useUpdateRuleProviderItem(
   name: string,
   apiConfig: ClashAPIConfig
 ): [(ev: React.MouseEvent<HTMLButtonElement>) => unknown, boolean] {
+
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(refreshRuleProviderByName, {
     onSuccess: () => {
       queryClient.invalidateQueries('/providers/rules');
-    },
+    }
   });
   const onClickRefreshButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
@@ -38,7 +35,7 @@ export function useUpdateAllRuleProviderItems(
   const { mutate, isLoading } = useMutation(updateRuleProviders, {
     onSuccess: () => {
       queryClient.invalidateQueries('/providers/rules');
-    },
+    }
   });
   const onClickRefreshButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
@@ -77,8 +74,8 @@ export function useRuleAndProvider(apiConfig: ClashAPIConfig) {
       isFetching,
       provider: {
         byName: provider.byName,
-        names: provider.names.filter((t) => t.toLowerCase().indexOf(f) >= 0),
-      },
+        names: provider.names.filter((t) => t.toLowerCase().indexOf(f) >= 0)
+      }
     };
   }
 }

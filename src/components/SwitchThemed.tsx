@@ -3,7 +3,7 @@ import ReactSwitch from 'react-switch';
 
 import { State } from '~/store/types';
 
-import { getTheme } from '../store/app';
+import { getTheme } from '~/store/app';
 import { connect } from './StateProvider';
 
 // workaround https://github.com/vitejs/vite/issues/2139#issuecomment-802981228
@@ -23,9 +23,9 @@ function SwitchThemed({ checked = false, onChange, theme, name }) {
       onColor={onColor}
       offHandleColor="#fff"
       onHandleColor="#fff"
-      handleDiameter={24}
-      height={28}
-      width={44}
+      handleDiameter={20}
+      height={20}
+      width={40}
       className="rs"
       name={name}
     />

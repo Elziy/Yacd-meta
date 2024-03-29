@@ -37,14 +37,18 @@
   padding: 10px 5px;
   font-size: 0.9em;
   // max-width: 14em;
-  min-width: 9em;
+  min-width: 1em;
+  max-width: 15em;
   cursor: default;
   text-align: left;
   vertical-align: middle;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:hover {
     color: var(--color-text-highlight);
+    max-width: 100em;
   }
 
   font-family: var(--font-normal);

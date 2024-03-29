@@ -20,21 +20,27 @@ declare const __VERSION__: string;
 declare const process = {
   env: {
     NODE_ENV: string,
-    PUBLIC_URL: string,
-  },
+    PUBLIC_URL: string
+  }
 };
 
 declare module 'react-table' {
-  interface TableOptions {}
+  interface TableOptions {
+  }
 
-  interface Empty {}
+  interface Empty {
+  }
 
-  interface SortByToggleProps {}
+  interface SortByToggleProps {
+  }
 
   interface Header {
     getHeaderProps(p: SortByToggleProps): { role?: string };
+
     getSortByToggleProps(): SortByToggleProps;
+
     render(x: string): string;
+
     id: string;
     isSorted: boolean;
     isSortedDesc: boolean;
@@ -42,11 +48,13 @@ declare module 'react-table' {
 
   interface HeaderGroup {
     getHeaderGroupProps(): { role?: string };
+
     headers: Header[];
   }
 
   interface Cell {
     getCellProps(): { role?: string };
+
     row: { original: { id: string } };
     column: { id: string };
     value: number;

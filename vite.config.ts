@@ -26,6 +26,19 @@ export default defineConfig(({ mode }) => ({
     // but change this may break other people's tools
     outDir: 'public',
   },
+  server: {
+    port: 80,
+    host: '0.0.0.0',
+    // 允许局域网访问
+    allowLocalhost: true,
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:5555',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  },
   plugins: [
     react(),
     VitePWA({

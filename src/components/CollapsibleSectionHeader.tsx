@@ -6,12 +6,14 @@ import { SectionNameType } from './shared/Basic';
 type Props = {
   name: string;
   type: string;
+  now?: string;
+  icon?: string;
   qty?: number;
   toggle?: () => void;
   isOpen?: boolean;
 };
 
-export default function Header({ name, type, toggle, qty }: Props) {
+export default function Header({ name, type, now, icon, toggle, qty }: Props) {
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
       e.preventDefault();
@@ -30,11 +32,8 @@ export default function Header({ name, type, toggle, qty }: Props) {
       onKeyDown={handleKeyDown}
       role="button"
     >
-      <div>
-        <SectionNameType name={name} type={type} />
-      </div>
-
-      {typeof qty === 'number' ? <span className={s.qty}>{qty}</span> : null}
+      <SectionNameType name={name} type={type} now={now} icon={icon} />
+      {typeof qty === 'number' ? <div><span className={s.qty}>{qty}</span></div> : null}
     </div>
   );
 }

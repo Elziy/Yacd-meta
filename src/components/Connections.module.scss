@@ -47,6 +47,7 @@
     margin: 0 25px;
   }
 
+  position: relative;
   width: 100%;
   max-width: 350px;
   justify-self: flex-end;
@@ -68,3 +69,12 @@
   transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   width: 100%;
 }
+
+.clear {
+  position: absolute;
+  top: 50%;
+  right: 1em;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+

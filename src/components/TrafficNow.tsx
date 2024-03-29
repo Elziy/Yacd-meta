@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as connAPI from '../api/connections';
-import { fetchData } from '../api/traffic';
+import { fetchData } from '~/api/traffic';
 import prettyBytes from '../misc/pretty-bytes';
-import { getClashAPIConfig } from '../store/app';
+import { getClashAPIConfig } from '~/store/app';
 import { connect } from './StateProvider';
 import s0 from './TrafficNow.module.scss';
 
@@ -81,6 +81,7 @@ function useConnection(apiConfig) {
     [setState]
   );
   useEffect(() => {
+    // @ts-ignore
     return connAPI.fetchData(apiConfig, read);
   }, [apiConfig, read]);
   return state;

@@ -9,7 +9,7 @@ import Select from '~/components/shared/Select';
 import { ClashGeneralConfig, DispatchFn, State } from '~/store/types';
 import { ClashAPIConfig } from '~/types';
 
-import { getClashAPIConfig, getLatencyTestUrl, getSelectedChartStyleIndex } from '../store/app';
+import { getClashAPIConfig, getLatencyTestUrl, getSelectedChartStyleIndex } from '~/store/app';
 import {
   fetchConfigs,
   flushFakeIPPool,
@@ -18,9 +18,9 @@ import {
   restartCore,
   updateConfigs,
   updateGeoDatabasesFile,
-  upgradeCore,
-} from '../store/configs';
-import { openModal } from '../store/modals';
+  upgradeCore
+} from '~/store/configs';
+import { openModal } from '~/store/modals';
 import Button from './Button';
 import s0 from './Config.module.scss';
 import ContentHeader from './ContentHeader';
@@ -29,6 +29,8 @@ import { Selection2 } from './Selection';
 import { connect, useStoreActions } from './StateProvider';
 import Switch from './SwitchThemed';
 import TrafficChartSample from './TrafficChartSample';
+import ModalCloseAllConnections from '~/components/ModalCloseAllConnections';
+import { notifyWarning } from '~/misc/message';
 
 const { useEffect, useState, useCallback, useRef } = React;
 
@@ -39,7 +41,7 @@ const logLeveOptions = [
   ['info', 'Info'],
   ['warning', 'Warning'],
   ['error', 'Error'],
-  ['silent', 'Silent'],
+  ['silent', 'Silent']
 ];
 
 const portFields = [
@@ -47,39 +49,39 @@ const portFields = [
   { key: 'socks-port', label: 'Socks5 Port' },
   { key: 'mixed-port', label: 'Mixed Port' },
   { key: 'redir-port', label: 'Redir Port' },
-  { key: 'mitm-port', label: 'MITM Port' },
+  { key: 'mitm-port', label: 'MITM Port' }
 ];
 
 const langOptions = [
   ['zh-cn', '简体中文'],
   ['zh-tw', '繁體中文'],
   ['en', 'English'],
-  ['vi', 'Vietnamese'],
+  ['vi', 'Vietnamese']
 ];
 
 const modeOptions = [
   ['direct', 'Direct'],
   ['rule', 'Rule'],
   ['script', 'Script'],
-  ['global', 'Global'],
+  ['global', 'Global']
 ];
 
 const tunStackOptions = [
   ['gvisor', 'gVisor'],
   ['mixed', 'Mixed'],
   ['system', 'System'],
-  ['lwip', 'LWIP'],
+  ['lwip', 'LWIP']
 ];
 
 const mapState = (s: State) => ({
   configs: getConfigs(s),
-  apiConfig: getClashAPIConfig(s),
+  apiConfig: getClashAPIConfig(s)
 });
 
 const mapState2 = (s: State) => ({
   selectedChartStyleIndex: getSelectedChartStyleIndex(s),
   latencyTestUrl: getLatencyTestUrl(s),
-  apiConfig: getClashAPIConfig(s),
+  apiConfig: getClashAPIConfig(s)
 });
 
 const Config = connect(mapState2)(ConfigImpl);
@@ -111,12 +113,12 @@ function getBackendContent(version: any): string {
 }
 
 function ConfigImpl({
-  dispatch,
-  configs,
-  selectedChartStyleIndex,
-  latencyTestUrl,
-  apiConfig,
-}: ConfigImplProps) {
+                      dispatch,
+                      configs,
+                      selectedChartStyleIndex,
+                      latencyTestUrl,
+                      apiConfig
+                    }: ConfigImplProps) {
   const { t, i18n } = useTranslation();
 
   const [configState, setConfigStateInternal] = useState(configs);
@@ -241,6 +243,13 @@ function ConfigImpl({
     fetchVersion('/version', apiConfig)
   );
 
+  const [reloadConfigFileModel, setReloadConfigFileModel] = useState(false);
+  const [updateGeoDatabasesFileModel, setUpdateGeoDatabasesFileModel] = useState(false);
+  const [flushFakeIPPoolModel, setFlushFakeIPPoolModel] = useState(false);
+  const [restartCoreModel, setRestartCoreModel] = useState(false);
+  const [upgradeCoreModel, setUpgradeCoreModel] = useState(false);
+
+
   return (
     <div>
       <ContentHeader title={t('Config')} />
@@ -359,20 +368,38 @@ function ConfigImpl({
           )}
           <div className={s0.section}>
             <div>
-              <div className={s0.label}>Reload</div>
+              <div className={s0.label}>{t('reload_config_file')}</div>
               <Button
                 start={<RotateCw size={16} />}
                 label={t('reload_config_file')}
-                onClick={handleReloadConfigFile}
+                onClick={() => setReloadConfigFileModel(true)}
+              />
+              <ModalCloseAllConnections
+                confirm={'reload_config_file'}
+                isOpen={reloadConfigFileModel}
+                primaryButtonOnTap={() => {
+                  handleReloadConfigFile();
+                  setReloadConfigFileModel(false);
+                }}
+                onRequestClose={() => setReloadConfigFileModel(false)}
               />
             </div>
             {version.meta && !version.premium && (
               <div>
-                <div className={s0.label}>GEO Databases</div>
+                <div className={s0.label}>GEO数据库</div>
                 <Button
                   start={<DownloadCloud size={16} />}
                   label={t('update_geo_databases_file')}
-                  onClick={handleUpdateGeoDatabasesFile}
+                  onClick={() => setUpdateGeoDatabasesFileModel(true)}
+                />
+                <ModalCloseAllConnections
+                  confirm={'update_geo_databases_file'}
+                  isOpen={updateGeoDatabasesFileModel}
+                  primaryButtonOnTap={() => {
+                    handleUpdateGeoDatabasesFile();
+                    setUpdateGeoDatabasesFileModel(false);
+                  }}
+                  onRequestClose={() => setUpdateGeoDatabasesFileModel(false)}
                 />
               </div>
             )}
@@ -381,26 +408,59 @@ function ConfigImpl({
               <Button
                 start={<Trash2 size={16} />}
                 label={t('flush_fake_ip_pool')}
-                onClick={handleFlushFakeIPPool}
+                onClick={() => setFlushFakeIPPoolModel(true)}
+              />
+              <ModalCloseAllConnections
+                confirm={'flush_fake_ip_pool'}
+                isOpen={flushFakeIPPoolModel}
+                primaryButtonOnTap={() => {
+                  handleFlushFakeIPPool();
+                  setFlushFakeIPPoolModel(false);
+                }}
+                onRequestClose={() => setFlushFakeIPPoolModel(false)}
               />
             </div>
             {version.meta && !version.premium && (
               <div>
-                <div className={s0.label}>Restart</div>
+                <div className={s0.label}>重启核心</div>
                 <Button
                   start={<RotateCw size={16} />}
                   label={t('restart_core')}
-                  onClick={handleRestartCore}
+                  onClick={() => {
+                    notifyWarning('重启核心后可能导致网络异常');
+                    setRestartCoreModel(true);
+                  }}
+                />
+                <ModalCloseAllConnections
+                  confirm={'restart_core'}
+                  isOpen={restartCoreModel}
+                  primaryButtonOnTap={() => {
+                    handleRestartCore();
+                    setRestartCoreModel(false);
+                  }}
+                  onRequestClose={() => setRestartCoreModel(false)}
                 />
               </div>
             )}
             {version.meta && !version.premium && (
               <div>
-                <div className={s0.label}>⚠️ Upgrade ⚠️</div>
+                <div className={s0.label}>⚠️ 升级核心 ⚠️</div>
                 <Button
                   start={<RotateCw size={16} />}
                   label={t('upgrade_core')}
-                  onClick={handleUpgradeCore}
+                  onClick={() => {
+                    notifyWarning('升级核心后可能导致网络异常');
+                    setUpgradeCoreModel(true);
+                  }}
+                />
+                <ModalCloseAllConnections
+                  confirm={'upgrade_core'}
+                  isOpen={upgradeCoreModel}
+                  primaryButtonOnTap={() => {
+                    handleUpgradeCore();
+                    setUpgradeCoreModel(false);
+                  }}
+                  onRequestClose={() => setUpgradeCoreModel(false)}
                 />
               </div>
             )}

@@ -1,9 +1,12 @@
+// noinspection RequiredAttributes
+
 import { Tooltip } from '@reach/tooltip';
 import cx from 'clsx';
 import * as React from 'react';
 import { Info } from 'react-feather';
 import { useTranslation } from 'react-i18next';
-import { FcAreaChart, FcDocument, FcGlobe, FcLink, FcRuler, FcSettings } from 'react-icons/fc';
+import { HiOutlineDocumentText, HiOutlineServer, HiOutlineSwitchVertical } from 'react-icons/hi';
+import { MdBarChart, MdCallSplit, MdSettings } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -18,20 +21,21 @@ import s from './SideBar.module.scss';
 type Props = { apiConfig: ClashAPIConfig };
 
 const icons = {
-  activity: FcAreaChart,
-  globe: FcGlobe,
-  command: FcRuler,
-  file: FcDocument,
-  settings: FcSettings,
-  link: FcLink,
+  activity: MdBarChart,
+  globe: HiOutlineServer,
+  command: MdCallSplit,
+  file: HiOutlineDocumentText,
+  settings: MdSettings,
+  link: HiOutlineSwitchVertical
 };
 
-const SideBarRow = React.memo(function SideBarRow({
-  isActive,
-  to,
-  iconId,
-  labelText,
-}: SideBarRowProps) {
+const SideBarRow = React.memo(function SideBarRow(
+  {
+    isActive,
+    to,
+    iconId,
+    labelText
+  }: SideBarRowProps) {
   const Comp = icons[iconId];
   const className = cx(s.row, isActive ? s.rowActive : null);
   return (
@@ -53,37 +57,37 @@ const pages = [
   {
     to: '/',
     iconId: 'activity',
-    labelText: 'Overview',
+    labelText: 'Overview'
   },
   {
     to: '/proxies',
     iconId: 'globe',
-    labelText: 'Proxies',
+    labelText: 'Proxies'
   },
   {
     to: '/rules',
     iconId: 'command',
-    labelText: 'Rules',
+    labelText: 'Rules'
   },
   {
     to: '/connections',
     iconId: 'link',
-    labelText: 'Conns',
+    labelText: 'Conns'
   },
   {
     to: '/configs',
     iconId: 'settings',
-    labelText: 'Config',
+    labelText: 'Config'
   },
   {
     to: '/logs',
     iconId: 'file',
-    labelText: 'Logs',
-  },
+    labelText: 'Logs'
+  }
 ];
 
 const mapState = (s) => ({
-  apiConfig: getClashAPIConfig(s),
+  apiConfig: getClashAPIConfig(s)
 });
 
 export default connect(mapState)(SideBar);

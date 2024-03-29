@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { QueryClientProvider } from 'react-query';
+import { focusManager, QueryClientProvider } from 'react-query';
 import { HashRouter as Router, Route, RouteObject, Routes, useRoutes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
@@ -18,6 +18,7 @@ import { queryClient } from '~/misc/query';
 import { actions, initialState } from '~/store';
 
 import styles from './App.module.scss';
+import { ToastContainer } from 'react-toastify';
 
 const { lazy, Suspense } = React;
 
@@ -35,8 +36,10 @@ const routes = [
   { path: '/proxies', element: <Proxies /> },
   { path: '/rules', element: <Rules /> },
   { path: '/about', element: <About /> },
-  process.env.NODE_ENV === 'development' ? { path: '/style', element: <StyleGuide /> } : false,
+  process.env.NODE_ENV === 'development' ? { path: '/style', element: <StyleGuide /> } : false
 ].filter(Boolean) as RouteObject[];
+
+focusManager.setFocused(false);
 
 function SideBarApp() {
   return (
@@ -53,6 +56,7 @@ function SideBarApp() {
 const App = () => (
   <ErrorBoundary>
     <RecoilRoot>
+      <ToastContainer containerId={'ts'} />
       <StateProvider initialState={initialState} actions={actions}>
         <QueryClientProvider client={queryClient}>
           <div className={styles.app}>
@@ -71,5 +75,6 @@ const App = () => (
     </RecoilRoot>
   </ErrorBoundary>
 );
+
 
 export default App;

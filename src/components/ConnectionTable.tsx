@@ -1,11 +1,12 @@
+// noinspection RequiredAttributes
+
 import './ConnectionTable.scss';
 
 import cx from 'clsx';
 import { formatDistance, Locale } from 'date-fns';
 import { enUS, zhCN, zhTW } from 'date-fns/locale';
 import React, { useEffect, useState } from 'react';
-import { ChevronDown } from 'react-feather';
-import { XCircle } from 'react-feather';
+import { ChevronDown, XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { useSortBy, useTable } from 'react-table';
 
@@ -13,7 +14,7 @@ import { State } from '~/store/types';
 
 import * as connAPI from '../api/connections';
 import prettyBytes from '../misc/pretty-bytes';
-import { getClashAPIConfig } from '../store/app';
+import { getClashAPIConfig } from '~/store/app';
 import s from './ConnectionTable.module.scss';
 import MOdalCloseConnection from './ModalCloseAllConnections';
 import { connect } from './StateProvider';
@@ -26,16 +27,16 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
   const tableState = {
     sortBy: [
       // maintain a more stable order
-      sortById,
+      sortById
     ],
-    hiddenColumns,
+    hiddenColumns
   };
   const table = useTable(
     {
       columns,
       data,
       initialState: tableState,
-      autoResetSortBy: false,
+      autoResetSortBy: false
     },
     useSortBy
   );
@@ -91,19 +92,18 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
         return cell.value;
     }
   };
-
   return (
     <div style={{ marginTop: '5px' }}>
       <table {...getTableProps()} className={cx(s.table, 'connections-table')}>
         <thead>
-          {headerGroups.map((headerGroup, trindex) => {
-            return (
-              <tr {...headerGroup.getHeaderGroupProps()} className={s.tr} key={trindex}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())} className={s.th}>
-                    <span>{t(column.render('Header'))}</span>
-                    {column.id !== 'ctrl' ? (
-                      <span className={s.sortIconContainer}>
+        {headerGroups.map((headerGroup, trindex) => {
+          return (
+            <tr {...headerGroup.getHeaderGroupProps()} className={s.tr} key={trindex}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps(column.getSortByToggleProps())} className={s.th}>
+                  <span>{t(column.render('Header'))}</span>
+                  {column.id !== 'ctrl' ? (
+                    <span className={s.sortIconContainer}>
                         {column.isSorted ? (
                           <ChevronDown
                             size={16}
@@ -111,31 +111,51 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
                           />
                         ) : null}
                       </span>
-                    ) : null}
-                  </th>
-                ))}
-              </tr>
-            );
-          })}
+                  ) : null}
+                </th>
+              ))}
+            </tr>
+          );
+        })}
         </thead>
         <tbody>
-          {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr className={s.tr} key={i}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      className={cx(s.td, i % 2 === 0 ? s.odd : false, cell.column.id)}
-                    >
-                      {renderCell(cell, locale)}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+        {rows.map((row, index) => {
+          prepareRow(row);
+          return (
+            <tr key={index} className={s.tr}>
+              {row.cells.map((cell) => {
+                return (
+                  <td
+                    {...cell.getCellProps()}
+                    className={cx(s.td, index % 2 === 0 ? s.odd : false, cell.column.id)}
+                  >
+                    {renderCell(cell, locale)}
+                  </td>
+                );
+                // return cell.column.id === 'chains' ? (
+                //   <Tooltip label={cell.value.toString()}>
+                //     <td
+                //       {...cell.getCellProps()}
+                //       className={cx(s.td, index % 2 === 0 ? s.odd : false, cell.column.id)}
+                //       style={{ maxWidth: cell.column.id === 'chains' ? '13em' : null }}
+                //     >
+                //       {renderCell(cell, locale)}
+                //     </td>
+                //   </Tooltip>
+                // ) : (
+                //   <td
+                //     {...cell.getCellProps()}
+                //     className={cx(s.td, index % 2 === 0 ? s.odd : false, cell.column.id)}
+                //     // title={cell.column.id === 'host' || cell.column.id === 'chains' ? cell.value.toString() : null}
+                //     style={{ maxWidth: cell.column.id === 'chains' ? '13em' : null }}
+                //   >
+                //     {renderCell(cell, locale)}
+                //   </td>
+                // );
+              })}
+            </tr>
+          );
+        })}
         </tbody>
       </table>
       <MOdalCloseConnection
@@ -149,7 +169,7 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
 }
 
 const mapState = (s: State) => ({
-  apiConfig: getClashAPIConfig(s),
+  apiConfig: getClashAPIConfig(s)
 });
 
 export default connect(mapState)(Table);

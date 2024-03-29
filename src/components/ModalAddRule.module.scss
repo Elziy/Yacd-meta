@@ -1,0 +1,26 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.row2 {
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+}
+
+.submit {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 1.5em;
+}
+
+.submit_button {
+  color: var(--color-text);
+  border-radius: 8px;
+  padding: 10px 30px;
+  cursor: pointer;
+}

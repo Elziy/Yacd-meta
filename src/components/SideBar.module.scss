@@ -70,6 +70,10 @@
   background: var(--color-sb-active-row-bg);
   color: var(--color-sb-active-row-font);
 
+  svg {
+    color: var(--color-sb-active-row-font);
+  }
+
   @media (max-width: 768px) {
     background: none;
     border-bottom: 2px solid var(--color-focus-blue);

@@ -1,5 +1,4 @@
 import cx from 'clsx';
-import { formatDistance } from 'date-fns';
 import * as React from 'react';
 import { ChevronDown, RotateCw, Zap } from 'react-feather';
 
@@ -10,18 +9,15 @@ import { useUpdateProviderItem } from '~/components/proxies/proxies.hooks';
 import s0 from '~/components/proxies/ProxyGroup.module.scss';
 import { connect, useStoreActions } from '~/components/StateProvider';
 import { framerMotionResouce } from '~/misc/motion';
-import {
-  getClashAPIConfig,
-  getCollapsibleIsOpen,
-  getHideUnavailableProxies,
-  getProxySortBy,
-} from '~/store/app';
+import { getClashAPIConfig, getCollapsibleIsOpen, getHideUnavailableProxies, getProxySortBy } from '~/store/app';
 import { getDelay, healthcheckProviderByName } from '~/store/proxies';
 import { DelayMapping, SubscriptionInfo } from '~/store/types';
 
 import { useFilteredAndSorted } from './hooks';
 import { ProxyList, ProxyListSummaryView } from './ProxyList';
 import s from './ProxyProvider.module.scss';
+import { useTranslation } from 'react-i18next';
+import { formatTime } from '~/api/proxies';
 
 const { useState, useCallback } = React;
 
@@ -41,18 +37,18 @@ type Props = {
 };
 
 function ProxyProviderImpl({
-  name,
-  proxies: all,
-  delay,
-  hideUnavailableProxies,
-  proxySortBy,
-  vehicleType,
-  updatedAt,
-  subscriptionInfo,
-  isOpen,
-  dispatch,
-  apiConfig,
-}: Props) {
+                             name,
+                             proxies: all,
+                             delay,
+                             hideUnavailableProxies,
+                             proxySortBy,
+                             vehicleType,
+                             updatedAt,
+                             subscriptionInfo,
+                             isOpen,
+                             dispatch,
+                             apiConfig
+                           }: Props) {
   const proxies = useFilteredAndSorted(all, delay, hideUnavailableProxies, proxySortBy);
   const [isHealthcheckLoading, setIsHealthcheckLoading] = useState(false);
 
@@ -65,27 +61,28 @@ function ProxyProviderImpl({
   }, [apiConfig, dispatch, name, setIsHealthcheckLoading]);
 
   const {
-    app: { updateCollapsibleIsOpen },
+    app: { updateCollapsibleIsOpen }
   } = useStoreActions();
 
   const toggle = useCallback(() => {
     updateCollapsibleIsOpen('proxyProvider', name, !isOpen);
   }, [isOpen, updateCollapsibleIsOpen, name]);
 
-  const timeAgo = formatDistance(new Date(updatedAt), new Date());
+  // const timeAgo = formatDistance(new Date(updatedAt), new Date());
+  const timeAgo = formatTime(new Date(updatedAt));
   const total = subscriptionInfo ? formatBytes(subscriptionInfo.Total) : 0;
   const used = subscriptionInfo
     ? formatBytes(subscriptionInfo.Download + subscriptionInfo.Upload)
     : 0;
   const percentage = subscriptionInfo
     ? (
-        ((subscriptionInfo.Download + subscriptionInfo.Upload) / subscriptionInfo.Total) *
-        100
-      ).toFixed(2)
+      ((subscriptionInfo.Download + subscriptionInfo.Upload) / subscriptionInfo.Total) *
+      100
+    ).toFixed(2)
     : 0;
   const expireStr = () => {
     if (subscriptionInfo.Expire === 0) {
-      return 'Null';
+      return '长期有效';
     }
     const expire = new Date(subscriptionInfo.Expire * 1000);
     const getYear = expire.getFullYear() + '-';
@@ -94,6 +91,9 @@ function ProxyProviderImpl({
     const getDate = (expire.getDate() < 10 ? '0' + expire.getDate() : expire.getDate()) + ' ';
     return getYear + getMonth + getDate;
   };
+
+  const { t } = useTranslation();
+
   return (
     <div className={s.body}>
       <div
@@ -101,7 +101,7 @@ function ProxyProviderImpl({
           display: 'flex',
           alignItems: 'center',
           flexWrap: 'wrap',
-          justifyContent: 'space-between',
+          justifyContent: 'space-between'
         }}
       >
         <CollapsibleSectionHeader
@@ -111,6 +111,7 @@ function ProxyProviderImpl({
           isOpen={isOpen}
           qty={proxies.length}
         />
+        <div className={s0.clickable} onClick={toggle}></div>
         <div style={{ display: 'flex' }}>
           <Button
             kind="minimal"
@@ -134,11 +135,11 @@ function ProxyProviderImpl({
       <div className={s.updatedAt}>
         {subscriptionInfo && (
           <small>
-            {used} / {total} ( {percentage}% ) &nbsp;&nbsp; Expire: {expireStr()}{' '}
+            {used} / {total} ( {percentage}% ) &nbsp;&nbsp; {t('expire')}: {expireStr()}{' '}
           </small>
         )}
         <br />
-        <small>Updated {timeAgo} ago</small>
+        <small>更新于{timeAgo}</small>
       </div>
       {/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element[]; isOpen: boolean; }' i... Remove this comment to see the full error message */}
       <Collapsible isOpen={isOpen}>
@@ -163,11 +164,11 @@ function ProxyProviderImpl({
 
 const button = {
   rest: { scale: 1 },
-  pressed: { scale: 0.95 },
+  pressed: { scale: 0.95 }
 };
 const arrow = {
   rest: { rotate: 0 },
-  hover: { rotate: 360, transition: { duration: 0.3 } },
+  hover: { rotate: 360, transition: { duration: 0.3 } }
 };
 
 function formatBytes(bytes, decimals = 2) {
@@ -178,6 +179,7 @@ function formatBytes(bytes, decimals = 2) {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
+
 function Refresh() {
   const module = framerMotionResouce.read();
   const motion = module.motion;
@@ -210,7 +212,7 @@ const mapState = (s, { proxies, name }) => {
     delay,
     hideUnavailableProxies,
     proxySortBy,
-    isOpen: collapsibleIsOpen[`proxyProvider:${name}`],
+    isOpen: collapsibleIsOpen[`proxyProvider:${name}`]
   };
 };
 

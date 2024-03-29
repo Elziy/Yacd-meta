@@ -11,7 +11,7 @@ import { State } from '~/store/types';
 
 import * as connAPI from '../api/connections';
 import useRemainingViewPortHeight from '../hooks/useRemainingViewPortHeight';
-import { getClashAPIConfig } from '../store/app';
+import { getClashAPIConfig } from '~/store/app';
 import s from './Connections.module.scss';
 import ConnectionTable from './ConnectionTable';
 import ContentHeader from './ContentHeader';
@@ -22,6 +22,7 @@ import ModalSourceIP from './ModalSourceIP';
 import { Action, Fab, position as fabPosition } from './shared/Fab';
 import { connect } from './StateProvider';
 import SvgYacd from './SvgYacd';
+import { MdClear } from 'react-icons/md';
 
 const { useEffect, useState, useRef, useCallback } = React;
 const ALL_SOURCE_IP = 'ALL_SOURCE_IP';
@@ -30,7 +31,19 @@ const sourceMapInit = localStorage.getItem('sourceMap')
   ? JSON.parse(localStorage.getItem('sourceMap'))
   : [];
 
-const paddingBottom = 30;
+// 反向解析DNS
+async function reverseDNS(ip: string) {
+  const res = await fetch('/api/dns', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ ip: ip })
+  });
+  return await res.json();
+}
+
+const paddingBottom = 20;
 
 function arrayToIdKv<T extends { id: string }>(items: T[]) {
   const o = {};
@@ -84,7 +97,7 @@ function filterConns(conns: FormattedConn[], keyword: string, sourceIp: string) 
         conn.rule,
         conn.type,
         conn.network,
-        conn.process,
+        conn.process
       ].some((field) => {
         return hasSubstring(field, keyword);
       })
@@ -115,6 +128,7 @@ function getNameFromSource(
       }
     } else {
       if (source === reg && name) {
+
         sourceName = `${name}(${source})`;
       }
     }
@@ -140,7 +154,7 @@ function formatConnectionDataItem(
     sourceIP,
     sourcePort,
     process,
-    sniffHost,
+    sniffHost
   } = metadata;
   // host could be an empty string if it's direct IP connection
   let host2 = host;
@@ -148,6 +162,7 @@ function formatConnectionDataItem(
   const prev = prevKv[id];
   const source = `${sourceIP}:${sourcePort}`;
 
+  // noinspection UnnecessaryLocalVariableJS
   const ret = {
     id,
     upload,
@@ -163,10 +178,11 @@ function formatConnectionDataItem(
     downloadSpeedCurr: download - (prev ? prev.download : 0),
     uploadSpeedCurr: upload - (prev ? prev.upload : 0),
     process: process ? process : '-',
-    destinationIP: remoteDestination || destinationIP || host,
+    destinationIP: remoteDestination || destinationIP || host
   };
   return ret;
 }
+
 function modifyChains(chains: string[]): string {
   if (!Array.isArray(chains) || chains.length === 0) {
     return '';
@@ -186,7 +202,7 @@ function modifyChains(chains: string[]): string {
   return `${first} -> ${last}`;
 }
 
-function renderTableOrPlaceholder(columns, hiddenColumns, conns: FormattedConn[]) {
+function renderTableOrPlaceholder(columns: ({ accessor: string; show: boolean; Header?: undefined; sortDescFirst?: undefined; } | { Header: string; accessor: string; show?: undefined; sortDescFirst?: undefined; } | { Header: string; accessor: string; sortDescFirst: boolean; show?: undefined; })[], hiddenColumns: any, conns: FormattedConn[]) {
   return conns.length > 0 ? (
     <ConnectionTable data={conns} columns={columns} hiddenColumns={hiddenColumns} />
   ) : (
@@ -217,7 +233,7 @@ const columnsOrigin = [
   { Header: 'c_source', accessor: 'source' },
   { Header: 'c_destination_ip', accessor: 'destinationIP' },
   { Header: 'c_sni', accessor: 'sniffHost' },
-  { Header: 'c_ctrl', accessor: 'ctrl' },
+  { Header: 'c_ctrl', accessor: 'ctrl' }
 ];
 
 const savedHiddenColumns = localStorage.getItem('hiddenColumns');
@@ -230,18 +246,18 @@ const hiddenColumnsInit = savedHiddenColumns
 const columnOrder = savedColumns ? JSON.parse(savedColumns) : null;
 const columnsInit = columnOrder
   ? [...columnsOrigin].sort((pre, next) => {
-      const preIdx = columnOrder.findIndex((column) => column.accessor === pre.accessor);
-      const nextIdx = columnOrder.findIndex((column) => column.accessor === next.accessor);
+    const preIdx = columnOrder.findIndex((column: { accessor: string; }) => column.accessor === pre.accessor);
+    const nextIdx = columnOrder.findIndex((column: { accessor: string; }) => column.accessor === next.accessor);
 
-      if (preIdx === -1) {
-        return 1;
-      }
+    if (preIdx === -1) {
+      return 1;
+    }
 
-      if (nextIdx === -1) {
-        return -1;
-      }
-      return preIdx - nextIdx;
-    })
+    if (nextIdx === -1) {
+      return -1;
+    }
+    return preIdx - nextIdx;
+  })
   : [...columnsOrigin];
 
 function Conn({ apiConfig }) {
@@ -275,13 +291,32 @@ function Conn({ apiConfig }) {
   const filteredClosedConns = filterConns(closedConns, filterKeyword, filterSourceIpStr);
 
   const getConnIpList = (conns: FormattedConn[]) => {
+    let ips = Array.from(new Set(conns.map((x) => x.sourceIP)))
+      .sort();
+    if (sourceMap.length === 1) {
+      console.log('sourceMap is empty');
+      ips.map((value) => {
+        reverseDNS(value).then((res) => {
+          let hostname = res.hostname || '';
+          // 如果.lan结尾的域名，去掉.lan
+          if (hostname.endsWith('.lan') || hostname.endsWith('.local') || hostname.endsWith('.com')) {
+            hostname = hostname.slice(0, -4);
+          }
+          if (res.code === 200) {
+            sourceMap.push({
+              reg: res.ipAddress,
+              name: hostname
+            });
+          }
+        });
+      });
+      localStorage.setItem('sourceMap', JSON.stringify(sourceMap));
+    }
     return [
       [ALL_SOURCE_IP, t('All')],
-      ...Array.from(new Set(conns.map((x) => x.sourceIP)))
-        .sort()
-        .map((value) => {
-          return [value, getNameFromSource(value, sourceMap).trim() || t('internel')];
-        }),
+      ...ips.map((value) => {
+        return [value, getNameFromSource(value, sourceMap).trim() || t('internel')];
+      })
     ];
   };
   const connIpSet = getConnIpList(conns);
@@ -305,12 +340,16 @@ function Conn({ apiConfig }) {
     setIsRefreshPaused((x) => !x);
   }, []);
   const closeAllConnections = useCallback(() => {
+    // noinspection JSIgnoredPromiseFromCall
     connAPI.closeAllConnections(apiConfig);
     closeCloseAllModal();
   }, [apiConfig, closeCloseAllModal]);
   const prevConnsRef = useRef(conns);
   const read = useCallback(
     ({ connections }) => {
+      if (!connections) {
+        return
+      }
       const prevConnsKv = arrayToIdKv(prevConnsRef.current);
       const now = Date.now();
       const x = connections.map((c: ConnectionItem) =>
@@ -342,7 +381,7 @@ function Conn({ apiConfig }) {
     return connAPI.fetchData(apiConfig, read, () => {
       setTimeout(() => {
         setReConnectCount((prev) => prev + 1);
-      }, 1000);
+      }, 1500);
     });
   }, [apiConfig, read, reConnectCount, setReConnectCount]);
 
@@ -350,13 +389,13 @@ function Conn({ apiConfig }) {
     if (sourceMap.length === 0) {
       sourceMap.push({
         reg: '',
-        name: '',
+        name: ''
       });
     }
     setSourceMapModal(true);
   };
   const closeModalSource = () => {
-    setSourceMap(sourceMap.filter((i) => i.reg || i.name));
+    setSourceMap(sourceMap.filter((i: { reg: any; name: any; }) => i.reg || i.name));
     localStorage.setItem('sourceMap', JSON.stringify(sourceMap));
     setSourceMapModal(false);
   };
@@ -374,6 +413,12 @@ function Conn({ apiConfig }) {
             placeholder={t('Search')}
             onChange={(e) => setFilterKeyword(e.target.value)}
           />
+          <div onClick={() => {
+            setFilterKeyword('');
+            // 修改搜索框的值
+            // @ts-ignore
+            document.querySelector('input[name=filter]').value = '';
+          }} className={s.clear}><MdClear style={{ paddingTop: '2px' }} size={18} /></div>
         </div>
       </div>
       <Tabs>
@@ -382,12 +427,12 @@ function Conn({ apiConfig }) {
             display: 'flex',
             flexWrap: 'wrap',
             paddingLeft: '30px',
-            justifyContent: 'flex-start',
+            justifyContent: 'flex-start'
           }}
         >
           <TabList
             style={{
-              padding: '0 15px 0 0',
+              padding: '0 15px 0 0'
             }}
           >
             <Tab>
@@ -412,11 +457,11 @@ function Conn({ apiConfig }) {
             onChange={(e) => setFilterSourceIpStr(e.target.value)}
           />
         </div>
-        <div ref={refContainer} style={{ padding: 30, paddingBottom: 10, paddingTop: 10 }}>
+        <div ref={refContainer} style={{ padding: 15, paddingBottom: 10, paddingTop: 10 }}>
           <div
             style={{
               height: containerHeight - paddingBottom,
-              overflow: 'auto',
+              overflow: 'auto'
             }}
           >
             <TabPanel>
@@ -443,6 +488,12 @@ function Conn({ apiConfig }) {
                 <Action text={t('client_tag')} onClick={openModalSource}>
                   <Tag size={10} />
                 </Action>
+                <Action text={t('delete_all_tags')} onClick={() => {
+                  // 删除所有标签
+                  localStorage.removeItem('sourceMap');
+                }}>
+                  <IconClose size={10} />
+                </Action>
               </Fab>
             </TabPanel>
             <TabPanel>
@@ -463,6 +514,8 @@ function Conn({ apiConfig }) {
             </TabPanel>
           </div>
         </div>
+
+
         <ModalCloseAllConnections
           isOpen={isCloseAllModalOpen}
           primaryButtonOnTap={closeAllConnections}
@@ -494,7 +547,7 @@ function Conn({ apiConfig }) {
 }
 
 const mapState = (s: State) => ({
-  apiConfig: getClashAPIConfig(s),
+  apiConfig: getClashAPIConfig(s)
 });
 
 export default connect(mapState)(Conn);

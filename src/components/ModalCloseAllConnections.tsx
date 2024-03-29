@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
@@ -9,25 +9,31 @@ import s from './ModalCloseAllConnections.module.scss';
 
 const { useRef, useCallback, useMemo } = React;
 
-export default function Comp({
-  confirm = 'close_all_confirm',
-  isOpen,
-  onRequestClose,
-  primaryButtonOnTap,
-}) {
+export default function Comp(
+  {
+    confirm = 'close_all_confirm',
+    isOpen,
+    onRequestClose,
+    primaryButtonOnTap
+  }) {
   const { t } = useTranslation();
   const primaryButtonRef = useRef(null);
   const onAfterOpen = useCallback(() => {
+    setSubmitting(false);
     primaryButtonRef.current.focus();
   }, []);
   const className = useMemo(
     () => ({
       base: cx(modalStyle.content, s.cnt),
       afterOpen: s.afterOpen,
-      beforeClose: '',
+      beforeClose: ''
     }),
     []
   );
+
+  // 防止重复提交
+  const [submitting, setSubmitting] = useState(false);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -36,9 +42,12 @@ export default function Comp({
       className={className}
       overlayClassName={cx(modalStyle.overlay, s.overlay)}
     >
-      <p>{t(confirm)}</p>
+      <p style={{ textAlign: 'center' }}>{t(confirm)}</p>
       <div className={s.btngrp}>
-        <Button onClick={primaryButtonOnTap} ref={primaryButtonRef}>
+        <Button disabled={submitting} onClick={() => {
+          setSubmitting(true);
+          primaryButtonOnTap();
+        }} ref={primaryButtonRef}>
           {t('close_all_confirm_yes')}
         </Button>
         <div style={{ width: 20 }} />
