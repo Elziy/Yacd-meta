@@ -1,8 +1,22 @@
 [中文](./README_CN.md)
 
-<h1 align="center">
-  <img src="https://user-images.githubusercontent.com/78135608/232244383-5e1389db-ce56-4c83-9627-4f3d1a489c6e.png" alt="yacd">
-</h1>
+## Sample screenshot
+
+#### Home
+
+![img.png](images/img_1.png)
+
+#### Proxies ICON
+
+![img_1.png](images/img_2.png)
+
+#### Rules Add / Remove
+
+![img_3.png](images/img_3.png)
+
+#### Rules Preview
+
+![img_4.png](images/img_4.png)
 
 > Yet Another [Clash](https://github.com/yaling888/clash) [Dashboard](https://github.com/yaling888/clash-dashboard)
 
@@ -29,8 +43,8 @@ The site http://yacd.metacubex.one is served with HTTP not HTTPS is because many
 pnpm i
 
 # start the dev server
-# then go to http://127.0.0.1:3000
-pnpm start
+# then go to http://127.0.0.1
+pnpm dev
 
 
 # build optimized assets
