@@ -33,7 +33,7 @@ export default function Header({ name, type, now, icon, toggle, qty }: Props) {
       role="button"
     >
       <SectionNameType name={name} type={type} now={now} icon={icon} />
-      {typeof qty === 'number' ? <div><span className={s.qty}>{qty}</span></div> : null}
+      {typeof qty === 'number' ? <div style={{ paddingBottom: '0.1em' }}><span className={s.qty}>{qty}</span></div> : null}
     </div>
   );
 }

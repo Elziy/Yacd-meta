@@ -12,7 +12,7 @@ import s0 from '~/components/Rules.module.scss';
 import { formatTime } from '~/api/proxies';
 import ModalCloseAllConnections from '~/components/ModalCloseAllConnections';
 import ShowModel from '~/components/rules/ShowModel';
-import { notifyError } from '~/misc/message';
+import { notifyError, notifySuccess } from '~/misc/message';
 
 export function RuleProviderItem(
   {
@@ -43,6 +43,7 @@ export function RuleProviderItem(
       const response = await res.json();
       if (response.code === 200) {
         setDeleteModal(false);
+        notifySuccess(response.message);
       } else {
         notifyError(response.message);
       }

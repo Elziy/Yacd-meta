@@ -26,7 +26,7 @@ export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequest
     format: 'yaml',
     path: 'rule_provider',
     url: '',
-    interval: null
+    interval: 86400
   });
 
   const [msg, setMsg] = useState('');
@@ -104,6 +104,7 @@ export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequest
       interval: ruleSet.interval
     };
     if (ruleSet.type === 'file') {
+      ruleSetBody.path = ruleSetBody.url;
       delete ruleSetBody.url;
     }
     addRuleSet(JSON.stringify(ruleSetBody)).then((response) => {
