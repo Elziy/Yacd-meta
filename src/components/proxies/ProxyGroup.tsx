@@ -78,7 +78,8 @@ function ProxyGroupImpl({
         await requestDelayForProxies(apiConfig, all);
         await dispatch(fetchProxies(apiConfig));
       }
-    } catch (err) {}
+    } catch (err) {
+    }
     setIsTestingLatency(false);
   }, [all, apiConfig, dispatch, name, version.meta]);
 
@@ -169,7 +170,17 @@ export const ProxyGroup = connect((s, { name, delay }) => {
   const latencyTestUrl = getLatencyTestUrl(s);
 
   const group = proxies[name];
-  const { all, type, now, icon } = group;
+  const { all, type, icon } = group;
+  let now = group.now;
+  let nowProxy = now;
+  while (proxies[nowProxy].now) {
+    nowProxy = proxies[nowProxy].now;
+  }
+
+  if (nowProxy !== now) {
+    now = now + ' / ' + nowProxy;
+  }
+
   return {
     all,
     delay,
