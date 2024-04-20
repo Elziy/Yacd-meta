@@ -34,6 +34,7 @@ function ProxyGroupImpl({
                           proxies,
                           type,
                           now,
+                          nowProxy,
                           icon,
                           isOpen,
                           latencyTestUrl,
@@ -103,7 +104,7 @@ function ProxyGroupImpl({
           justifyContent: 'space-between'
         }}
       >
-        <CollapsibleSectionHeader name={name} type={type} now={now} icon={icon} toggle={toggle} qty={all.length} />
+        <CollapsibleSectionHeader name={name} type={type} now={now} nowProxy={nowProxy} icon={icon} toggle={toggle} qty={all.length} />
         <div className={s0.clickable} onClick={toggle}>
         </div>
         <div style={{ display: 'flex' }}>
@@ -170,15 +171,10 @@ export const ProxyGroup = connect((s, { name, delay }) => {
   const latencyTestUrl = getLatencyTestUrl(s);
 
   const group = proxies[name];
-  const { all, type, icon } = group;
-  let now = group.now;
+  const { all, type, now, icon } = group;
   let nowProxy = now;
   while (proxies[nowProxy].now) {
     nowProxy = proxies[nowProxy].now;
-  }
-
-  if (nowProxy !== now) {
-    now = now + ' / ' + nowProxy;
   }
 
   return {
@@ -189,6 +185,7 @@ export const ProxyGroup = connect((s, { name, delay }) => {
     proxies,
     type,
     now,
+    nowProxy,
     icon,
     isOpen: collapsibleIsOpen[`proxyGroup:${name}`],
     latencyTestUrl

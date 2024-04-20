@@ -78,6 +78,7 @@ h2.sectionNameType {
   position: relative;
   background-color: var(--loading-dot-2-1);
   animation: dot2 $d step-start infinite;
+
   &:before {
     content: '';
     position: absolute;
@@ -85,6 +86,7 @@ h2.sectionNameType {
     background-color: var(--loading-dot-1-1);
     animation: dot1 $d step-start infinite;
   }
+
   &:after {
     content: '';
     position: absolute;
@@ -132,3 +134,29 @@ h2.sectionNameType {
     background-color: var(--loading-dot-3-3);
   }
 }
+
+.proxyMain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.proxy {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: #777;
+  gap: 6px;
+  margin-right: 10px;
+}
+
+.dis{
+  display: none;
+
+  @media (--breakpoint-not-small) {
+    display: block;
+  }
+}
+
+

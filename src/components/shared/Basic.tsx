@@ -1,4 +1,6 @@
 import React from 'react';
+import { HiArrowNarrowRight } from 'react-icons/hi';
+
 
 import s from './Basic.module.scss';
 
@@ -13,7 +15,7 @@ const getBase64 = async (url: RequestInfo | URL) => {
   });
 };
 
-export function SectionNameType({ name, type, now, icon }) {
+export function SectionNameType({ name, type, now, nowProxy, icon }) {
   let src = '';
 
   if (name === 'GLOBAL')
@@ -39,8 +41,12 @@ export function SectionNameType({ name, type, now, icon }) {
       {src ? <img src={src} style={{ width: '2.4em', height: '2.4em', marginRight: 10 }} alt="yacd" /> : null}
       <div style={{ marginRight: 5 }}>
         <span style={{ fontSize: '15px', verticalAlign: 'top' }}>{name}</span>
-        <div>
-          {now ? <span style={{ fontSize: '12px', color: '#777', marginRight: '1.5em' }}>{now}</span>
+        <div className={s.proxyMain}>
+          {now ? <div className={s.proxy}>
+              <span>{now}</span>
+              {now !== nowProxy ? <><HiArrowNarrowRight className={s.dis} size={16} />
+                <span className={s.dis}>{nowProxy}</span></> : null}
+            </div>
             : null}
           <span>{type.toUpperCase()}</span>
         </div>
