@@ -21,7 +21,13 @@
     text-align: center;
   }
 
-  td.chains {
-    max-width: 14em;
+  //td.chains,
+  td.destinationIP {
+    max-width: 8em;
+
+    &:hover {
+      color: var(--color-text-highlight);
+      max-width: 100em;
+    }
   }
 }

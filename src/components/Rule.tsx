@@ -47,6 +47,11 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
   policies.push(['DIRECT', '直连']);
   policies.push(['REJECT', '拒绝']);
 
+  const disable = id < 3 || type === 'AND' || type === 'OR' || type === 'NOT' || type === 'SubRules';
+  if (type === 'SubRules') {
+    policies.push([policy, policy]);
+  }
+
   const deleteRule = async (body: BodyInit) => {
     const res = await fetch('/api/delete_rule', {
       method: 'DELETE',
@@ -105,13 +110,13 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
   };
 
   function get_rule() {
-    const t = type.toLowerCase()
+    const t = type.toLowerCase();
     if (t !== 'geosite' && t !== 'geoip') {
       notifyError('不支持的类型');
       return;
     }
     if (size > 20000) {
-      notifyWarning('规则过大, 别看啦！')
+      notifyWarning('规则过大, 别看啦！');
       return;
     }
     setIsModalOpen(true);
@@ -155,8 +160,8 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
           {/*<div style={styleProxy}>{proxy}</div>*/}
           <span>
             <Select
-              disabled={id < 3 || type === 'AND' || type === 'OR' || type === 'NOT'}
-              style={{ backgroundColor: styleProxy.color, height: '1.8em',color: '#E7E7E7'}}
+              disabled={disable}
+              style={{ backgroundColor: styleProxy.color, height: '1.8em', color: '#E7E7E7' }}
               options={policies}
               selected={policy}
               onChange={(e) => {
