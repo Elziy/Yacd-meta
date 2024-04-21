@@ -75,7 +75,7 @@ export function RuleProviderItem(
     <div className={s.RuleProviderItem}>
       <span className={s.left}>{idx}</span>
       <div className={s.middle}>
-        <SectionNameType name={name} type={`${vehicleType} / ${behavior}`} now={undefined} icon={undefined} />
+        <SectionNameType name={name} type={`${vehicleType} / ${behavior}`} now={undefined} icon={undefined} nowProxy={undefined} />
         <div style={{ paddingRight: '0.5em' }}>
           <span onClick={get_rule_set} className={s0.qty}>{ruleCount}</span>
         </div>
