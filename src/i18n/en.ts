@@ -82,6 +82,7 @@ export const data = {
   device_name: 'Device Tag',
   delete: 'Delete',
   add_tag: 'Add tag',
+  get_tag: 'Get tag',
   client_tag: 'Client tags',
   sourceip_tip: "Prefix with / for regular expressions, otherwise it's a complete match",
   disconnect: 'Close Connection',

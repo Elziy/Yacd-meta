@@ -85,6 +85,7 @@ export const data = {
   device_name: '设备名',
   delete: '删除',
   add_tag: '添加标签',
+  get_tag: '获取标签',
   client_tag: '客户端标签',
   sourceip_tip: '/开头为正则，否则为全匹配',
   disconnect: '断开连接',

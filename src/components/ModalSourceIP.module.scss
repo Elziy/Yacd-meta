@@ -5,5 +5,14 @@
 }
 
 .iptableTipContainer {
+  padding-top: 10px;
   width: 300px;
+  font-size: xx-small;
+}
+
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 1em;
 }

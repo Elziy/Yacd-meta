@@ -31,18 +31,6 @@ const sourceMapInit = localStorage.getItem('sourceMap')
   ? JSON.parse(localStorage.getItem('sourceMap'))
   : [];
 
-// 反向解析DNS
-async function reverseDNS(ip: string) {
-  const res = await fetch('/api/dns', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ ip: ip })
-  });
-  return await res.json();
-}
-
 const paddingBottom = 20;
 
 function arrayToIdKv<T extends { id: string }>(items: T[]) {
@@ -202,7 +190,12 @@ function modifyChains(chains: string[]): string {
   return `${first} -> ${last}`;
 }
 
-function renderTableOrPlaceholder(columns: ({ accessor: string; show: boolean; Header?: undefined; sortDescFirst?: undefined; } | { Header: string; accessor: string; show?: undefined; sortDescFirst?: undefined; } | { Header: string; accessor: string; sortDescFirst: boolean; show?: undefined; })[], hiddenColumns: any, conns: FormattedConn[]) {
+function renderTableOrPlaceholder(columns: ({ accessor: string; show: boolean; Header?: undefined; sortDescFirst?: undefined; } | {
+  Header: string;
+  accessor: string;
+  show?: undefined;
+  sortDescFirst?: undefined;
+} | { Header: string; accessor: string; sortDescFirst: boolean; show?: undefined; })[], hiddenColumns: any, conns: FormattedConn[]) {
   return conns.length > 0 ? (
     <ConnectionTable data={conns} columns={columns} hiddenColumns={hiddenColumns} />
   ) : (
@@ -293,25 +286,6 @@ function Conn({ apiConfig }) {
   const getConnIpList = (conns: FormattedConn[]) => {
     let ips = Array.from(new Set(conns.map((x) => x.sourceIP)))
       .sort();
-    if (sourceMap.length === 1) {
-      console.log('sourceMap is empty');
-      ips.map((value) => {
-        reverseDNS(value).then((res) => {
-          let hostname = res.hostname || '';
-          // 如果.lan结尾的域名，去掉.lan
-          if (hostname.endsWith('.lan') || hostname.endsWith('.local') || hostname.endsWith('.com')) {
-            hostname = hostname.slice(0, -4);
-          }
-          if (res.code === 200) {
-            sourceMap.push({
-              reg: res.ipAddress,
-              name: hostname
-            });
-          }
-        });
-      });
-      localStorage.setItem('sourceMap', JSON.stringify(sourceMap));
-    }
     return [
       [ALL_SOURCE_IP, t('All')],
       ...ips.map((value) => {
@@ -321,6 +295,8 @@ function Conn({ apiConfig }) {
   };
   const connIpSet = getConnIpList(conns);
   // const ClosedConnIpSet = getConnIpList(closedConns);
+
+  const [ips, setIps] = useState([]);
 
   const [isCloseFilterModalOpen, setIsCloseFilterModalOpen] = useState(false);
   const openCloseFilterModal = useCallback(() => setIsCloseFilterModalOpen(true), []);
@@ -348,7 +324,7 @@ function Conn({ apiConfig }) {
   const read = useCallback(
     ({ connections }) => {
       if (!connections) {
-        return
+        return;
       }
       const prevConnsKv = arrayToIdKv(prevConnsRef.current);
       const now = Date.now();
@@ -392,6 +368,11 @@ function Conn({ apiConfig }) {
         name: ''
       });
     }
+    let openIps = Array.from(new Set(conns.map((x) => x.sourceIP)))
+      .sort();
+    let closedIps = Array.from(new Set(closedConns.map((x) => x.sourceIP)))
+      .sort();
+    setIps(Array.from(new Set([...openIps, ...closedIps])).sort());
     setSourceMapModal(true);
   };
   const closeModalSource = () => {
@@ -540,6 +521,7 @@ function Conn({ apiConfig }) {
           onRequestClose={closeModalSource}
           sourceMap={sourceMap}
           setSourceMap={setSourceMap}
+          ips={ips}
         />
       </Tabs>
     </div>

@@ -83,6 +83,7 @@ export const data = {
   device_name: '設備名稱',
   delete: '刪除',
   add_tag: '新增標籤',
+  get_tag: '取得標籤',
   client_tag: '客戶端標籤',
   sourceip_tip: '/開頭為正規表達式，否則為全面配對',
   disconnect: '斷開連線',

@@ -82,6 +82,7 @@ export const data = {
   device_name: 'Thẻ thiết bị',
   delete: 'Xóa',
   add_tag: 'Thêm thẻ',
+  get_tag: 'Nhận thẻ',
   client_tag: 'Thẻ khách hàng',
   sourceip_tip: 'Thêm / vào đầu để sử dụng biểu thức chính quy, nếu không sẽ là kết quả khớp chính xác(By Ohoang7)',
   disconnect: 'Đóng kết nối',

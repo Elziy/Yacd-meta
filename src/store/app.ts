@@ -4,7 +4,6 @@ import { loadState, saveState } from '~/misc/storage';
 import { debounce, trimTrailingSlash } from '~/misc/utils';
 import { fetchConfigs } from './configs';
 import { closeModal } from './modals';
-import { fetchStatistic } from '~/api/traffic';
 
 export const getClashAPIConfig = (s: State) => {
   const idx = s.app.selectedClashAPIConfigIndex;
@@ -20,8 +19,8 @@ export const getProxySortBy = (s: State) => s.app.proxySortBy;
 export const getHideUnavailableProxies = (s: State) => s.app.hideUnavailableProxies;
 export const getAutoCloseOldConns = (s: State) => s.app.autoCloseOldConns;
 export const getLogStreamingPaused = (s: State) => s.app.logStreamingPaused;
-
 export const getMinTraffic = (s: State) => s.app.minTraffic;
+export const getUserIps = (s: State) => s.app.userIps;
 
 const saveStateDebounced = debounce(saveState, 600);
 
@@ -155,7 +154,7 @@ export function updateCollapsibleIsOpen(prefix: string, name: string, v: boolean
 const defaultClashAPIConfig = {
   baseURL: document.getElementById('app')?.getAttribute('data-base-url') ?? 'http://127.0.0.1:9090',
   secret: '',
-  addedAt: 0,
+  addedAt: 0
 };
 // type Theme = 'light' | 'dark';
 const defaultState: StateApp = {
@@ -174,7 +173,8 @@ const defaultState: StateApp = {
   autoCloseOldConns: false,
   logStreamingPaused: false,
   // min traffic to show in the chart, unit is MB
-  minTraffic: 10
+  minTraffic: 10,
+  userIps: null
 };
 
 function parseConfigQueryString() {
