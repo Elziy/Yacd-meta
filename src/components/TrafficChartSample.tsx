@@ -7,6 +7,11 @@ const { useMemo } = React;
 
 const extraChartOptions: import('chart.js').ChartOptions<'line'> = {
   maintainAspectRatio: true,
+  elements: {
+    point: {
+      hitRadius: 0,
+    }
+  },
   plugins: {
     legend: { display: false },
   },
