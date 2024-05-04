@@ -524,10 +524,8 @@ function ConfigImpl({
 
         <div>
           <div className={s0.label}>
-            {t('current_backend')}
-            <p>{getBackendContent(version) + apiConfig?.baseURL}</p>
+            <p>{t('current_backend') + ' : ' + getBackendContent(version) + apiConfig?.baseURL}</p>
           </div>
-          <div className={s0.label}>Action</div>
           <Button
             start={<LogOut size={16} />}
             label={t('switch_backend')}
