@@ -3,7 +3,8 @@ import React from 'react';
 import s0 from './ErrorBoundaryFallback.module.scss';
 import SvgGithub from './SvgGithub';
 import SvgYacd from './SvgYacd';
-const yacdRepoIssueUrl = 'https://github.com/metacubex/yacd';
+
+const yacdRepoIssueUrl = 'https://github.com/Elziy/Yacd-meta';
 
 type Props = {
   message?: string;
@@ -20,8 +21,8 @@ function ErrorBoundaryFallback({ message, detail }: Props) {
       {detail ? <p>{detail}</p> : null}
       <p>
         <a className={s0.link} href={yacdRepoIssueUrl}>
-          <SvgGithub width={16} height={16} />
-          metacubex/yacd
+          <SvgGithub width={20} height={20} />
+          <span>Elziy/Yacd-meta</span>
         </a>
       </p>
     </div>

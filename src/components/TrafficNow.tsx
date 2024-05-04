@@ -11,14 +11,14 @@ import s0 from './TrafficNow.module.scss';
 const { useState, useEffect, useCallback } = React;
 
 const mapState = (s) => ({
-  apiConfig: getClashAPIConfig(s),
+  apiConfig: getClashAPIConfig(s)
 });
 export default connect(mapState)(TrafficNow);
 
 function TrafficNow({ apiConfig }) {
   const { t } = useTranslation();
   const { upStr, downStr } = useSpeed(apiConfig);
-  const { upTotal, dlTotal, connNumber, mUsage } = useConnection(apiConfig);
+  const { upTotal, dlTotal, connNumber, mUsage, proxyUpTotal, proxyDlTotal } = useConnection(apiConfig);
   return (
     <div className={s0.TrafficNow}>
       <div className={s0.sec}>
@@ -38,6 +38,14 @@ function TrafficNow({ apiConfig }) {
         <div>{dlTotal}</div>
       </div>
       <div className={s0.sec}>
+        <div>{t('Proxy Upload Total')}</div>
+        <div>{proxyUpTotal}</div>
+      </div>
+      <div className={s0.sec}>
+        <div>{t('Proxy Download Total')}</div>
+        <div>{proxyDlTotal}</div>
+      </div>
+      <div className={s0.sec}>
         <div>{t('Active Connections')}</div>
         <div>{connNumber}</div>
       </div>
@@ -55,7 +63,7 @@ function useSpeed(apiConfig) {
     return fetchData(apiConfig).subscribe((o) =>
       setSpeed({
         upStr: prettyBytes(o.up) + '/s',
-        downStr: prettyBytes(o.down) + '/s',
+        downStr: prettyBytes(o.down) + '/s'
       })
     );
   }, [apiConfig]);
@@ -66,16 +74,28 @@ function useConnection(apiConfig) {
   const [state, setState] = useState({
     upTotal: '0 B',
     dlTotal: '0 B',
+    directUpTotal: '0 B',
+    directDlTotal: '0 B',
+    proxyUpTotal: '0 B',
+    proxyDlTotal: '0 B',
     connNumber: 0,
-    mUsage: '0 B',
+    mUsage: '0 B'
   });
   const read = useCallback(
-    ({ downloadTotal, uploadTotal, connections, memory }) => {
+    ({
+       downloadTotal, uploadTotal,
+       directUploadTotal, directDownloadTotal, proxyUploadTotal, proxyDownloadTotal,
+       connections, memory
+     }) => {
       setState({
         upTotal: prettyBytes(uploadTotal),
         dlTotal: prettyBytes(downloadTotal),
+        directUpTotal: prettyBytes(directUploadTotal),
+        directDlTotal: prettyBytes(directDownloadTotal),
+        proxyUpTotal: prettyBytes(proxyUploadTotal),
+        proxyDlTotal: prettyBytes(proxyDownloadTotal),
         connNumber: connections.length,
-        mUsage: prettyBytes(memory),
+        mUsage: prettyBytes(memory)
       });
     },
     [setState]

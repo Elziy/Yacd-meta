@@ -3,13 +3,15 @@ import { useTranslation } from 'react-i18next';
 
 import ContentHeader from './ContentHeader';
 import s0 from './Home.module.scss';
-import Loading from './Loading';
-import MemoryChart from './MemoryChart';
-import TrafficChart from './TrafficChart';
+import Loading from './Loading2';
+import TrafficChart from './charts/TrafficChart';
 import TrafficNow from './TrafficNow';
+import MemoryChart from '~/components/charts/MemoryChart';
+import StatisticChart from '~/components/charts/StatisticChart';
 
 export default function Home() {
   const { t } = useTranslation();
+
   return (
     <div>
       <ContentHeader title={t('Overview')} />
@@ -18,8 +20,9 @@ export default function Home() {
           <TrafficNow />
         </div>
         <div className={s0.chart}>
-          <Suspense fallback={<Loading height="200px" />}>
+          <Suspense fallback={<Loading />}>
             <TrafficChart />
+            <StatisticChart />
             <MemoryChart />
           </Suspense>
         </div>

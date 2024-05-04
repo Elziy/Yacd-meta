@@ -8,7 +8,6 @@ import { About } from '~/components/about/About';
 import APIDiscovery from '~/components/APIDiscovery';
 import ErrorBoundary from '~/components/ErrorBoundary';
 import Home from '~/components/Home';
-import Loading from '~/components/Loading';
 import Loading2 from '~/components/Loading2';
 import { Head } from '~/components/shared/Head';
 import SideBar from '~/components/SideBar';
@@ -61,7 +60,7 @@ const App = () => (
         <QueryClientProvider client={queryClient}>
           <div className={styles.app}>
             <Head />
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading2 />}>
               <Router>
                 <Routes>
                   <Route path="/backend" element={<APIConfig />} />

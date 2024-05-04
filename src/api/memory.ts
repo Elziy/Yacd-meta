@@ -33,7 +33,7 @@ const memory = {
       const idx = this.subscribers.indexOf(listener);
       this.subscribers.splice(idx, 1);
     };
-  },
+  }
 };
 
 let fetched = false;
@@ -76,19 +76,20 @@ function pump(reader: ReadableStreamDefaultReader) {
 // similar to ws readyState but not the same
 // https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
 let wsState: number;
+
 function fetchData(apiConfig: ClashAPIConfig) {
   if (fetched || wsState === 1) return memory;
   wsState = 1;
-  const url = buildWebSocketURL(apiConfig, endpoint);
+  const url = buildWebSocketURL(apiConfig, endpoint, 3000);
   const ws = new WebSocket(url);
-  ws.addEventListener('error', function (_ev) {
+  ws.addEventListener('error', function(_ev) {
     wsState = 3;
   });
-  ws.addEventListener('close', function (_ev) {
+  ws.addEventListener('close', function(_ev) {
     wsState = 3;
     fetchDataWithFetch(apiConfig);
   });
-  ws.addEventListener('message', function (event) {
+  ws.addEventListener('message', function(event) {
     parseAndAppend(event.data);
   });
   return memory;

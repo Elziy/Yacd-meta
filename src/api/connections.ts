@@ -87,7 +87,7 @@ export function fetchData(
       });
   }
   wsState = 1;
-  const url = buildWebSocketURL(apiConfig, endpoint);
+  const url = buildWebSocketURL(apiConfig, endpoint, 2000);
   const ws = new WebSocket(url);
   ws.addEventListener('error', () => {
     wsState = 3;

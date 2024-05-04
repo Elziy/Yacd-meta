@@ -9,7 +9,7 @@ import Select from '~/components/shared/Select';
 import { ClashGeneralConfig, DispatchFn, State } from '~/store/types';
 import { ClashAPIConfig } from '~/types';
 
-import { getClashAPIConfig, getLatencyTestUrl, getSelectedChartStyleIndex } from '~/store/app';
+import { getClashAPIConfig, getLatencyTestUrl, getMinTraffic, getSelectedChartStyleIndex } from '~/store/app';
 import {
   fetchConfigs,
   flushFakeIPPool,
@@ -81,6 +81,7 @@ const mapState = (s: State) => ({
 const mapState2 = (s: State) => ({
   selectedChartStyleIndex: getSelectedChartStyleIndex(s),
   latencyTestUrl: getLatencyTestUrl(s),
+  minTraffic: getMinTraffic(s),
   apiConfig: getClashAPIConfig(s)
 });
 
@@ -99,6 +100,7 @@ type ConfigImplProps = {
   configs: ClashGeneralConfig;
   selectedChartStyleIndex: number;
   latencyTestUrl: string;
+  minTraffic: number;
   apiConfig: ClashAPIConfig;
 };
 
@@ -117,6 +119,7 @@ function ConfigImpl({
                       configs,
                       selectedChartStyleIndex,
                       latencyTestUrl,
+                      minTraffic,
                       apiConfig
                     }: ConfigImplProps) {
   const { t, i18n } = useTranslation();
@@ -210,6 +213,12 @@ function ConfigImpl({
           updateAppConfig(name, value);
           break;
         }
+        case 'minTraffic': {
+          const num = parseInt(value, 10);
+          if (num < 0) return;
+          updateAppConfig(name, num);
+          break;
+        }
         case 'device name':
         case 'interface name':
           break;
@@ -263,7 +272,7 @@ function ConfigImpl({
                   name={f.key}
                   value={configState[f.key]}
                   onChange={({ target: { name, value } }) => handleInputOnChange({ name, value })}
-                  onBlur={handleInputOnBlur}
+                  // onBlur={handleInputOnBlur}
                 />
               </div>
             ) : null
@@ -481,6 +490,7 @@ function ConfigImpl({
             onBlur={handleInputOnBlur}
           />
         </div>
+
         <div>
           <div className={s0.label}>{t('lang')}</div>
           <div>
@@ -499,6 +509,16 @@ function ConfigImpl({
             optionPropsList={propsList}
             selectedIndex={selectedChartStyleIndex}
             onChange={selectChartStyleIndex}
+          />
+        </div>
+
+        <div>
+          <div className={s0.label}>{t('min_traffic')}</div>
+          <Input
+            name="minTraffic"
+            type="number"
+            value={minTraffic}
+            onChange={handleInputOnBlur}
           />
         </div>
 

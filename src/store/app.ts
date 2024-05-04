@@ -4,6 +4,7 @@ import { loadState, saveState } from '~/misc/storage';
 import { debounce, trimTrailingSlash } from '~/misc/utils';
 import { fetchConfigs } from './configs';
 import { closeModal } from './modals';
+import { fetchStatistic } from '~/api/traffic';
 
 export const getClashAPIConfig = (s: State) => {
   const idx = s.app.selectedClashAPIConfigIndex;
@@ -19,6 +20,8 @@ export const getProxySortBy = (s: State) => s.app.proxySortBy;
 export const getHideUnavailableProxies = (s: State) => s.app.hideUnavailableProxies;
 export const getAutoCloseOldConns = (s: State) => s.app.autoCloseOldConns;
 export const getLogStreamingPaused = (s: State) => s.app.logStreamingPaused;
+
+export const getMinTraffic = (s: State) => s.app.minTraffic;
 
 const saveStateDebounced = debounce(saveState, 600);
 
@@ -170,6 +173,8 @@ const defaultState: StateApp = {
   hideUnavailableProxies: false,
   autoCloseOldConns: false,
   logStreamingPaused: false,
+  // min traffic to show in the chart, unit is MB
+  minTraffic: 10
 };
 
 function parseConfigQueryString() {

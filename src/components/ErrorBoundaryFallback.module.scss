@@ -24,6 +24,8 @@
 .link {
   display: inline-flex;
   align-items: center;
+  font-size: large;
+  text-decoration: none;
 
   color: var(--color-text-secondary);
   &:hover,

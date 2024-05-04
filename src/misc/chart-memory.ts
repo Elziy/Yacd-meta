@@ -10,9 +10,37 @@ export const commonDataSetProps = { borderWidth: 1, pointRadius: 0, tension: 0.2
 
 export const memoryChartOptions: import('chart.js').ChartOptions<'line'> = {
   responsive: true,
-  maintainAspectRatio: true,
+  maintainAspectRatio: false,
+  elements: {
+    point: {
+      hitRadius: 20,
+      hoverRadius: 10
+    }
+  },
   plugins: {
-    legend: { labels: { boxWidth: 20 } }
+    legend: {
+      labels:
+        {
+          boxHeight: 10,
+          boxWidth: 30,
+          font: {
+            size: 16
+          }
+        }
+    },
+    tooltip: {
+      titleFont: {
+        size: 0
+      },
+      bodyFont: {
+        size: 16
+      },
+      callbacks: {
+        label(context) {
+          return ' ' + prettyBytes(context.parsed.y);
+        }
+      }
+    }
   },
   scales: {
     x: { display: false, type: 'category' },
@@ -28,7 +56,10 @@ export const memoryChartOptions: import('chart.js').ChartOptions<'line'> = {
         dash: [3, 6]
       },
       ticks: {
-        maxTicksLimit: 3,
+        maxTicksLimit: 5,
+        font: {
+          size: 16
+        },
         callback(value: number) {
           return prettyBytes(value);
         }

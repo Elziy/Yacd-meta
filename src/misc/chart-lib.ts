@@ -1,4 +1,5 @@
 import {
+  ArcElement,
   CategoryScale,
   Chart,
   Filler,
@@ -6,7 +7,12 @@ import {
   LinearScale,
   LineController,
   LineElement,
+  PieController,
+  BarController,
+  BarElement,
   PointElement,
+  Tooltip,
+  Title
 } from 'chart.js';
 
 // see https://www.chartjs.org/docs/latest/getting-started/integration.html#bundlers-webpack-rollup-etc
@@ -14,6 +20,12 @@ Chart.register(
   LineElement,
   PointElement,
   LineController,
+  PieController,
+  BarController,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Title,
   CategoryScale,
   LinearScale,
   Filler,

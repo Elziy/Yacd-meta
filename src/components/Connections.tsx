@@ -110,7 +110,7 @@ function filterConns(conns: FormattedConn[], keyword: string, sourceIp: string) 
   return result;
 }
 
-function getNameFromSource(
+export function getNameFromSource(
   source: string,
   sourceMap: { reg: string; name: string }[],
   defaultVal?: string
@@ -381,7 +381,7 @@ function Conn({ apiConfig }) {
     return connAPI.fetchData(apiConfig, read, () => {
       setTimeout(() => {
         setReConnectCount((prev) => prev + 1);
-      }, 1500);
+      }, 1000);
     });
   }, [apiConfig, read, reConnectCount, setReConnectCount]);
 

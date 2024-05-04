@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Zap } from 'react-feather';
 
-import Loading from '~/components/Loading';
+import Loading from '~/components/Loading2';
 
 import Button from './Button';
 import Input from './Input';

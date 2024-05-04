@@ -14,7 +14,27 @@ export type StateApp = {
   hideUnavailableProxies: boolean;
   autoCloseOldConns: boolean;
   logStreamingPaused: boolean;
+  minTraffic: number
 };
+
+export type Statistic = {
+  userStatistic?: UserStatistic[],
+  ruleStatistic?: RuleStatistic[]
+};
+
+export type UserStatistic = {
+  user: string,
+  directUpload: number,
+  directDownload: number,
+  proxyUpload: number,
+  proxyDownload: number
+}
+
+export type RuleStatistic = {
+  rule: string,
+  upload: number,
+  download: number
+}
 
 export type ClashTunConfig = {
   enable: boolean;
@@ -125,7 +145,11 @@ export type StateModals = {
   apiConfig: boolean;
 };
 
-//////
+////// store.statistic
+
+export type StateStatistic = {
+  statistic: Statistic;
+};
 
 export type State = {
   app: StateApp;
@@ -133,13 +157,17 @@ export type State = {
   proxies: StateProxies;
   logs: StateLogs;
   modals: StateModals;
+  statistic: StateStatistic;
 };
 
 export type GetStateFn = () => State;
+
 export interface DispatchFn {
   (msg: string, change: (s: State) => void): void;
+
   (action: (dispatch: DispatchFn, getState: GetStateFn) => Promise<void>): ReturnType<
     typeof action
   >;
+
   (action: (dispatch: DispatchFn, getState: GetStateFn) => void): ReturnType<typeof action>;
 }
