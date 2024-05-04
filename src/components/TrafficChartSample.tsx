@@ -6,6 +6,7 @@ import { chartJSResource, chartStyles, commonDataSetProps } from '../misc/chart'
 const { useMemo } = React;
 
 const extraChartOptions: import('chart.js').ChartOptions<'line'> = {
+  maintainAspectRatio: true,
   plugins: {
     legend: { display: false },
   },
