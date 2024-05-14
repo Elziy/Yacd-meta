@@ -57,6 +57,7 @@ export const data = {
   upgrade_core: 'Nâng cấp lõi Clash',
   update_geo_databases_file: 'Cập nhật tệp cơ sở dữ liệu GEO',
   flush_fake_ip_pool: 'Xóa bộ nhớ đệm fake-ip',
+  flush_traffic_statistic: 'Xóa thống kê lưu lượng',
   enable_tun_device: 'Bật thiết bị TUN',
   allow_lan: 'Cho phép LAN',
   tls_sniffing: 'Bộ giám sát gói tin Sniffer',
@@ -86,5 +87,5 @@ export const data = {
   client_tag: 'Thẻ khách hàng',
   sourceip_tip: 'Thêm / vào đầu để sử dụng biểu thức chính quy, nếu không sẽ là kết quả khớp chính xác(By Ohoang7)',
   disconnect: 'Đóng kết nối',
-  internel: 'Kết nối nội bộ',
+  internel: 'Kết nối nội bộ'
 };

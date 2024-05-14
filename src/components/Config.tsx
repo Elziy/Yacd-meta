@@ -12,7 +12,7 @@ import { ClashAPIConfig } from '~/types';
 import { getClashAPIConfig, getLatencyTestUrl, getMinTraffic, getSelectedChartStyleIndex } from '~/store/app';
 import {
   fetchConfigs,
-  flushFakeIPPool,
+  flushFakeIPPool, flushTrafficStatistic,
   getConfigs,
   reloadConfigFile,
   restartCore,
@@ -248,6 +248,10 @@ function ConfigImpl({
     dispatch(flushFakeIPPool(apiConfig));
   }, [apiConfig, dispatch]);
 
+  const handleFlushTrafficStatistic = useCallback(() => {
+    dispatch(flushTrafficStatistic(apiConfig));
+  }, [apiConfig, dispatch]);
+
   const { data: version } = useQuery(['/version', apiConfig], () =>
     fetchVersion('/version', apiConfig)
   );
@@ -255,6 +259,7 @@ function ConfigImpl({
   const [reloadConfigFileModel, setReloadConfigFileModel] = useState(false);
   const [updateGeoDatabasesFileModel, setUpdateGeoDatabasesFileModel] = useState(false);
   const [flushFakeIPPoolModel, setFlushFakeIPPoolModel] = useState(false);
+  const [flushTrafficStatisticModel, setFlushTrafficStatisticModel] = useState(false);
   const [restartCoreModel, setRestartCoreModel] = useState(false);
   const [upgradeCoreModel, setUpgradeCoreModel] = useState(false);
 
@@ -427,6 +432,23 @@ function ConfigImpl({
                   setFlushFakeIPPoolModel(false);
                 }}
                 onRequestClose={() => setFlushFakeIPPoolModel(false)}
+              />
+            </div>
+            <div>
+              <div className={s0.label}>流量统计</div>
+              <Button
+                start={<Trash2 size={16} />}
+                label={t('flush_traffic_statistic')}
+                onClick={() => setFlushTrafficStatisticModel(true)}
+              />
+              <ModalCloseAllConnections
+                confirm={'flush_traffic_statistic'}
+                isOpen={flushTrafficStatisticModel}
+                primaryButtonOnTap={() => {
+                  handleFlushTrafficStatistic();
+                  setFlushTrafficStatisticModel(false);
+                }}
+                onRequestClose={() => setFlushTrafficStatisticModel(false)}
               />
             </div>
             {version.meta && !version.premium && (

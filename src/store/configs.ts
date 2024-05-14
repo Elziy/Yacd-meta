@@ -212,6 +212,31 @@ export function flushFakeIPPool(apiConfig: ClashAPIConfig) {
   };
 }
 
+export function flushTrafficStatistic(apiConfig: ClashAPIConfig) {
+  return async (dispatch: DispatchFn) => {
+    configsAPI
+      .flushTrafficStatistic(apiConfig)
+      .then(
+        (res) => {
+          if (res.ok === false) {
+            // eslint-disable-next-line no-console
+            console.log('Error flush traffic statistic', res.statusText);
+          } else {
+            notifySuccess('流量统计已清空')
+          }
+        },
+        (err) => {
+          // eslint-disable-next-line no-console
+          console.log('Error flush traffic statistic', err);
+          throw err;
+        }
+      )
+      .then(() => {
+        dispatch(fetchConfigs(apiConfig));
+      });
+  };
+}
+
 export const initialState: StateConfigs = {
   configs: {
     port: 7890,

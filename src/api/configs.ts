@@ -5,6 +5,7 @@ import { ClashAPIConfig } from '~/types';
 const endpoint = '/configs';
 const updateGeoDatabasesFileEndpoint = '/configs/geo';
 const flushFakeIPPoolEndpoint = '/cache/fakeip/flush';
+const flushTrafficStatisticEndpoint = '/resetStatistic';
 const restartCoreEndpoint = '/restart';
 const upgradeCoreEndpoint = '/upgrade';
 
@@ -18,6 +19,7 @@ export async function fetchConfigs(apiConfig: ClashAPIConfig) {
 // { Path: string }
 
 type ClashConfigPartial = TunPartial<ClashGeneralConfig>;
+
 function configsPatchWorkaround(o: ClashConfigPartial) {
   // backward compatibility for older clash  using `socket-port`
   if ('socks-port' in o) {
@@ -59,4 +61,9 @@ export async function upgradeCore(apiConfig: ClashAPIConfig) {
 export async function flushFakeIPPool(apiConfig: ClashAPIConfig) {
   const { url, init } = getURLAndInit(apiConfig);
   return await fetch(url + flushFakeIPPoolEndpoint, { ...init, method: 'POST' });
+}
+
+export async function flushTrafficStatistic(apiConfig: ClashAPIConfig) {
+  const { url, init } = getURLAndInit(apiConfig);
+  return await fetch(url + flushTrafficStatisticEndpoint, { ...init, method: 'DELETE' });
 }
