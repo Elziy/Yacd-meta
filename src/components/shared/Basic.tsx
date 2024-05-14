@@ -5,6 +5,10 @@ import { HiArrowNarrowRight } from 'react-icons/hi';
 import s from './Basic.module.scss';
 
 const getBase64 = async (url: RequestInfo | URL) => {
+  const headers = new Headers();
+  headers.append('Control-Allow-Origin', '*');
+  headers.append('Access-Control-Allow-Credentials', 'true');
+  headers.append('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   const res = await fetch(url);
   const blob = await res.blob();
   const reader = new FileReader();
@@ -23,14 +27,16 @@ export function SectionNameType({ name, type, now, nowProxy, icon }) {
   else if (type === 'HTTP' || type === 'HTTPS')
     src = 'yacd.png';
   else if (icon) {
-    let base64 = localStorage.getItem(icon);
+    let cacheObj = JSON.parse(localStorage.getItem('iconCache') || '{}');
+    let base64 = cacheObj[icon];
     if (base64) {
       src = base64;
     } else {
       getBase64(icon).then((res) => {
         src = res as string;
         if (src) {
-          localStorage.setItem(icon, src);
+          cacheObj = JSON.parse(localStorage.getItem('iconCache') || '{}');
+          localStorage.setItem('iconCache', JSON.stringify({ ...cacheObj, [icon]: src }));
         }
       });
     }
