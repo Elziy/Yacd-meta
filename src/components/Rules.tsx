@@ -1,6 +1,6 @@
 import './Connections.css';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { areEqual, VariableSizeList } from 'react-window';
 
@@ -13,9 +13,10 @@ import { ClashAPIConfig } from '~/types';
 
 import useRemainingViewPortHeight from '../hooks/useRemainingViewPortHeight';
 import { FcAddDatabase, FcDataBackup, FcDataRecovery } from 'react-icons/fc';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { getClashAPIConfig } from '~/store/app';
 import ContentHeader from './ContentHeader';
-import Rule from './Rule';
+import Rule, { editRule } from './Rule';
 import s from './Rules.module.scss';
 import { connect } from './StateProvider';
 import { fetchProxies, getProxyGroupNames } from '~/store/proxies';
@@ -26,6 +27,7 @@ import ModalAddRuleSet from '~/components/ModalAddRuleSet';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import Button from '~/components/Button';
 import { RotateIcon } from '~/components/shared/RotateIcon';
+import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 
 
 const { memo } = React;
@@ -58,7 +60,7 @@ function getItemSizeFactory({ provider }) {
     // }
     // // rule
     // return 70;
-    return 70
+    return 70;
   };
 }
 
@@ -98,9 +100,24 @@ const RuleRow = ({ index, style, data }) => {
   );
 };
 
+const DraggableRuleRow = ({ index, style, data }) => {
+  const { rules, groups } = data;
+  const r = rules[index];
+  return (
+    <Draggable draggableId={`rule-${index}`} index={index} key={index}>
+      {(provided) => (
+        <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
+             style={{ ...style, ...provided.draggableProps.style }}>
+          < Rule {...r} groups={groups} />
+        </div>
+      )}
+    </Draggable>
+  );
+};
+
 // 只有规则提供者的行
 const RuleProviderRow = ({ index, style, data }) => {
-  const { rules, provider, apiConfig, groups } = data;
+  const { provider, apiConfig } = data;
   const name = provider.names[index];
   const item = provider.byName[name];
   return (
@@ -116,18 +133,13 @@ const mapState = (s: State) => ({
 });
 
 export default connect(mapState)(Rules);
-
-type RulesProps = {
-  apiConfig: ClashAPIConfig;
-};
-
-let tag = 0;
+let tag = 0
 
 function Rules({ dispatch, apiConfig, groups }) {
   const [refRulesContainer, containerHeight] = useRemainingViewPortHeight();
 
   const { rules, provider } = useRuleAndProvider(apiConfig);
-  if (tag === 0) {
+  if (groups.length <=0 && tag === 0) {
     dispatch(fetchProxies(apiConfig));
     tag = 1;
   }
@@ -157,6 +169,37 @@ function Rules({ dispatch, apiConfig, groups }) {
   }, [apiConfig, dispatch]);
 
   const [update, isLoading] = useUpdateAllRuleProviderItems(apiConfig);
+
+  const onDragEnd = (result: { destination: { index: number; }; source: { index: number; }; }) => {
+    if (!result.destination || result.source.index === result.destination.index) {
+      return;
+    }
+
+    if (result.source.index === 0 || result.destination.index === 0
+      || result.source.index === 1 || result.destination.index === 1
+      || result.source.index === 2 || result.destination.index === 2) {
+      notifyWarning('所选规则禁止拖动');
+      return;
+    }
+    const [removed] = rules.splice(result.source.index, 1);
+    rules.splice(result.destination.index, 0, removed);
+
+    const body = {
+      option: 'exchange',
+      index1: result.source.index,
+      index2: result.destination.index
+    };
+
+    editRule(JSON.stringify(body)).then((res) => {
+      if (res.code === 200) {
+        notifySuccess(res.message);
+      } else {
+        notifyError(res.message);
+      }
+    }).catch(() => {
+      notifyError('网络错误');
+    });
+  };
 
   return (
     <div>
@@ -190,17 +233,29 @@ function Rules({ dispatch, apiConfig, groups }) {
         <div>
           <div>
             <TabPanel>
-              <div ref={refRulesContainer} style={{ paddingBottom }}>
-                <VariableSizeList
-                  height={containerHeight - paddingBottom}
-                  width="100%"
-                  itemCount={rules.length}
-                  itemSize={getItemSize}
-                  itemData={{ rules, provider, apiConfig, groups }}
-                  itemKey={itemKey}
-                >
-                  {RuleRow}
-                </VariableSizeList>
+              <div ref={refRulesContainer} style={{ paddingBottom, userSelect: 'none' }}>
+                <DragDropContext onDragEnd={onDragEnd}>
+                  <Droppable droppableId="droppable-rules" mode="virtual" renderClone={(provided, snapshot, rubric) => {
+                    return (
+                      <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                        < Rule {...rules[rubric.source.index]} groups={groups} />
+                      </div>
+                    );
+                  }}>
+                    {(provided: { innerRef: React.Ref<any>; }) => (
+                      <VariableSizeList
+                        height={containerHeight - paddingBottom}
+                        width="100%"
+                        itemCount={rules.length}
+                        itemSize={getItemSize}
+                        outerRef={provided.innerRef}
+                        itemData={{ rules, groups }}
+                      >
+                        {DraggableRuleRow}
+                      </VariableSizeList>
+                    )}
+                  </Droppable>
+                </DragDropContext>
               </div>
             </TabPanel>
             <TabPanel>
@@ -210,7 +265,7 @@ function Rules({ dispatch, apiConfig, groups }) {
                   width="100%"
                   itemCount={provider.names.length}
                   itemSize={getItemSize}
-                  itemData={{ rules, provider, apiConfig, groups }}
+                  itemData={{ provider, apiConfig }}
                   itemKey={itemKey}
                 >
                   {RuleProviderRow}

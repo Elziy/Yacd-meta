@@ -55,7 +55,7 @@ export default function ModalManageConnectionColumns({
     <BaseModal isOpen={isOpen} onRequestClose={onRequestClose}>
       <div>
         <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="droppable-modal">
+          <Droppable droppableId="droppable-columns">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {columns

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import s0 from './Rule.module.scss';
 import Button from '~/components/Button';
@@ -24,6 +24,28 @@ function getStyleFor({ proxy }) {
   return { color, paddingLeft: '1em' };
 }
 
+const deleteRule = async (body: BodyInit) => {
+  const res = await fetch('/api/delete_rule', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body
+  });
+  return await res.json();
+};
+
+export const editRule = async (body: BodyInit) => {
+  const res = await fetch('/api/edit_rule', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body
+  });
+  return await res.json();
+};
+
 type Props = {
   id?: number;
   type?: string;
@@ -41,7 +63,9 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
   const [delete_modal, setDeleteModal] = useState(false);
   const [edit_modal, setEditModal] = useState(false);
   const [policy, setPolicy] = useState(proxy);
-
+  useEffect(() => {
+    setPolicy(proxy);
+  }, [proxy]);
 
   const policies = groups.map((group: any) => [group, group]);
   policies.push(['DIRECT', '直连']);
@@ -51,28 +75,6 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
   if (type === 'SubRules') {
     policies.push([policy, policy]);
   }
-
-  const deleteRule = async (body: BodyInit) => {
-    const res = await fetch('/api/delete_rule', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body
-    });
-    return await res.json();
-  };
-
-  const editRule = async (body: BodyInit) => {
-    const res = await fetch('/api/edit_rule', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body
-    });
-    return await res.json();
-  };
 
   const delete_rule = (id: number) => {
     const body = {
@@ -90,8 +92,9 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
     });
   };
 
-  const eidt_rule = (id: number) => {
+  const add_rule = (id: number) => {
     const body = {
+      option: 'add',
       policy: policy,
       index: id
     };
@@ -187,7 +190,7 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
       <ModalCloseAllConnections
         confirm={'edit_rule'}
         isOpen={edit_modal}
-        primaryButtonOnTap={() => eidt_rule(id)}
+        primaryButtonOnTap={() => add_rule(id)}
         onRequestClose={() => {
           setPolicy(proxy);
           setEditModal(false);
