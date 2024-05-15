@@ -47,7 +47,7 @@ function AboutImpl(props: Props) {
             version.meta && version.premium
               ? 'https://github.com/SagerNet/sing-box'
               : version.meta
-              ? 'https://github.com/MetaCubeX/Clash.Meta'
+              ? 'https://github.com/Elziy/mihomo'
               : 'https://github.com/Dreamacro/clash'
           }
         />
