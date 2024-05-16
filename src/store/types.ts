@@ -15,7 +15,7 @@ export type StateApp = {
   autoCloseOldConns: boolean;
   logStreamingPaused: boolean;
   minTraffic: number
-  userIps: string[]
+  userIpFilter: string[]
 };
 
 export type Statistic = {

@@ -9,7 +9,7 @@ import Select from '~/components/shared/Select';
 import { ClashGeneralConfig, DispatchFn, State } from '~/store/types';
 import { ClashAPIConfig } from '~/types';
 
-import { getClashAPIConfig, getLatencyTestUrl, getMinTraffic, getSelectedChartStyleIndex } from '~/store/app';
+import { getClashAPIConfig, getLatencyTestUrl, getMinTraffic, getSelectedChartStyleIndex, getUserIpFilter } from '~/store/app';
 import {
   fetchConfigs,
   flushFakeIPPool, flushTrafficStatistic,
@@ -31,6 +31,7 @@ import Switch from '../shared/SwitchThemed';
 import TrafficChartSample from './TrafficChartSample';
 import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
 import { notifyWarning } from '~/misc/message';
+import ModalAddUserIpFilter from '~/components/configs/ModalAddUserIpFilter';
 
 const { useEffect, useState, useCallback, useRef } = React;
 
@@ -82,6 +83,7 @@ const mapState2 = (s: State) => ({
   selectedChartStyleIndex: getSelectedChartStyleIndex(s),
   latencyTestUrl: getLatencyTestUrl(s),
   minTraffic: getMinTraffic(s),
+  userIpFilter: getUserIpFilter(s),
   apiConfig: getClashAPIConfig(s)
 });
 
@@ -101,6 +103,7 @@ type ConfigImplProps = {
   selectedChartStyleIndex: number;
   latencyTestUrl: string;
   minTraffic: number;
+  userIpFilter: string[];
   apiConfig: ClashAPIConfig;
 };
 
@@ -120,6 +123,7 @@ function ConfigImpl({
                       selectedChartStyleIndex,
                       latencyTestUrl,
                       minTraffic,
+                      userIpFilter,
                       apiConfig
                     }: ConfigImplProps) {
   const { t, i18n } = useTranslation();
@@ -252,6 +256,12 @@ function ConfigImpl({
     dispatch(flushTrafficStatistic(apiConfig));
   }, [apiConfig, dispatch]);
 
+  const handleUserIpFilter = () => {
+    userIpFilter = userIpFilter.filter((i) => i);
+    updateAppConfig('userIpFilter', userIpFilter);
+    setUserIpFilterModel(false);
+  };
+
   const { data: version } = useQuery(['/version', apiConfig], () =>
     fetchVersion('/version', apiConfig)
   );
@@ -260,6 +270,7 @@ function ConfigImpl({
   const [updateGeoDatabasesFileModel, setUpdateGeoDatabasesFileModel] = useState(false);
   const [flushFakeIPPoolModel, setFlushFakeIPPoolModel] = useState(false);
   const [flushTrafficStatisticModel, setFlushTrafficStatisticModel] = useState(false);
+  const [userIpFilterModel, setUserIpFilterModel] = useState(false);
   const [restartCoreModel, setRestartCoreModel] = useState(false);
   const [upgradeCoreModel, setUpgradeCoreModel] = useState(false);
 
@@ -451,6 +462,21 @@ function ConfigImpl({
                 onRequestClose={() => setFlushTrafficStatisticModel(false)}
               />
             </div>
+            <div>
+              <div className={s0.label}>用户统计IP过滤</div>
+              <Button
+                start={<Trash2 size={16} />}
+                label={t('flush_traffic_statistic')}
+                onClick={() => setUserIpFilterModel(true)}
+              />
+              <ModalAddUserIpFilter
+                isOpen={userIpFilterModel}
+                onRequestClose={handleUserIpFilter}
+                userIpFilter={userIpFilter}
+              />
+            </div>
+
+
             {version.meta && !version.premium && (
               <div>
                 <div className={s0.label}>重启核心</div>

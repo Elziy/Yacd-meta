@@ -20,7 +20,7 @@ export const getHideUnavailableProxies = (s: State) => s.app.hideUnavailableProx
 export const getAutoCloseOldConns = (s: State) => s.app.autoCloseOldConns;
 export const getLogStreamingPaused = (s: State) => s.app.logStreamingPaused;
 export const getMinTraffic = (s: State) => s.app.minTraffic;
-export const getUserIps = (s: State) => s.app.userIps;
+export const getUserIpFilter = (s: State) => s.app.userIpFilter;
 
 const saveStateDebounced = debounce(saveState, 600);
 
@@ -174,7 +174,7 @@ const defaultState: StateApp = {
   logStreamingPaused: false,
   // min traffic to show in the chart, unit is MB
   minTraffic: 10,
-  userIps: null
+  userIpFilter: []
 };
 
 function parseConfigQueryString() {

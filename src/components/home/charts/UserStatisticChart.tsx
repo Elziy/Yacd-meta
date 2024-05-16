@@ -1,15 +1,17 @@
 import { State, UserStatistic } from '~/store/types';
 import { connect } from '~/components/StateProvider';
-import { getMinTraffic } from '~/store/app';
+import { getMinTraffic, getUserIpFilter } from '~/store/app';
 import React from 'react';
 import BarChart from '~/components/home/charts/BarChart';
 import { getNameFromSource } from '~/components/connections/Connections';
 
-function getUserStatistic(userStatistic: UserStatistic[], minTraffic: number) {
+function getUserStatistic(userStatistic: UserStatistic[], minTraffic: number, userIpFilter: string[]) {
   userStatistic = userStatistic.filter((item) => item.user !== 'invalid IP' &&
-    (item.directDownload + item.directUpload + item.proxyDownload + item.proxyUpload) > minTraffic * 1024 * 1024).length >= 1 ?
+    (item.directDownload + item.directUpload + item.proxyDownload + item.proxyUpload) > minTraffic * 1024 * 1024 &&
+    !userIpFilter.includes(item.user)).length >= 1 ?
     userStatistic.filter((item) => item.user !== 'invalid IP' &&
-      (item.directDownload + item.directUpload + item.proxyDownload + item.proxyUpload) > minTraffic * 1024 * 1024)
+      (item.directDownload + item.directUpload + item.proxyDownload + item.proxyUpload) > minTraffic * 1024 * 1024 &&
+      !userIpFilter.includes(item.user))
     : userStatistic;
   return userStatistic
     .sort((a, b) => b.directDownload + b.directUpload + b.proxyDownload + b.proxyUpload
@@ -67,14 +69,19 @@ function getUserDatasets(userStatistic: UserStatistic[]) {
 }
 
 const mapState = (s: State) => ({
-  minTraffic: getMinTraffic(s)
+  minTraffic: getMinTraffic(s),
+  userIpFilter: getUserIpFilter(s)
 });
 
 export default connect(mapState)(UserStatisticChart);
 
-function UserStatisticChart({ userStatistic, minTraffic }: { userStatistic: UserStatistic[]; minTraffic: number }) {
+function UserStatisticChart({ userStatistic, minTraffic, userIpFilter }: {
+  userStatistic: UserStatistic[];
+  minTraffic: number,
+  userIpFilter: string[]
+}) {
   if (!userStatistic) return null;
-  userStatistic = getUserStatistic(userStatistic, minTraffic);
+  userStatistic = getUserStatistic(userStatistic, minTraffic, userIpFilter);
   const userDatasets = getUserDatasets(userStatistic);
 
   return (
