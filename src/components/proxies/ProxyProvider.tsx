@@ -2,9 +2,9 @@ import cx from 'clsx';
 import * as React from 'react';
 import { ChevronDown, RotateCw, Zap } from 'react-feather';
 
-import Button from '~/components/Button';
-import Collapsible from '~/components/Collapsible';
-import CollapsibleSectionHeader from '~/components/CollapsibleSectionHeader';
+import Button from '~/components/shared/Button';
+import Collapsible from '~/components/shared/Collapsible';
+import CollapsibleSectionHeader from '~/components/proxies/ProxyHeader';
 import { useUpdateProviderItem } from '~/components/proxies/proxies.hooks';
 import s0 from '~/components/proxies/ProxyGroup.module.scss';
 import { connect, useStoreActions } from '~/components/StateProvider';

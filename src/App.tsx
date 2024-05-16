@@ -3,16 +3,16 @@ import { focusManager, QueryClientProvider } from 'react-query';
 import { HashRouter as Router, Route, RouteObject, Routes, useRoutes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import APIConfig from '~/components//APIConfig';
+import APIConfig from '~/components/apiConfig/APIConfig';
 import { About } from '~/components/about/About';
-import APIDiscovery from '~/components/APIDiscovery';
-import ErrorBoundary from '~/components/ErrorBoundary';
-import Home from '~/components/Home';
-import Loading2 from '~/components/Loading2';
+import APIDiscovery from '~/components/apiConfig/APIDiscovery';
+import ErrorBoundary from '~/components/error/ErrorBoundary';
+import Home from '~/components/home/Home';
+import Loading2 from '~/components/shared/Loading2';
 import { Head } from '~/components/shared/Head';
-import SideBar from '~/components/SideBar';
+import SideBar from '~/components/sideBar/SideBar';
 import StateProvider from '~/components/StateProvider';
-import StyleGuide from '~/components/StyleGuide';
+import StyleGuide from '~/components/test/StyleGuide';
 import { queryClient } from '~/misc/query';
 import { actions, initialState } from '~/store';
 
@@ -21,11 +21,11 @@ import { ToastContainer } from 'react-toastify';
 
 const { lazy, Suspense } = React;
 
-const Connections = lazy(() => import('~/components/Connections'));
-const Config = lazy(() => import('~/components/Config'));
-const Logs = lazy(() => import('~/components/Logs'));
+const Connections = lazy(() => import('~/components/connections/Connections'));
+const Config = lazy(() => import('~/components/configs/Config'));
+const Logs = lazy(() => import('~/components/logs/Logs'));
 const Proxies = lazy(() => import('~/components/proxies/Proxies'));
-const Rules = lazy(() => import('~/components/Rules'));
+const Rules = lazy(() => import('~/components/rules/Rules'));
 
 const routes = [
   { path: '/', element: <Home /> },

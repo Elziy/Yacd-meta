@@ -3,7 +3,7 @@ import { GitHub } from 'react-feather';
 import { useQuery } from 'react-query';
 
 import { fetchVersion } from '~/api/version';
-import ContentHeader from '~/components/ContentHeader';
+import ContentHeader from '~/components/sideBar/ContentHeader';
 import { connect } from '~/components/StateProvider';
 import { getClashAPIConfig } from '~/store/app';
 import { ClashAPIConfig } from '~/types';

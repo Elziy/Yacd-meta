@@ -5,7 +5,7 @@ import BaseModal from '~/components/shared/BaseModal';
 import s from './ShowModel.module.scss';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atelierDuneDark, atelierDuneLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import Loading from '~/components/Loading2';
+import Loading from '~/components/shared/Loading2';
 import { HiX } from 'react-icons/hi';
 
 export default function ModalAddRule({ isOpen, onRequestClose, data }) {

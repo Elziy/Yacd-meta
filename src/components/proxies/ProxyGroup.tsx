@@ -8,8 +8,8 @@ import { fetchVersion } from '~/api/version';
 import { getCollapsibleIsOpen, getHideUnavailableProxies, getLatencyTestUrl, getProxySortBy } from '~/store/app';
 import { fetchProxies, getProxies, switchProxy } from '~/store/proxies';
 
-import Button from '../Button';
-import CollapsibleSectionHeader from '../CollapsibleSectionHeader';
+import Button from '../shared/Button';
+import CollapsibleSectionHeader from './ProxyHeader';
 import { connect, useStoreActions } from '../StateProvider';
 import { useFilteredAndSorted } from './hooks';
 import s0 from './ProxyGroup.module.scss';

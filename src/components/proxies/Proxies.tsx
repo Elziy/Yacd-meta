@@ -4,8 +4,8 @@ import { Tooltip } from '@reach/tooltip';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Button from '~/components/Button';
-import ContentHeader from '~/components/ContentHeader';
+import Button from '~/components/shared/Button';
+import ContentHeader from '~/components/sideBar/ContentHeader';
 import { ClosePrevConns } from '~/components/proxies/ClosePrevConns';
 import { ProxyGroup } from '~/components/proxies/ProxyGroup';
 import { ProxyPageFab } from '~/components/proxies/ProxyPageFab';

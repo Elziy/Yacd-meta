@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import Button from '~/components/Button';
+import Button from '~/components/shared/Button';
 import { useUpdateRuleProviderItem } from '~/components/rules/rules.hooks';
 import { SectionNameType } from '~/components/shared/Basic';
 import { RotateIcon } from '~/components/shared/RotateIcon';
 import { HiX } from 'react-icons/hi';
 
 import s from './RuleProviderItem.module.scss';
-import s0 from '~/components/Rules.module.scss';
+import s0 from '~/components/rules/Rules.module.scss';
 import { formatTime } from '~/api/proxies';
-import ModalCloseAllConnections from '~/components/ModalCloseAllConnections';
+import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
 import ShowModel from '~/components/rules/ShowModel';
 import { notifyError, notifySuccess } from '~/misc/message';
 

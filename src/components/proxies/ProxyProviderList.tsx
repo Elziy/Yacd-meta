@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ContentHeader from '~/components/ContentHeader';
+import ContentHeader from '~/components/sideBar/ContentHeader';
 import { ProxyProvider } from '~/components/proxies/ProxyProvider';
 import { FormattedProxyProvider } from '~/store/types';
 

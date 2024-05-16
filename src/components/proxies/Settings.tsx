@@ -5,7 +5,7 @@ import Select from '~/components/shared/Select';
 
 import { getAutoCloseOldConns, getHideUnavailableProxies, getProxySortBy } from '../../store/app';
 import { connect, useStoreActions } from '../StateProvider';
-import Switch from '../SwitchThemed';
+import Switch from '../shared/SwitchThemed';
 import s from './Settings.module.scss';
 
 const options = [
