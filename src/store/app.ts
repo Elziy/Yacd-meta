@@ -170,7 +170,7 @@ const defaultState: StateApp = {
   // how proxies are sorted in a group or provider
   proxySortBy: 'Natural',
   hideUnavailableProxies: false,
-  autoCloseOldConns: false,
+  autoCloseOldConns: true,
   logStreamingPaused: false,
   // min traffic to show in the chart, unit is MB
   minTraffic: 10,
