@@ -58,6 +58,8 @@ export const data = {
   update_geo_databases_file: 'Update GEO Databases ',
   flush_fake_ip_pool: 'Flush fake-ip data',
   flush_traffic_statistic: 'Flush traffic statistic',
+  user_statistic_ip_filter: 'User statistic IP Filter',
+  add_user_statistic_ip_filter: 'Add user statistic IP Filter',
   enable_tun_device: 'Enable TUN Device',
   allow_lan: 'Allow LAN',
   tls_sniffing: 'Sniffer',

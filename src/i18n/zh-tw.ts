@@ -57,6 +57,8 @@ export const data = {
   update_geo_databases_file: '更新 GEO 資料庫文件',
   flush_fake_ip_pool: '清除 Fake IP 資料庫',
   flush_traffic_statistic: '清除流量統計',
+  user_statistic_ip_filter: '使用者統計IP過濾',
+  add_user_statistic_ip_filter: '新增使用者統計IP過濾',
   enable_tun_device: '開啟 TUN 轉發',
   allow_lan: '允許區域網路連接',
   tls_sniffing: 'SNI 嗅探',

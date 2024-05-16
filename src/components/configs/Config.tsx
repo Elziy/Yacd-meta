@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DownloadCloud, LogOut, RotateCw, Trash2 } from 'react-feather';
+import { DownloadCloud, LogOut, RotateCw, Trash2, Edit } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 
@@ -463,10 +463,10 @@ function ConfigImpl({
               />
             </div>
             <div>
-              <div className={s0.label}>用户统计IP过滤</div>
+              <div className={s0.label}>{t('user_statistic_ip_filter')}</div>
               <Button
-                start={<Trash2 size={16} />}
-                label={t('flush_traffic_statistic')}
+                start={<Edit size={16} />}
+                label={t('add_user_statistic_ip_filter')}
                 onClick={() => setUserIpFilterModel(true)}
               />
               <ModalAddUserIpFilter

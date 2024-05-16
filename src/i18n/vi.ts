@@ -58,6 +58,8 @@ export const data = {
   update_geo_databases_file: 'Cập nhật tệp cơ sở dữ liệu GEO',
   flush_fake_ip_pool: 'Xóa bộ nhớ đệm fake-ip',
   flush_traffic_statistic: 'Xóa thống kê lưu lượng',
+  user_statistic_ip_filter: 'Thống kê người dùng Lọc IP',
+  add_user_statistic_ip_filter: 'Thêm người dùng thống kê Lọc IP',
   enable_tun_device: 'Bật thiết bị TUN',
   allow_lan: 'Cho phép LAN',
   tls_sniffing: 'Bộ giám sát gói tin Sniffer',

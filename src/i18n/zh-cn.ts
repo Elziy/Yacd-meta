@@ -59,6 +59,8 @@ export const data = {
   update_geo_databases_file: '更新 GEO 数据库文件',
   flush_fake_ip_pool: '清空 FakeIP 数据库',
   flush_traffic_statistic: '清空流量统计',
+  user_statistic_ip_filter: '用户统计 IP 过滤',
+  add_user_statistic_ip_filter: '增加用户统计 IP 过滤',
   enable_tun_device: '开启 TUN 转发',
   allow_lan: '允许局域网连接',
   tls_sniffing: 'SNI 嗅探',
