@@ -9,7 +9,7 @@ import { useUpdateProviderItem } from '~/components/proxies/proxies.hooks';
 import s0 from '~/components/proxies/ProxyGroup.module.scss';
 import { connect, useStoreActions } from '~/components/StateProvider';
 import { framerMotionResouce } from '~/misc/motion';
-import { getClashAPIConfig, getCollapsibleIsOpen, getHideUnavailableProxies, getProxySortBy } from '~/store/app';
+import { getClashAPIConfig, getCollapsibleIsOpen, getHideUnavailableProxies, getLatencyTestUrl, getProxySortBy } from '~/store/app';
 import { getDelay, healthcheckProviderByName } from '~/store/proxies';
 import { DelayMapping, SubscriptionInfo } from '~/store/types';
 
@@ -25,6 +25,7 @@ type Props = {
   name: string;
   proxies: Array<string>;
   delay: DelayMapping;
+  latencyTestUrl?: string;
   hideUnavailableProxies: boolean;
   proxySortBy: string;
   type: 'Proxy' | 'Rule';
@@ -40,6 +41,7 @@ function ProxyProviderImpl({
                              name,
                              proxies: all,
                              delay,
+                             latencyTestUrl,
                              hideUnavailableProxies,
                              proxySortBy,
                              vehicleType,
@@ -143,7 +145,7 @@ function ProxyProviderImpl({
       </div>
       {/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element[]; isOpen: boolean; }' i... Remove this comment to see the full error message */}
       <Collapsible isOpen={isOpen}>
-        <ProxyList all={proxies} />
+        <ProxyList all={proxies} latencyTestUrl={latencyTestUrl} />
         <div className={s.actionFooter}>
           <Button text="Update" start={<Refresh />} onClick={updateProvider} />
           <Button
@@ -203,6 +205,7 @@ const mapState = (s, { proxies, name }) => {
   const delay = getDelay(s);
   const collapsibleIsOpen = getCollapsibleIsOpen(s);
   const apiConfig = getClashAPIConfig(s);
+  const latencyTestUrl = getLatencyTestUrl(s);
 
   const proxySortBy = getProxySortBy(s);
 
@@ -210,6 +213,7 @@ const mapState = (s, { proxies, name }) => {
     apiConfig,
     proxies,
     delay,
+    latencyTestUrl,
     hideUnavailableProxies,
     proxySortBy,
     isOpen: collapsibleIsOpen[`proxyProvider:${name}`]

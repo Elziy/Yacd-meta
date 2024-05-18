@@ -1,10 +1,25 @@
 @import '~/styles/utils/custom-media';
 
 .proxyLatency {
-  border-radius: 20px;
+  border-radius: 6px;
   color: #eee;
+  padding: 3px 6px 4px 6px;
   font-size: 0.75em;
   @media (--breakpoint-not-small) {
     font-size: 0.8em;
+  }
+}
+
+.proxyLatency:hover {
+  background-color: rgba(104, 168, 22, 0.15);
+  cursor: pointer;
+}
+
+.loading {
+  color: #eee;
+  padding-right: 1em;
+  padding-bottom: 0.15em;
+  @media (--breakpoint-not-small) {
+    padding-bottom: 0.2em;
   }
 }

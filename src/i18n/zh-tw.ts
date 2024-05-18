@@ -47,6 +47,7 @@ export const data = {
   chart_style: '流量圖樣式',
   latency_test_url: '延遲測速 URL',
   lang: '語言',
+  check: '測速',
   'min_traffic': '最小流量(MB)',
   expire: '過期時間',
   rule_list: '規則列表',
@@ -90,5 +91,5 @@ export const data = {
   client_tag: '客戶端標籤',
   sourceip_tip: '/開頭為正規表達式，否則為全面配對',
   disconnect: '斷開連線',
-  internel: '內部連線',
+  internel: '內部連線'
 };

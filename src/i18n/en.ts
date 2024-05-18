@@ -46,6 +46,7 @@ export const data = {
   chart_style: 'Chart Style',
   latency_test_url: 'Latency Test URL',
   lang: 'Language',
+  check: 'check',
   'min_traffic': 'Min Traffic (MB)',
   expire: 'Expire',
   rule_list: 'Rule List',

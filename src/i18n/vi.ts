@@ -46,6 +46,7 @@ export const data = {
   chart_style: 'Kiểu biểu đồ',
   latency_test_url: 'URL kiểm tra độ trễ',
   lang: 'Ngôn ngữ',
+  check: 'Đo tốc độ',
   'min_traffic': 'Lưu lượng tối thiểu (MB)',
   expire: 'Hết hạn',
   rule_list: 'Danh sách quy tắc',

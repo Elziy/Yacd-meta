@@ -7,17 +7,16 @@ import s from './ProxyList.module.scss';
 type ProxyListProps = {
   all: string[];
   now?: string;
+  latencyTestUrl?: string;
   isSelectable?: boolean;
   itemOnTapCallback?: (x: string) => void;
   show?: boolean;
 };
 
-export function ProxyList({ all, now, isSelectable, itemOnTapCallback }: ProxyListProps) {
-  const proxies = all;
-
+export function ProxyList({ all, now, latencyTestUrl, isSelectable, itemOnTapCallback }: ProxyListProps) {
   return (
     <div className={cx(s.list, s.detail)}>
-      {proxies.map((proxyName) => {
+      {all.map((proxyName) => {
         return (
           <Proxy
             key={proxyName}
@@ -25,6 +24,7 @@ export function ProxyList({ all, now, isSelectable, itemOnTapCallback }: ProxyLi
             isSelectable={isSelectable}
             name={proxyName}
             now={proxyName === now}
+            latencyTestUrl={latencyTestUrl}
           />
         );
       })}
@@ -33,11 +33,11 @@ export function ProxyList({ all, now, isSelectable, itemOnTapCallback }: ProxyLi
 }
 
 export function ProxyListSummaryView({
-  all,
-  now,
-  isSelectable,
-  itemOnTapCallback,
-}: ProxyListProps) {
+                                       all,
+                                       now,
+                                       isSelectable,
+                                       itemOnTapCallback
+                                     }: ProxyListProps) {
   return (
     <div className={cx(s.list, s.summary)}>
       {all.map((proxyName) => {

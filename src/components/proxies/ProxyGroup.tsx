@@ -156,6 +156,7 @@ function ProxyGroupImpl({
       {createElement(isOpen ? ProxyList : ProxyListSummaryView, {
         all,
         now,
+        latencyTestUrl,
         isSelectable,
         itemOnTapCallback
       })}

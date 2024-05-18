@@ -49,6 +49,7 @@ export const data = {
   chart_style: '流量图样式',
   latency_test_url: '延迟测速 URL',
   lang: '语言',
+  check: '测速',
   'min_traffic': '最小流量(MB)',
   expire: '过期时间',
   rule_list: '规则列表',
