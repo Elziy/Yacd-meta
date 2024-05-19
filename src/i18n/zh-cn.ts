@@ -56,6 +56,8 @@ export const data = {
   rule_provider: '规则资源',
   update_all_rule_provider: '更新所有规则资源',
   update_all_proxy_provider: '更新所有代理资源',
+  add_rule: '添加规则',
+  add_rule_set: '添加规则资源',
   reload_config_file: '重载配置文件',
   update_geo_databases_file: '更新 GEO 数据库文件',
   flush_fake_ip_pool: '清空 FakeIP 数据库',

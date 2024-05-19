@@ -8,7 +8,6 @@ import Button from '~/components/shared/Button';
 import ContentHeader from '~/components/sideBar/ContentHeader';
 import { ClosePrevConns } from '~/components/proxies/ClosePrevConns';
 import { ProxyGroup } from '~/components/proxies/ProxyGroup';
-import { ProxyPageFab } from '~/components/proxies/ProxyPageFab';
 import { ProxyProviderList } from '~/components/proxies/ProxyProviderList';
 import Settings from '~/components/proxies/Settings';
 import BaseModal from '~/components/shared/BaseModal';

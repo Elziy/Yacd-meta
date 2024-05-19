@@ -54,6 +54,8 @@ export const data = {
   update_all_rule_provider: 'Update all rule providers',
   update_all_proxy_provider: 'Update all proxy providers',
   reload_config_file: 'Reload config file',
+  add_rule: 'Add Rule',
+  add_rule_set: 'Add Rule Set',
   restart_core: 'Restart clash core',
   upgrade_core: 'Upgrade Alpha core',
   update_geo_databases_file: 'Update GEO Databases ',

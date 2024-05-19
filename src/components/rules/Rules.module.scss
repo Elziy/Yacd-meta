@@ -10,18 +10,23 @@
   }
 }
 
+.topBarRight {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+  gap: 1em;
+  justify-content: flex-end;
+
+  margin-right: 30px;
+}
+
+
 .RuleProviderItemWrapper {
   padding: 6px 10px;
   @media (--breakpoint-not-small) {
     padding: 10px 40px;
   }
-}
-
-.addRuleButton {
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
 }
 
 .update {

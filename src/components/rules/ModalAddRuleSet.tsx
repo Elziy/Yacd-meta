@@ -26,7 +26,7 @@ export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequest
     format: 'yaml',
     path: 'rule_provider',
     url: '',
-    interval: 86400
+    interval: 864000
   });
 
   const [msg, setMsg] = useState('');
@@ -146,7 +146,7 @@ export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequest
   return (
     <BaseModal isOpen={isOpen} onRequestClose={onRequestClose}>
       <div style={{ textAlign: 'center', fontSize: '1.2em', paddingBottom: '1em' }}>
-        <span>添加规则集合</span>
+        <span>{t('add_rule_set')}</span>
       </div>
 
       <div className={s.row}>

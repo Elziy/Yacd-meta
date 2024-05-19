@@ -116,7 +116,7 @@ export default function ModalAddRule({ dispatch, apiConfig, isOpen, onRequestClo
   return (
     <BaseModal isOpen={isOpen} onRequestClose={onRequestClose}>
       <div style={{ textAlign: 'center', fontSize: '1.2em', paddingBottom: '1em' }}>
-        <span>添加规则</span>
+        <span>{t('add_rule')}</span>
       </div>
       <div className={s.row}>
         规则索引:

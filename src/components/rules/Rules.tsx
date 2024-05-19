@@ -12,7 +12,6 @@ import { State } from '~/store/types';
 import { ClashAPIConfig } from '~/types';
 
 import useRemainingViewPortHeight from '../../hooks/useRemainingViewPortHeight';
-import { FcAddDatabase, FcDataBackup, FcDataRecovery } from 'react-icons/fc';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { getClashAPIConfig } from '~/store/app';
 import ContentHeader from '../sideBar/ContentHeader';
@@ -28,6 +27,8 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import Button from '~/components/shared/Button';
 import { RotateIcon } from '~/components/shared/RotateIcon';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
+import { Tooltip } from '@reach/tooltip';
+import { FiPlus, FiRepeat, FiFilePlus } from 'react-icons/fi';
 
 
 const { memo } = React;
@@ -133,13 +134,13 @@ const mapState = (s: State) => ({
 });
 
 export default connect(mapState)(Rules);
-let tag = 0
+let tag = 0;
 
 function Rules({ dispatch, apiConfig, groups }) {
   const [refRulesContainer, containerHeight] = useRemainingViewPortHeight();
 
   const { rules, provider } = useRuleAndProvider(apiConfig);
-  if (groups.length <=0 && tag === 0) {
+  if (groups.length <= 0 && tag === 0) {
     dispatch(fetchProxies(apiConfig));
     tag = 1;
   }
@@ -201,20 +202,29 @@ function Rules({ dispatch, apiConfig, groups }) {
     });
   };
 
+  // noinspection RequiredAttributes
   return (
     <div>
       <div className={s.header}>
         <ContentHeader title={t('Rules')} />
         <TextFilter textAtom={ruleFilterText} placeholder={t('Search')} />
-        <button onClick={() => setReloadConfig(true)} className={s.addRuleButton}>
-          <FcDataBackup size={32} />
-        </button>
-        <button onClick={() => setAddRuleSetModal(true)} className={s.addRuleButton}>
-          <FcDataRecovery size={32} />
-        </button>
-        <button onClick={() => setAddRuleModal(true)} className={s.addRuleButton}>
-          <FcAddDatabase size={32} />
-        </button>
+        <Tooltip label={t('reload_config_file')}>
+          <Button onClick={() => setReloadConfig(true)} kind="minimal">
+            <FiRepeat size={24} />
+          </Button>
+        </Tooltip>
+
+        <Tooltip label={t('add_rule')}>
+          <Button className={s.addRuleButton} onClick={() => setAddRuleModal(true)} kind="minimal">
+            <FiPlus size={24} />
+          </Button>
+        </Tooltip>
+
+        <Tooltip label={t('add_rule_set')}>
+          <Button onClick={() => setAddRuleSetModal(true)} kind="minimal">
+            <FiFilePlus  size={24} />
+          </Button>
+        </Tooltip>
       </div>
 
       <Tabs>
