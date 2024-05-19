@@ -68,8 +68,8 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
   }, [proxy]);
 
   const policies = groups.map((group: any) => [group, group]);
-  policies.push(['DIRECT', '直连']);
-  policies.push(['REJECT', '拒绝']);
+  policies.unshift(['DIRECT', '直连']);
+  policies.unshift(['REJECT', '拒绝']);
 
   const disable = id < 3 || type === 'AND' || type === 'OR' || type === 'NOT' || type === 'SubRules';
   if (type === 'SubRules') {
