@@ -93,7 +93,7 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
     }
   };
   return (
-    <div style={{ marginTop: '5px' }}>
+    <div style={{ marginTop: '5px', userSelect: 'text' }}>
       <table {...getTableProps()} className={cx(s.table, 'connections-table')}>
         <thead>
         {headerGroups.map((headerGroup, trindex) => {
