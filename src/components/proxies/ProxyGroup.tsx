@@ -1,6 +1,5 @@
-import cx from 'clsx';
 import * as React from 'react';
-import { ChevronDown, Zap } from 'react-feather';
+import { Zap, Edit } from 'react-feather';
 import { useQuery } from 'react-query';
 
 import * as proxiesAPI from '~/api/proxies';
@@ -14,16 +13,10 @@ import { connect, useStoreActions } from '../StateProvider';
 import { useFilteredAndSorted } from './hooks';
 import s0 from './ProxyGroup.module.scss';
 import { ProxyList, ProxyListSummaryView } from './ProxyList';
+import ModalAddProxyGroup, { defaultProxyGroup } from '~/components/proxies/ModalAddProxyGroup';
+import { notifyError } from '~/misc/message';
 
 const { createElement, useCallback, useMemo, useState, useEffect } = React;
-
-function ZapWrapper() {
-  return (
-    <div className={s0.zapWrapper}>
-      <Zap size={16} />
-    </div>
-  );
-}
 
 function ProxyGroupImpl({
                           name,
@@ -84,16 +77,39 @@ function ProxyGroupImpl({
     setIsTestingLatency(false);
   }, [all, apiConfig, dispatch, name, version.meta]);
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  const updateWindowWidth = () => {
-    setWindowWidth(window.innerWidth);
+  const [addProxyGroupModal, setAddProxyGroupModal] = useState(false);
+  const [proxyGroup, setProxyGroup] = useState(null);
+  const openAddProxyGroupModal = () => {
+    setAddProxyGroupModal(true);
+    fetch('/api/get_proxy_group?name=' + name, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(async (res) => {
+      const response = await res.json();
+      if (response.code === 200) {
+        setProxyGroup({
+          name: response.data.name,
+          type: response.data.type,
+          proxies: response.data.proxies || [],
+          use: response.data.use || [],
+          icon: response.data.icon || '',
+          'disable-udp': response.data['disable-udp'] || false,
+          filter: response.data.filter || '',
+          'exclude-filter': response.data['exclude-filter'] || '',
+          url: response.data.url || defaultProxyGroup.url,
+          interval: response.data.interval || defaultProxyGroup.interval
+        });
+      } else {
+        notifyError(response.message);
+        setAddProxyGroupModal(false);
+      }
+    }).catch(() => {
+      notifyError('网络错误');
+      setAddProxyGroupModal(false);
+    });
   };
-
-  useEffect(() => {
-    window.addEventListener('resize', updateWindowWidth);
-    return () => window.removeEventListener('resize', updateWindowWidth);
-  }, []);
 
   return (
     <div className={s0.group}>
@@ -108,49 +124,28 @@ function ProxyGroupImpl({
         <div className={s0.clickable} onClick={toggle}>
         </div>
         <div style={{ display: 'flex' }}>
-          {windowWidth > 768 ? (
-            <>
-              <Button
-                kind="minimal"
-                onClick={toggle}
-                className={s0.btn}
-                title="Toggle collapsible section"
-              >
-                <span className={cx(s0.arrow, { [s0.isOpen]: isOpen })}>
-                  <ChevronDown size={20} />
-                </span>
-              </Button>
-              <Button
-                title="Test latency"
-                kind="minimal"
-                onClick={testLatency}
-                isLoading={isTestingLatency}
-              >
-                <ZapWrapper />
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                title="Test latency"
-                kind="minimal"
-                onClick={testLatency}
-                isLoading={isTestingLatency}
-              >
-                <ZapWrapper />
-              </Button>
-              <Button
-                kind="minimal"
-                onClick={toggle}
-                className={s0.btn}
-                title="Toggle collapsible section"
-              >
-                <span className={cx(s0.arrow, { [s0.isOpen]: isOpen })}>
-                  <ChevronDown size={20} />
-                </span>
-              </Button>
-            </>
-          )}
+          <>
+            <Button
+              kind="minimal"
+              onClick={openAddProxyGroupModal}
+              className={s0.btn}
+              isLoading={addProxyGroupModal}
+            >
+              <div className={s0.zapWrapper}>
+                <Edit size={16} />
+              </div>
+            </Button>
+            <Button
+              title="Test latency"
+              kind="minimal"
+              onClick={testLatency}
+              isLoading={isTestingLatency}
+            >
+              <div className={s0.zapWrapper}>
+                <Zap size={16} />
+              </div>
+            </Button>
+          </>
         </div>
       </div>
       {createElement(isOpen ? ProxyList : ProxyListSummaryView, {
@@ -160,6 +155,10 @@ function ProxyGroupImpl({
         isSelectable,
         itemOnTapCallback
       })}
+
+      <ModalAddProxyGroup nowProxyGroup={proxyGroup} isOpen={addProxyGroupModal} onRequestClose={() => {
+        setAddProxyGroupModal(false);
+      }} />
     </div>
   );
 }

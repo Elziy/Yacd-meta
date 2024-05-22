@@ -56,6 +56,8 @@ export const data = {
   reload_config_file: 'Tải lại tệp cấu hình',
   add_rule: 'Thêm quy tắc',
   add_rule_set: 'Thêm bộ quy tắc',
+  add_proxy_group: 'Thêm nhóm proxy',
+  add_proxy_provider: 'Thêm nh cung cấp proxy',
   restart_core: 'Khởi động lõi lại Clash',
   upgrade_core: 'Nâng cấp lõi Clash',
   update_geo_databases_file: 'Cập nhật tệp cơ sở dữ liệu GEO',

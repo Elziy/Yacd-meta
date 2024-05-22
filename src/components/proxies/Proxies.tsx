@@ -13,12 +13,23 @@ import Settings from '~/components/proxies/Settings';
 import BaseModal from '~/components/shared/BaseModal';
 import { TextFilter } from '~/components/shared/TextFitler';
 import { connect, useStoreActions } from '~/components/StateProvider';
-import Equalizer from '~/components/svg/Equalizer';
 import { getClashAPIConfig } from '~/store/app';
-import { fetchProxies, getDelay, getProxyGroupNames, getProxyProviders, getShowModalClosePrevConns, proxyFilterText } from '~/store/proxies';
+import {
+  fetchProxies,
+  getDelay,
+  getProxyGroupNames,
+  getProxyProviders,
+  getShowModalClosePrevConns,
+  proxyFilterText
+} from '~/store/proxies';
 import type { State } from '~/store/types';
 
 import s0 from './Proxies.module.scss';
+import { FiFilePlus, FiPlus, FiRepeat } from 'react-icons/fi';
+import Equalizer from '~/components/svg/Equalizer';
+import ModalAddProxyGroup from '~/components/proxies/ModalAddProxyGroup';
+import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
+import { reloadConfigFile } from '~/store/configs';
 
 const { useState, useEffect, useCallback, useRef } = React;
 
@@ -30,29 +41,18 @@ function Proxies({
                    apiConfig,
                    showModalClosePrevConns
                  }) {
-  const refFetchedTimestamp = useRef<{ startAt?: number; completeAt?: number }>({});
+  const { t } = useTranslation();
 
   const fetchProxiesHooked = useCallback(() => {
-    refFetchedTimestamp.current.startAt = Date.now();
-    dispatch(fetchProxies(apiConfig)).then(() => {
-      refFetchedTimestamp.current.completeAt = Date.now();
-    });
+    dispatch(fetchProxies(apiConfig));
   }, [apiConfig, dispatch]);
-  useEffect(() => {
-    // fetch it now
-    fetchProxiesHooked();
 
-    // arm a window on focus listener to refresh it
-    const fn = () => {
-      if (
-        refFetchedTimestamp.current.startAt &&
-        Date.now() - refFetchedTimestamp.current.startAt > 3e4 // 30s
-      ) {
-        fetchProxiesHooked();
-      }
-    };
-    window.addEventListener('focus', fn, false);
-    return () => window.removeEventListener('focus', fn, false);
+  const handleReloadConfigFile = useCallback(() => {
+    dispatch(reloadConfigFile(apiConfig));
+  }, [apiConfig, dispatch]);
+
+  useEffect(() => {
+    fetchProxiesHooked();
   }, [fetchProxiesHooked]);
 
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -64,25 +64,34 @@ function Proxies({
     proxies: { closeModalClosePrevConns, closePrevConnsAndTheModal }
   } = useStoreActions();
 
-  const { t } = useTranslation();
+
+  const [addProxyGroupModal, setAddProxyGroupModal] = useState(false);
+  const [reload_config, setReloadConfig] = useState(false);
 
   return (
-    <>
-      <BaseModal isOpen={isSettingsModalOpen} onRequestClose={closeSettingsModal}>
-        <Settings />
-      </BaseModal>
-      <div className={s0.topBar}>
+    <div>
+      <div className={s0.header}>
         <ContentHeader title={t('Proxies')} />
-        <div className={s0.topBarRight}>
-          <div className={s0.textFilterContainer}>
-            <TextFilter textAtom={proxyFilterText} placeholder={t('Search')} />
-          </div>
-          <Tooltip label={t('settings')}>
-            <Button kind="minimal" onClick={() => setIsSettingsModalOpen(true)}>
-              <Equalizer size={20} />
-            </Button>
-          </Tooltip>
-        </div>
+        <TextFilter textAtom={proxyFilterText} placeholder={t('Search')} />
+        <Tooltip label={t('reload_config_file')}>
+          <Button className={s0.firstButton} onClick={() => setReloadConfig(true)} kind="minimal">
+            <FiRepeat size={24} />
+          </Button>
+        </Tooltip>
+
+        <Tooltip label={t('settings')}>
+          <Button kind="minimal" onClick={() => setIsSettingsModalOpen(true)}>
+            <Equalizer size={24} />
+          </Button>
+        </Tooltip>
+
+        <Tooltip label={t('add_proxy_group')}>
+          <Button onClick={() => {
+            setAddProxyGroupModal(true);
+          }} kind="minimal">
+            <FiPlus size={24} />
+          </Button>
+        </Tooltip>
       </div>
       <div>
         {groupNames.map((groupName: string) => {
@@ -101,13 +110,31 @@ function Proxies({
       <ProxyProviderList items={proxyProviders} />
       <div style={{ height: 60 }} />
       {/*<ProxyPageFab dispatch={dispatch} apiConfig={apiConfig} proxyProviders={proxyProviders} />*/}
+
+      <ModalAddProxyGroup isOpen={addProxyGroupModal} onRequestClose={() => {
+        setAddProxyGroupModal(false);
+      }} />
+
+      <ModalCloseAllConnections
+        confirm={'reload_config_file'}
+        isOpen={reload_config}
+        primaryButtonOnTap={() => {
+          handleReloadConfigFile();
+          setReloadConfig(false);
+        }}
+        onRequestClose={() => setReloadConfig(false)}
+      />
+
+      <BaseModal isOpen={isSettingsModalOpen} onRequestClose={closeSettingsModal}>
+        <Settings />
+      </BaseModal>
       <BaseModal isOpen={showModalClosePrevConns} onRequestClose={closeModalClosePrevConns}>
         <ClosePrevConns
           onClickPrimaryButton={() => closePrevConnsAndTheModal(apiConfig)}
           onClickSecondaryButton={closeModalClosePrevConns}
         />
       </BaseModal>
-    </>
+    </div>
   );
 }
 
@@ -120,3 +147,4 @@ const mapState = (s: State) => ({
 });
 
 export default connect(mapState)(Proxies);
+

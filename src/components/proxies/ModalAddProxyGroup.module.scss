@@ -1,0 +1,41 @@
+.main {
+  max-height: 70vh;
+  max-width: 85vw;
+  min-width: 25em;
+  overflow-y: scroll;
+  user-select: none;
+  padding: 20px 30px 10px 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.row2 {
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+}
+
+.mSelectLabel {
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.submit {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.submit_button {
+  width: 100%;
+  color: var(--color-text);
+  border-radius: 8px;
+  padding: 10px 30px;
+  cursor: pointer;
+}

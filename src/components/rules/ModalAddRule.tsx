@@ -10,6 +10,7 @@ import Select from '~/components/shared/Select';
 import Switch from '../shared/SwitchThemed';
 import { reloadConfigFile } from '~/store/configs';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
+import { fixRuleCount } from '~/components/rules/Rule';
 
 const ruleTypes = [
   ['DOMAIN', '域名'],
@@ -63,8 +64,8 @@ export default function ModalAddRule({ dispatch, apiConfig, isOpen, onRequestClo
       setMsg('');
       return;
     }
-    if (index < 3) {
-      notifyWarning('索引不能小于3');
+    if (index < fixRuleCount) {
+      notifyWarning('索引不能小于' + fixRuleCount);
       setMsg('');
       return;
     }

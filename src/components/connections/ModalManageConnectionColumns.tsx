@@ -12,19 +12,19 @@ const getItemStyle = (isDragging, draggableStyle) => {
   return {
     ...draggableStyle,
     ...(isDragging && {
-      background: 'transparent',
-    }),
+      background: 'transparent'
+    })
   };
 };
 
 export default function ModalManageConnectionColumns({
-  isOpen,
-  onRequestClose,
-  columns,
-  hiddenColumns,
-  setColumns,
-  setHiddenColumns,
-}) {
+                                                       isOpen,
+                                                       onRequestClose,
+                                                       columns,
+                                                       hiddenColumns,
+                                                       setColumns,
+                                                       setHiddenColumns
+                                                     }) {
   const { t } = useTranslation();
 
   const onDragEnd = (result) => {

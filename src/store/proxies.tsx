@@ -49,6 +49,7 @@ export const getProxies = (s: State) => s.proxies.proxies;
 export const getDelay = (s: State) => s.proxies.delay;
 export const getProxyGroupNames = (s: State) => s.proxies.groupNames;
 export const getProxyProviders = (s: State) => s.proxies.proxyProviders || [];
+export const getProxyProviderNames = (s: State) => s.proxies.proxyProviders?.map((p) => p.name) || [];
 export const getDangleProxyNames = (s: State) => s.proxies.dangleProxyNames;
 export const getShowModalClosePrevConns = (s: State) => s.proxies.showModalClosePrevConns;
 

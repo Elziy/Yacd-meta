@@ -6,21 +6,17 @@
   align-items: center;
 
   @media (--breakpoint-not-small) {
-    padding-right: 32px;
+    padding-right: 40px;
+  }
+
+  button {
+    color: var(--color-icon)
   }
 }
 
-.topBarRight {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  flex: 1;
-  gap: 1em;
-  justify-content: flex-end;
-
-  margin-right: 30px;
+.firstButton {
+  margin-left: 10px;
 }
-
 
 .RuleProviderItemWrapper {
   padding: 6px 10px;

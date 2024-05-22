@@ -1,6 +1,5 @@
-import cx from 'clsx';
 import * as React from 'react';
-import { ChevronDown, RotateCw, Zap } from 'react-feather';
+import { Edit, RotateCw, Zap } from 'react-feather';
 
 import Button from '~/components/shared/Button';
 import Collapsible from '~/components/shared/Collapsible';
@@ -18,6 +17,8 @@ import { ProxyList, ProxyListSummaryView } from './ProxyList';
 import s from './ProxyProvider.module.scss';
 import { useTranslation } from 'react-i18next';
 import { formatTime } from '~/api/proxies';
+import ModalAddProxyProvider, { defaultProxyProvider } from '~/components/proxies/ModalAddProxyProvider';
+import { notifyError } from '~/misc/message';
 
 const { useState, useCallback } = React;
 
@@ -51,6 +52,7 @@ function ProxyProviderImpl({
                              dispatch,
                              apiConfig
                            }: Props) {
+  const { t } = useTranslation();
   const proxies = useFilteredAndSorted(all, delay, hideUnavailableProxies, proxySortBy);
   const [isHealthcheckLoading, setIsHealthcheckLoading] = useState(false);
 
@@ -94,7 +96,43 @@ function ProxyProviderImpl({
     return getYear + getMonth + getDate;
   };
 
-  const { t } = useTranslation();
+  const [addProxyProviderModal, setAddProxyProviderModal] = useState(false);
+  const [proxyProvider, setProxyProvider] = useState(null);
+  const openAddProxyProviderModal = () => {
+    setAddProxyProviderModal(true);
+    fetch('/api/get_proxy_provider?name=' + name, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(async (res) => {
+      const response = await res.json();
+      if (response.code === 200) {
+        setProxyProvider({
+          name: name,
+          type: 'http',
+          url: response.data.url,
+          path: defaultProxyProvider.path,
+          interval: response.data.interval || defaultProxyProvider.interval,
+          proxy: response.data.proxy || '',
+          'health-check': {
+            enable: false
+          },
+          override: {
+            'additional-prefix': response.data.override?.['additional-prefix'] || ''
+          },
+          filter: response.data.filter || '',
+          'exclude-filter': response.data['exclude-filter'] || ''
+        });
+      } else {
+        notifyError(response.message);
+        setAddProxyProviderModal(false);
+      }
+    }).catch(() => {
+      notifyError('网络错误');
+      setAddProxyProviderModal(false);
+    });
+  };
 
   return (
     <div className={s.body}>
@@ -117,13 +155,13 @@ function ProxyProviderImpl({
         <div style={{ display: 'flex' }}>
           <Button
             kind="minimal"
-            onClick={toggle}
+            onClick={openAddProxyProviderModal}
             className={s0.btn}
-            title="Toggle collapsible section"
+            isLoading={addProxyProviderModal}
           >
-            <span className={cx(s0.arrow, { [s0.isOpen]: isOpen })}>
-              <ChevronDown size={20} />
-            </span>
+            <div className={s0.zapWrapper}>
+              <Edit size={16} />
+            </div>
           </Button>
           <Button kind="minimal" start={<Refresh />} onClick={updateProvider} />
           <Button
@@ -160,6 +198,10 @@ function ProxyProviderImpl({
       <Collapsible isOpen={!isOpen}>
         <ProxyListSummaryView all={proxies} />
       </Collapsible>
+      <ModalAddProxyProvider
+        nowProxyProvider={proxyProvider}
+        isOpen={addProxyProviderModal}
+        onRequestClose={() => setAddProxyProviderModal(false)} />
     </div>
   );
 }

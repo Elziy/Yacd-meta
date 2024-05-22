@@ -1,33 +1,21 @@
 @import '~/styles/utils/custom-media';
 
-.topBar {
-  position: sticky;
-  top: 0;
-
-  display: flex;
+.header {
+  display: grid;
+  grid-template-columns: 1fr minmax(auto, auto) minmax(auto, auto) minmax(auto, auto) minmax(auto, auto);
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  z-index: 1;
-  background-color: var(--color-background2);
-  backdrop-filter: blur(36px);
+
+  @media (--breakpoint-not-small) {
+    padding-right: 38px;
+  }
+
+  button {
+    color: var(--color-icon)
+  }
 }
 
-.topBarRight {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  flex: 1;
-  gap: 0.5em;
-  justify-content: flex-end;
-
-  margin-right: 30px;
-}
-
-.textFilterContainer {
-  max-width: 350px;
-  min-width: 150px;
-  flex: 1;
+.firstButton {
+  margin-left: 10px;
 }
 
 .group {

@@ -57,6 +57,8 @@ export const data = {
   reload_config_file: '重新載入設定檔',
   add_rule: '新增規則',
   add_rule_set: '新增規則集',
+  add_proxy_group: '新增代理群組',
+  add_proxy_provider: '新增代理伺服器提供者',
   update_geo_databases_file: '更新 GEO 資料庫文件',
   flush_fake_ip_pool: '清除 Fake IP 資料庫',
   flush_traffic_statistic: '清除流量統計',

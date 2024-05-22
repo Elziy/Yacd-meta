@@ -1,0 +1,40 @@
+.multiSelect {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.multiSelectLabel {
+  width: 85%;
+  -webkit-appearance: none;
+  background-color: var(--color-input-bg);
+  background-image: none;
+  border: 1px solid var(--color-input-border);
+  border-right-width: 0;
+  border-radius: 4px 0 0 4px;
+  box-sizing: border-box;
+  color: inherit;
+  height: 35px;
+  outline: none;
+  padding: 0 15px;
+  font-size: small;
+  display: flex;
+  align-items: center;
+}
+
+.removeSelectedButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  border: 1px solid var(--color-input-border);
+  border-radius: 0 4px 4px 0;
+  background-color: var(--color-input-bg);
+  width: 15%;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-focus-blue);
+  }
+}
+
