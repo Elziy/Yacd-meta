@@ -15,7 +15,7 @@ import useRemainingViewPortHeight from '../../hooks/useRemainingViewPortHeight';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { getClashAPIConfig } from '~/store/app';
 import ContentHeader from '../sideBar/ContentHeader';
-import Rule, { editRule } from './Rule';
+import Rule, { editRule, fixedRuleCount } from './Rule';
 import s from './Rules.module.scss';
 import { connect } from '../StateProvider';
 import { fetchProxies, getProxyGroupNames } from '~/store/proxies';
@@ -134,16 +134,18 @@ const mapState = (s: State) => ({
 });
 
 export default connect(mapState)(Rules);
-let tag = 0;
 
 function Rules({ dispatch, apiConfig, groups }) {
   const [refRulesContainer, containerHeight] = useRemainingViewPortHeight();
 
   const { rules, provider } = useRuleAndProvider(apiConfig);
-  if (groups.length <= 0 && tag === 0) {
+  const fetchProxiesHooked = useCallback(() => {
     dispatch(fetchProxies(apiConfig));
-    tag = 1;
-  }
+  }, [apiConfig, dispatch]);
+
+  useEffect(() => {
+    fetchProxiesHooked();
+  }, [fetchProxiesHooked]);
   const getItemSize = getItemSizeFactory({ provider });
   const [addRuleModal, setAddRuleModal] = useState(false);
   const [addRuleSetModal, setAddRuleSetModal] = useState(false);
@@ -176,9 +178,7 @@ function Rules({ dispatch, apiConfig, groups }) {
       return;
     }
 
-    if (result.source.index === 0 || result.destination.index === 0
-      || result.source.index === 1 || result.destination.index === 1
-      || result.source.index === 2 || result.destination.index === 2) {
+    if (result.source.index < fixedRuleCount || result.destination.index < fixedRuleCount) {
       notifyWarning('所选规则禁止拖动');
       return;
     }
@@ -209,13 +209,13 @@ function Rules({ dispatch, apiConfig, groups }) {
         <ContentHeader title={t('Rules')} />
         <TextFilter textAtom={ruleFilterText} placeholder={t('Search')} />
         <Tooltip label={t('reload_config_file')}>
-          <Button onClick={() => setReloadConfig(true)} kind="minimal">
+          <Button className={s.firstButton} onClick={() => setReloadConfig(true)} kind="minimal">
             <FiRepeat size={24} />
           </Button>
         </Tooltip>
 
         <Tooltip label={t('add_rule')}>
-          <Button className={s.addRuleButton} onClick={() => setAddRuleModal(true)} kind="minimal">
+          <Button onClick={() => setAddRuleModal(true)} kind="minimal">
             <FiPlus size={24} />
           </Button>
         </Tooltip>

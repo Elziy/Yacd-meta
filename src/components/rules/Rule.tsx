@@ -71,7 +71,7 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
   policies.unshift(['DIRECT', '直连']);
   policies.unshift(['REJECT', '拒绝']);
 
-  const disable = id < 3 || type === 'AND' || type === 'OR' || type === 'NOT' || type === 'SubRules';
+  const disable = id < fixedRuleCount || type === 'AND' || type === 'OR' || type === 'NOT' || type === 'SubRules';
   if (type === 'SubRules') {
     policies.push([policy, policy]);
   }
@@ -175,7 +175,7 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
         </span>
         </div>
       </div>
-      {id >= 3 && <div className={s0.right}>
+      {id >= fixedRuleCount && <div className={s0.right}>
         <span style={{ paddingLeft: '0.5em' }} className={s0.buttonWrapper}>
           <Button className={s0.button}
                   onClick={() => {
@@ -213,3 +213,5 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
 }
 
 export default Rule;
+
+export const fixedRuleCount = 5

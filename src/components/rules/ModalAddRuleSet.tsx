@@ -10,7 +10,7 @@ import Select from '~/components/shared/Select';
 import Switch from '../shared/SwitchThemed';
 import { reloadConfigFile } from '~/store/configs';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
-import { fixRuleCount } from '~/components/rules/Rule';
+import { fixedRuleCount } from '~/components/rules/Rule';
 
 export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequestClose, groups, rules, provider }) {
   const { t } = useTranslation();
@@ -65,8 +65,8 @@ export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequest
       setMsg('');
       return;
     }
-    if (index < fixRuleCount) {
-      notifyWarning('索引不能小于' + fixRuleCount);
+    if (index < fixedRuleCount) {
+      notifyWarning('索引不能小于' + fixedRuleCount);
       setMsg('');
       return;
     }
