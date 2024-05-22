@@ -11,7 +11,7 @@ import s from './RuleProviderItem.module.scss';
 import s0 from '~/components/rules/Rules.module.scss';
 import { formatTime } from '~/api/proxies';
 import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
-import ShowModel from '~/components/rules/ShowModel';
+import ShowCodeModal from '~/components/rules/ShowCodeModal';
 import { notifyError, notifySuccess } from '~/misc/message';
 
 export function RuleProviderItem(
@@ -64,9 +64,11 @@ export function RuleProviderItem(
       if (response.code === 200) {
         setData(response.data);
       } else {
+        setIsModalOpen(false);
         notifyError(response.message);
       }
     }).catch(() => {
+      setIsModalOpen(false);
       notifyError('网络错误');
     });
   }
@@ -99,7 +101,7 @@ export function RuleProviderItem(
         onRequestClose={() => setDeleteModal(false)}
       />
 
-      <ShowModel isOpen={isModalOpen} onRequestClose={() => {
+      <ShowCodeModal isOpen={isModalOpen} onRequestClose={() => {
         setIsModalOpen(false)
         setData(null)
       }} data={data} />

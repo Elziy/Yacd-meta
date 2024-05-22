@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { useTranslation } from 'react-i18next';
 import BaseModal from '~/components/shared/BaseModal';
 import s from './ShowModel.module.scss';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -8,7 +7,7 @@ import { atelierDuneDark, atelierDuneLight } from 'react-syntax-highlighter/dist
 import Loading from '~/components/shared/Loading2';
 import { HiX } from 'react-icons/hi';
 
-export default function ModalAddRule({ isOpen, onRequestClose, data }) {
+export default function ShowCodeModal({ isOpen, onRequestClose, data }) {
   if (!data)
     return (
       <BaseModal isOpen={isOpen} onRequestClose={onRequestClose}>
