@@ -222,7 +222,7 @@ function Rules({ dispatch, apiConfig, groups }) {
 
         <Tooltip label={t('add_rule_set')}>
           <Button onClick={() => setAddRuleSetModal(true)} kind="minimal">
-            <FiFilePlus  size={24} />
+            <FiFilePlus size={24} />
           </Button>
         </Tooltip>
       </div>
@@ -252,17 +252,20 @@ function Rules({ dispatch, apiConfig, groups }) {
                       </div>
                     );
                   }}>
-                    {(provided: { innerRef: React.Ref<any>; }) => (
-                      <VariableSizeList
-                        height={containerHeight - paddingBottom}
-                        width="100%"
-                        itemCount={rules.length}
-                        itemSize={getItemSize}
-                        outerRef={provided.innerRef}
-                        itemData={{ rules, groups }}
-                      >
-                        {DraggableRuleRow}
-                      </VariableSizeList>
+                    {(provided) => (
+                      <div {...provided.droppableProps} ref={provided.innerRef}>
+                        <VariableSizeList
+                          height={containerHeight - paddingBottom}
+                          width="100%"
+                          itemCount={rules.length}
+                          itemSize={getItemSize}
+                          outerRef={provided.innerRef}
+                          itemData={{ rules, groups }}
+                        >
+                          {DraggableRuleRow}
+                        </VariableSizeList>
+                        {provided.placeholder}
+                      </div>
                     )}
                   </Droppable>
                 </DragDropContext>
@@ -292,7 +295,6 @@ function Rules({ dispatch, apiConfig, groups }) {
           </div>
         </div>
       </Tabs>
-
 
       <AddRuleSet
         isOpen={addRuleSetModal}
