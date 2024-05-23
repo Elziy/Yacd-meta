@@ -20,7 +20,9 @@ export const defaultProxyProvider = {
   interval: 86400,
   proxy: 'DIRECT',
   'health-check': {
-    enable: false
+    enable: false,
+    url: 'http://www.gstatic.com/generate_204',
+    interval: 3600
   },
   override: {
     'additional-prefix': ''

@@ -116,7 +116,9 @@ function ProxyProviderImpl({
           interval: response.data.interval || defaultProxyProvider.interval,
           proxy: response.data.proxy || '',
           'health-check': {
-            enable: false
+            enable: false,
+            url: defaultProxyProvider['health-check'].url,
+            interval: defaultProxyProvider['health-check'].interval,
           },
           override: {
             'additional-prefix': response.data.override?.['additional-prefix'] || ''
