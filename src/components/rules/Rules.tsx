@@ -28,7 +28,7 @@ import Button from '~/components/shared/Button';
 import { RotateIcon } from '~/components/shared/RotateIcon';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 import { Tooltip } from '@reach/tooltip';
-import { FiPlus, FiRepeat, FiFilePlus } from 'react-icons/fi';
+import { FiRepeat, FiFilePlus, FiPlusCircle } from 'react-icons/fi';
 
 
 const { memo } = React;
@@ -210,19 +210,19 @@ function Rules({ dispatch, apiConfig, groups }) {
         <TextFilter textAtom={ruleFilterText} placeholder={t('Search')} />
         <Tooltip label={t('reload_config_file')}>
           <Button className={s.firstButton} onClick={() => setReloadConfig(true)} kind="minimal">
-            <FiRepeat size={24} />
+            <FiRepeat size={20} />
           </Button>
         </Tooltip>
 
         <Tooltip label={t('add_rule')}>
           <Button onClick={() => setAddRuleModal(true)} kind="minimal">
-            <FiPlus size={24} />
+            <FiPlusCircle size={20} />
           </Button>
         </Tooltip>
 
         <Tooltip label={t('add_rule_set')}>
           <Button onClick={() => setAddRuleSetModal(true)} kind="minimal">
-            <FiFilePlus size={24} />
+            <FiFilePlus size={20} />
           </Button>
         </Tooltip>
       </div>

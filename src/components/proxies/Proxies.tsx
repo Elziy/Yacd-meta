@@ -8,7 +8,7 @@ import Button from '~/components/shared/Button';
 import ContentHeader from '~/components/sideBar/ContentHeader';
 import { ClosePrevConns } from '~/components/proxies/ClosePrevConns';
 import { ProxyGroup } from '~/components/proxies/ProxyGroup';
-import { ProxyProviderList } from '~/components/proxies/ProxyProviderList';
+import ProxyProviderList from '~/components/proxies/ProxyProviderList';
 import Settings from '~/components/proxies/Settings';
 import BaseModal from '~/components/shared/BaseModal';
 import { TextFilter } from '~/components/shared/TextFitler';
@@ -25,7 +25,7 @@ import {
 import type { State } from '~/store/types';
 
 import s0 from './Proxies.module.scss';
-import { FiFilePlus, FiPlus, FiRepeat } from 'react-icons/fi';
+import { FiPlusCircle, FiRepeat } from 'react-icons/fi';
 import Equalizer from '~/components/svg/Equalizer';
 import ModalAddProxyGroup from '~/components/proxies/ModalAddProxyGroup';
 import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
@@ -75,13 +75,13 @@ function Proxies({
         <TextFilter textAtom={proxyFilterText} placeholder={t('Search')} />
         <Tooltip label={t('reload_config_file')}>
           <Button className={s0.firstButton} onClick={() => setReloadConfig(true)} kind="minimal">
-            <FiRepeat size={24} />
+            <FiRepeat size={20} />
           </Button>
         </Tooltip>
 
         <Tooltip label={t('settings')}>
           <Button kind="minimal" onClick={() => setIsSettingsModalOpen(true)}>
-            <Equalizer size={24} />
+            <Equalizer size={20} />
           </Button>
         </Tooltip>
 
@@ -89,7 +89,7 @@ function Proxies({
           <Button onClick={() => {
             setAddProxyGroupModal(true);
           }} kind="minimal">
-            <FiPlus size={24} />
+            <FiPlusCircle size={20} />
           </Button>
         </Tooltip>
       </div>
