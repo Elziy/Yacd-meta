@@ -13,6 +13,7 @@ import { formatTime } from '~/api/proxies';
 import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
 import ShowCodeModal from '~/components/rules/ShowCodeModal';
 import { notifyError, notifySuccess } from '~/misc/message';
+import { useStoreActions } from '~/components/StateProvider';
 
 export function RuleProviderItem(
   {
@@ -22,13 +23,14 @@ export function RuleProviderItem(
     behavior,
     updatedAt,
     ruleCount,
-    apiConfig
+    apiConfig,
+    unReloadConfig
   }) {
   const [onClickRefreshButton, isRefreshing] = useUpdateRuleProviderItem(name, apiConfig);
   const [data, setData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [delete_modal, setDeleteModal] = useState(false);
-
+  const { updateAppConfig } = useStoreActions();
   const timeAgo = formatTime(new Date(updatedAt));
   // const timeAgo = formatDistance(new Date(updatedAt), new Date());
 
@@ -42,8 +44,10 @@ export function RuleProviderItem(
     }).then(async (res) => {
       const response = await res.json();
       if (response.code === 200) {
-        setDeleteModal(false);
         notifySuccess(response.message);
+        unReloadConfig?.push('删除规则资源 : ' + name);
+        updateAppConfig('unReloadConfig', unReloadConfig);
+        setDeleteModal(false);
       } else {
         notifyError(response.message);
       }
@@ -102,8 +106,8 @@ export function RuleProviderItem(
       />
 
       <ShowCodeModal isOpen={isModalOpen} onRequestClose={() => {
-        setIsModalOpen(false)
-        setData(null)
+        setIsModalOpen(false);
+        setData(null);
       }} data={data} />
     </div>
   );

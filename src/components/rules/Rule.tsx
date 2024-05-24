@@ -8,6 +8,7 @@ import Select from '~/components/shared/Select';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 import s from '~/components/rules/Rules.module.scss';
 import ShowCodeModal from '~/components/rules/ShowCodeModal';
+import { useStoreActions } from '~/components/StateProvider';
 
 
 const colorMap = {
@@ -53,10 +54,12 @@ type Props = {
   proxy?: string;
   size?: number;
   groups: string[];
+  unReloadConfig?: string[];
 };
 
-function Rule({ type, payload, proxy, id, size, groups }: Props) {
+function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props) {
   const styleProxy = getStyleFor({ proxy });
+  const { updateAppConfig } = useStoreActions();
 
   const [data, setData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -83,6 +86,8 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
     deleteRule(JSON.stringify(body)).then((res) => {
       if (res.code === 200) {
         notifySuccess(res.message);
+        unReloadConfig?.push('删除规则 : ' + type + ', ' + payload);
+        updateAppConfig('unReloadConfig', unReloadConfig);
         setDeleteModal(false);
       } else {
         notifyError(res.message);
@@ -216,4 +221,4 @@ function Rule({ type, payload, proxy, id, size, groups }: Props) {
 
 export default Rule;
 
-export const fixedRuleCount = 5
+export const fixedRuleCount = 5;

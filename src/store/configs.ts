@@ -5,6 +5,7 @@ import * as configsAPI from '../api/configs';
 import * as trafficAPI from '../api/traffic';
 import { openModal } from './modals';
 import { notifySuccess } from '~/misc/message';
+import { resetUnReloadConfig } from '~/store/app';
 
 export const getConfigs = (s: State) => s.configs.configs;
 export const getHaveFetched = (s: State) => s.configs.haveFetchedConfig;
@@ -69,7 +70,7 @@ export function updateConfigs(
             // eslint-disable-next-line no-console
             console.log('Error update configs', res.statusText);
           } else {
-            notifySuccess('配置已更新')
+            notifySuccess('配置已更新');
           }
         },
         (err) => {
@@ -98,7 +99,8 @@ export function reloadConfigFile(apiConfig: ClashAPIConfig) {
             // eslint-disable-next-line no-console
             console.log('Error reload config file', res.statusText);
           } else {
-            notifySuccess('配置文件已重新加载')
+            resetUnReloadConfig();
+            notifySuccess('配置文件已重新加载');
           }
         },
         (err) => {
@@ -123,7 +125,7 @@ export function restartCore(apiConfig: ClashAPIConfig) {
             // eslint-disable-next-line no-console
             console.log('Error restart core', res.statusText);
           } else {
-            notifySuccess('核心已重启')
+            notifySuccess('核心已重启');
           }
         },
         (err) => {
@@ -148,7 +150,7 @@ export function upgradeCore(apiConfig: ClashAPIConfig) {
             // eslint-disable-next-line no-console
             console.log('Error upgrade core', res.statusText);
           } else {
-            notifySuccess('核心已升级')
+            notifySuccess('核心已升级');
           }
         },
         (err) => {
@@ -162,6 +164,7 @@ export function upgradeCore(apiConfig: ClashAPIConfig) {
       });
   };
 }
+
 export function updateGeoDatabasesFile(apiConfig: ClashAPIConfig) {
   return async (dispatch: DispatchFn) => {
     configsAPI
@@ -172,7 +175,7 @@ export function updateGeoDatabasesFile(apiConfig: ClashAPIConfig) {
             // eslint-disable-next-line no-console
             console.log('Error update geo databases file', res.statusText);
           } else {
-            notifySuccess('GEO 数据库文件已更新')
+            notifySuccess('GEO 数据库文件已更新');
           }
         },
         (err) => {
@@ -197,7 +200,7 @@ export function flushFakeIPPool(apiConfig: ClashAPIConfig) {
             // eslint-disable-next-line no-console
             console.log('Error flush FakeIP pool', res.statusText);
           } else {
-            notifySuccess('FakeIP 数据库已清空')
+            notifySuccess('FakeIP 数据库已清空');
           }
         },
         (err) => {
@@ -222,7 +225,7 @@ export function flushTrafficStatistic(apiConfig: ClashAPIConfig) {
             // eslint-disable-next-line no-console
             console.log('Error flush traffic statistic', res.statusText);
           } else {
-            notifySuccess('流量统计已清空')
+            notifySuccess('流量统计已清空');
           }
         },
         (err) => {
@@ -254,8 +257,8 @@ export const initialState: StateConfigs = {
       device: '',
       stack: '',
       'dns-hijack': [],
-      'auto-route': false,
-    },
+      'auto-route': false
+    }
   },
-  haveFetchedConfig: false,
+  haveFetchedConfig: false
 };

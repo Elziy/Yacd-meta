@@ -21,6 +21,7 @@ export const getAutoCloseOldConns = (s: State) => s.app.autoCloseOldConns;
 export const getLogStreamingPaused = (s: State) => s.app.logStreamingPaused;
 export const getMinTraffic = (s: State) => s.app.minTraffic;
 export const getUserIpFilter = (s: State) => s.app.userIpFilter;
+export const getUnreloadConfig = (s: State) => s.app.unReloadConfig;
 
 const saveStateDebounced = debounce(saveState, 600);
 
@@ -141,6 +142,12 @@ export function updateAppConfig(name: string, value: unknown) {
   };
 }
 
+export function resetUnReloadConfig() {
+  let s = loadState();
+  s.unReloadConfig = [];
+  saveState(s);
+}
+
 export function updateCollapsibleIsOpen(prefix: string, name: string, v: boolean) {
   return (dispatch: DispatchFn, getState: GetStateFn) => {
     dispatch('updateCollapsibleIsOpen', (s: State) => {
@@ -174,7 +181,8 @@ const defaultState: StateApp = {
   logStreamingPaused: false,
   // min traffic to show in the chart, unit is MB
   minTraffic: 10,
-  userIpFilter: []
+  userIpFilter: [],
+  unReloadConfig: []
 };
 
 function parseConfigQueryString() {

@@ -11,6 +11,7 @@ import Switch from '../shared/SwitchThemed';
 import { reloadConfigFile } from '~/store/configs';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 import { fixedRuleCount } from '~/components/rules/Rule';
+import { useStoreActions } from '~/components/StateProvider';
 
 const ruleTypes = [
   ['DOMAIN', '域名'],
@@ -25,7 +26,7 @@ const ruleTypes = [
 ];
 
 
-export default function ModalAddRule({ dispatch, apiConfig, isOpen, onRequestClose, groups, rules, provider }) {
+export default function ModalAddRule({ dispatch, apiConfig, isOpen, onRequestClose, groups, rules, provider, unReloadConfig }) {
   const { t } = useTranslation();
 
   const [submitting, setSubmitting] = useState(false);
@@ -35,6 +36,7 @@ export default function ModalAddRule({ dispatch, apiConfig, isOpen, onRequestClo
   const [policy, setPolicy] = useState(groups[0] || '');
   const [noResolve, setNoResolve] = useState(false);
   const [relaodConfig, setRelaodConfig] = useState(false);
+  const { updateAppConfig } = useStoreActions();
 
   const [msg, setMsg] = useState('');
 
@@ -99,9 +101,11 @@ export default function ModalAddRule({ dispatch, apiConfig, isOpen, onRequestClo
         if (relaodConfig) {
           handleReloadConfigFile();
         }
+        notifySuccess(res.message);
+        unReloadConfig?.push(t('add_rule') + ' : ' + rule);
+        updateAppConfig('unReloadConfig', unReloadConfig);
         setSubmitting(false);
         onRequestClose();
-        notifySuccess(res.message);
       } else {
         setMsg('');
         notifyError(res.message);

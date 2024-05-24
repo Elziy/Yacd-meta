@@ -124,6 +124,23 @@
 .iconWrapper:hover {
   opacity: 0.6;
 }
-.iconWrapper:focus {
-  border-color: var(--color-focus-blue);
+
+.button {
+  --sz: 40px;
+
+  width: var(--sz);
+  height: var(--sz);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  outline: none;
+  padding: 5px;
+  color: var(--color-text);
+  border-width: 0;
+  background: unset;
+  &:hover {
+    background: unset;
+    border: 0;
+  }
 }

@@ -35,9 +35,6 @@
     border-radius: 100%;
     border: 1px solid transparent;
     background: var(--color-bg-sidebar);
-    &:focus {
-      border-color: var(--color-focus-blue);
-    }
     option {
       // this has effect in Firefox
       // Chrome and Safari use the native menu

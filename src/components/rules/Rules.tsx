@@ -13,11 +13,11 @@ import { ClashAPIConfig } from '~/types';
 
 import useRemainingViewPortHeight from '../../hooks/useRemainingViewPortHeight';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { getClashAPIConfig } from '~/store/app';
+import { getClashAPIConfig, getUnreloadConfig } from '~/store/app';
 import ContentHeader from '../sideBar/ContentHeader';
 import Rule, { editRule, fixedRuleCount } from './Rule';
 import s from './Rules.module.scss';
-import { connect } from '../StateProvider';
+import { connect, useStoreActions } from '../StateProvider';
 import { fetchProxies, getProxyGroupNames } from '~/store/proxies';
 import ModalAddRule from '~/components/rules/ModalAddRule';
 import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
@@ -102,14 +102,14 @@ const RuleRow = ({ index, style, data }) => {
 };
 
 const DraggableRuleRow = ({ index, style, data }) => {
-  const { rules, groups } = data;
+  const { rules, groups, unReloadConfig } = data;
   const r = rules[index];
   return (
     <Draggable draggableId={`rule-${index}`} index={index} key={index}>
       {(provided) => (
         <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
              style={{ ...style, ...provided.draggableProps.style }}>
-          < Rule {...r} groups={groups} />
+          < Rule {...r} groups={groups} unReloadConfig={unReloadConfig} />
         </div>
       )}
     </Draggable>
@@ -118,27 +118,30 @@ const DraggableRuleRow = ({ index, style, data }) => {
 
 // 只有规则提供者的行
 const RuleProviderRow = ({ index, style, data }) => {
-  const { provider, apiConfig } = data;
+  const { provider, apiConfig, unReloadConfig } = data;
   const name = provider.names[index];
   const item = provider.byName[name];
   return (
     <div style={style} className={s.RuleProviderItemWrapper}>
-      <RuleProviderItem apiConfig={apiConfig} {...item} />
+      <RuleProviderItem apiConfig={apiConfig} {...item} unReloadConfig={unReloadConfig} />
     </div>
   );
 };
 
 const mapState = (s: State) => ({
   apiConfig: getClashAPIConfig(s),
-  groups: getProxyGroupNames(s)
+  groups: getProxyGroupNames(s),
+  unReloadConfig: getUnreloadConfig(s)
 });
 
 export default connect(mapState)(Rules);
 
-function Rules({ dispatch, apiConfig, groups }) {
+function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
   const [refRulesContainer, containerHeight] = useRemainingViewPortHeight();
 
   const { rules, provider } = useRuleAndProvider(apiConfig);
+  const { updateAppConfig } = useStoreActions();
+
   const fetchProxiesHooked = useCallback(() => {
     dispatch(fetchProxies(apiConfig));
   }, [apiConfig, dispatch]);
@@ -159,6 +162,7 @@ function Rules({ dispatch, apiConfig, groups }) {
   }
   const mapState = (s: State) => ({
     apiConfig: getClashAPIConfig(s),
+    unReloadConfig: getUnreloadConfig(s),
     groups: groups,
     rules: rules,
     provider: provider
@@ -183,6 +187,7 @@ function Rules({ dispatch, apiConfig, groups }) {
       return;
     }
     const [removed] = rules.splice(result.source.index, 1);
+    const destinationRule = rules[result.destination.index];
     rules.splice(result.destination.index, 0, removed);
 
     const body = {
@@ -193,6 +198,8 @@ function Rules({ dispatch, apiConfig, groups }) {
 
     editRule(JSON.stringify(body)).then((res) => {
       if (res.code === 200) {
+        unReloadConfig?.push('拖动规则 : ' + removed.payload + ' => ' + destinationRule.payload);
+        updateAppConfig('unReloadConfig', unReloadConfig);
         notifySuccess(res.message);
       } else {
         notifyError(res.message);
@@ -260,7 +267,7 @@ function Rules({ dispatch, apiConfig, groups }) {
                           itemCount={rules.length}
                           itemSize={getItemSize}
                           outerRef={provided.innerRef}
-                          itemData={{ rules, groups }}
+                          itemData={{ rules, groups, unReloadConfig }}
                         >
                           {DraggableRuleRow}
                         </VariableSizeList>
@@ -278,7 +285,7 @@ function Rules({ dispatch, apiConfig, groups }) {
                   width="100%"
                   itemCount={provider.names.length}
                   itemSize={getItemSize}
-                  itemData={{ provider, apiConfig }}
+                  itemData={{ provider, apiConfig, unReloadConfig }}
                   itemKey={itemKey}
                 >
                   {RuleProviderRow}

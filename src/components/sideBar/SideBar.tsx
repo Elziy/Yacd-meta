@@ -13,12 +13,19 @@ import { Link, useLocation } from 'react-router-dom';
 import { fetchVersion } from '~/api/version';
 import { ThemeSwitcher } from '~/components/shared/ThemeSwitcher';
 import { connect } from '~/components/StateProvider';
-import { getClashAPIConfig } from '~/store/app';
+import { getClashAPIConfig, getUnreloadConfig } from '~/store/app';
 import { ClashAPIConfig } from '~/types';
 
 import s from './SideBar.module.scss';
+import { FcHighPriority } from 'react-icons/fc';
+import Button from '~/components/shared/Button';
+import { useState } from 'react';
+import ModalReloadConfig from '~/components/sideBar/ModalReloadConfig';
 
-type Props = { apiConfig: ClashAPIConfig };
+type Props = {
+  apiConfig: ClashAPIConfig,
+  unReloadConfig: string[]
+};
 
 const icons = {
   activity: MdBarChart,
@@ -87,7 +94,8 @@ const pages = [
 ];
 
 const mapState = (s) => ({
-  apiConfig: getClashAPIConfig(s)
+  apiConfig: getClashAPIConfig(s),
+  unReloadConfig: getUnreloadConfig(s)
 });
 
 export default connect(mapState)(SideBar);
@@ -99,6 +107,9 @@ function SideBar(props: Props) {
   const { data: version } = useQuery(['/version', props.apiConfig], () =>
     fetchVersion('/version', props.apiConfig)
   );
+
+  const [unReloadConfigModal, setUnreloadConfigModal] = useState(false);
+
   return (
     <div className={s.root}>
       <div className={version.meta && version.premium ? s.logo_singbox : s.logo_meta} />
@@ -120,6 +131,16 @@ function SideBar(props: Props) {
             <Info size={20} />
           </Link>
         </Tooltip>
+        {props.unReloadConfig?.length > 0 ?
+          <div>
+            <Tooltip label={'已修改的配置未重载'}>
+              <Button className={s.button} onClick={() => setUnreloadConfigModal(true)}>
+                <FcHighPriority size={20} />
+              </Button>
+            </Tooltip>
+            <ModalReloadConfig isOpen={unReloadConfigModal} onRequestClose={() => setUnreloadConfigModal(false)} />
+          </div>
+          : null}
       </div>
     </div>
   );

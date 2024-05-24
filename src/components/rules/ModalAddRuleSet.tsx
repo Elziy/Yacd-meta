@@ -11,14 +11,16 @@ import Switch from '../shared/SwitchThemed';
 import { reloadConfigFile } from '~/store/configs';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 import { fixedRuleCount } from '~/components/rules/Rule';
+import { useStoreActions } from '~/components/StateProvider';
 
-export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequestClose, groups, rules, provider }) {
+export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequestClose, groups, rules, unReloadConfig }) {
   const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [index, setIndex] = useState(5);
   const [policy, setPolicy] = useState(groups[0] || '');
   const [noResolve, setNoResolve] = useState(false);
   const [relaodConfig, setRelaodConfig] = useState(false);
+  const { updateAppConfig } = useStoreActions();
 
   const [ruleSet, setRuleSet] = useState({
     name: '',
@@ -116,6 +118,8 @@ export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequest
               handleReloadConfigFile();
             }
             notifySuccess(response.message);
+            unReloadConfig?.push(t('add_rule_set') + ' : ' + rule);
+            updateAppConfig('unReloadConfig', unReloadConfig);
             setSubmitting(false);
             onRequestClose();
           } else {

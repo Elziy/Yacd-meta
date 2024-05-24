@@ -1,5 +1,5 @@
+import React from 'react';
 import { Tooltip } from '@reach/tooltip';
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { connect } from '~/components/StateProvider';

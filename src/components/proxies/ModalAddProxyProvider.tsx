@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import type { State } from '~/store/types';
-import { getClashAPIConfig } from '~/store/app';
+import { getClashAPIConfig, getUnreloadConfig } from '~/store/app';
 import { getProxyGroupNames, getProxyProviderNames } from '~/store/proxies';
-import { connect } from '~/components/StateProvider';
+import { connect, useStoreActions } from '~/components/StateProvider';
 import { useTranslation } from 'react-i18next';
 import { reloadConfigFile } from '~/store/configs';
 import BaseModal from '~/components/shared/BaseModal';
@@ -31,8 +31,9 @@ export const defaultProxyProvider = {
   'exclude-filter': ''
 };
 
-function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, nowProxyProvider, groupNames, proxyProviderNames }) {
+function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, nowProxyProvider, groupNames, proxyProviderNames, unReloadConfig }) {
   const { t } = useTranslation();
+  const { updateAppConfig } = useStoreActions();
   const [submitting, setSubmitting] = useState(false);
 
   const handleReloadConfigFile = useCallback(() => {
@@ -86,6 +87,8 @@ function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, no
       setSubmitting(false);
       if (response.code === 200) {
         notifySuccess(response.message);
+        unReloadConfig?.push((nowProxyProvider ? t('edit_proxy_provider') : t('add_proxy_provider')) + ' : ' + proxyProvider.name);
+        updateAppConfig('unReloadConfig', unReloadConfig);
         // handleReloadConfigFile();
         onRequestClose();
       } else {
@@ -102,7 +105,7 @@ function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, no
     <BaseModal isOpen={isOpen} onRequestClose={onRequestClose}>
       <div>
         <div style={{ textAlign: 'center', fontSize: '1.2em' }}>
-          <span>{t('add_proxy_group')}</span>
+          <span>{nowProxyProvider ? t('edit_proxy_provider') : t('add_proxy_provider')}</span>
         </div>
 
         <div className={s.main} style={{ paddingRight: 10 }}>
@@ -200,7 +203,8 @@ function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, no
 const mapState = (s: State) => ({
   apiConfig: getClashAPIConfig(s),
   groupNames: getProxyGroupNames(s),
-  proxyProviderNames: getProxyProviderNames(s)
+  proxyProviderNames: getProxyProviderNames(s),
+  unReloadConfig: getUnreloadConfig(s)
 });
 
 export default connect(mapState)(ModalAddProxyProvider);

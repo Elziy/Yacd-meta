@@ -16,6 +16,7 @@ export type StateApp = {
   logStreamingPaused: boolean;
   minTraffic: number
   userIpFilter: string[]
+  unReloadConfig: string[]
 };
 
 export type Statistic = {

@@ -10,9 +10,9 @@ import Select from '~/components/shared/Select';
 import { reloadConfigFile } from '~/store/configs';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 import type { State } from '~/store/types';
-import { getClashAPIConfig } from '~/store/app';
+import { getClashAPIConfig, getUnreloadConfig } from '~/store/app';
 import { getProxyGroupNames, getProxyProviderNames } from '~/store/proxies';
-import { connect } from '~/components/StateProvider';
+import { connect, useStoreActions } from '~/components/StateProvider';
 import MultiSelect from '~/components/shared/MultiSelect';
 
 export const defaultProxyGroup = {
@@ -29,8 +29,9 @@ export const defaultProxyGroup = {
   timeout: 5000
 };
 
-function ModalAddProxyGroup({ dispatch, apiConfig, isOpen, onRequestClose, nowProxyGroup, groupNames, proxyProviderNames }) {
+function ModalAddProxyGroup({ dispatch, apiConfig, isOpen, onRequestClose, nowProxyGroup, groupNames, proxyProviderNames, unReloadConfig }) {
   const { t } = useTranslation();
+  const { updateAppConfig } = useStoreActions();
   const [submitting, setSubmitting] = useState(false);
   const [index, setIndex] = useState(null);
 
@@ -106,6 +107,8 @@ function ModalAddProxyGroup({ dispatch, apiConfig, isOpen, onRequestClose, nowPr
       const response = await res.json();
       if (response.code === 200) {
         notifySuccess(response.message);
+        unReloadConfig?.push((nowProxyGroup ? t('edit_proxy_group') : t('add_proxy_group')) + ' : ' + proxyGroup.name);
+        updateAppConfig('unReloadConfig', unReloadConfig);
         onRequestClose();
       } else {
         notifyError(response.message);
@@ -121,7 +124,7 @@ function ModalAddProxyGroup({ dispatch, apiConfig, isOpen, onRequestClose, nowPr
     <BaseModal isOpen={isOpen} onRequestClose={onRequestClose}>
       <div>
         <div style={{ textAlign: 'center', fontSize: '1.2em' }}>
-          <span>{t('add_proxy_group')}</span>
+          <span>{nowProxyGroup ? t('edit_proxy_group') : t('add_proxy_group')}</span>
         </div>
 
         <div className={s.main}>
@@ -253,7 +256,8 @@ function ModalAddProxyGroup({ dispatch, apiConfig, isOpen, onRequestClose, nowPr
 const mapState = (s: State) => ({
   apiConfig: getClashAPIConfig(s),
   groupNames: getProxyGroupNames(s),
-  proxyProviderNames: getProxyProviderNames(s)
+  proxyProviderNames: getProxyProviderNames(s),
+  unReloadConfig: getUnreloadConfig(s)
 });
 
 export default connect(mapState)(ModalAddProxyGroup);
