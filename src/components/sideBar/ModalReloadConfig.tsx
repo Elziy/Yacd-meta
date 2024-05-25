@@ -17,7 +17,7 @@ function ModalReloadConfig({ dispatch, apiConfig, isOpen, onRequestClose, unRelo
 
   const submit = () => {
     setSubmitting(true);
-    // handleReloadConfigFile();
+    handleReloadConfigFile();
     onRequestClose();
   };
 
