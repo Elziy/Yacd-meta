@@ -30,7 +30,7 @@ export function ThemeSwitcherImpl({ theme, dispatch }) {
     (e: React.ChangeEvent<HTMLSelectElement>) => dispatch(switchTheme(e.target.value)),
     [dispatch]
   );
-
+// noinspection RequiredAttributes
   return (
     <Tooltip label={t('switch_theme')} aria-label={'switch theme'}>
       <div className={s.themeSwitchContainer}>

@@ -33,10 +33,7 @@
   opacity: 0.4;
 }
 
-.select:focus {
-  box-shadow: rgba(66, 153, 225, 0.6) 0 0 0 1px;
-}
-
 .select option {
   background-color: var(--color-background);
+  color: var(--color-text);
 }

@@ -97,15 +97,17 @@ function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props)
     });
   };
 
-  const add_rule = (id: number) => {
+  const edit_rule = (id: number) => {
     const body = {
-      option: 'add',
+      option: 'change_policy',
       policy: policy,
       index: id
     };
     editRule(JSON.stringify(body)).then((res) => {
       if (res.code === 200) {
         notifySuccess(res.message);
+        unReloadConfig?.push('修改规则 : ' + type + ', ' + payload);
+        updateAppConfig('unReloadConfig', unReloadConfig);
         setEditModal(false);
       } else {
         setPolicy(proxy);
@@ -197,7 +199,7 @@ function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props)
       <ModalCloseAllConnections
         confirm={'edit_rule'}
         isOpen={edit_modal}
-        primaryButtonOnTap={() => add_rule(id)}
+        primaryButtonOnTap={() => edit_rule(id)}
         onRequestClose={() => {
           setPolicy(proxy);
           setEditModal(false);
