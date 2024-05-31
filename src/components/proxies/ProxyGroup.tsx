@@ -90,6 +90,7 @@ function ProxyGroupImpl({
       const response = await res.json();
       if (response.code === 200) {
         setProxyGroup({
+          index: response.data.index || 0,
           name: response.data.name,
           type: response.data.type,
           proxies: response.data.proxies || [],

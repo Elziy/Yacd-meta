@@ -47,9 +47,7 @@ function ModalAddProxyGroup({ dispatch, apiConfig, isOpen, onRequestClose, nowPr
     if (nowProxyGroup) {
       setProxyGroup(nowProxyGroup);
       // 设置当前代理组的索引
-      const name = nowProxyGroup.name;
-      const i = groupNames.indexOf(name);
-      setIndex(i === -1 ? groupNames.length - 2 : i);
+      setIndex(nowProxyGroup.index);
     } else {
       setIndex(groupNames.length - 2);
     }
