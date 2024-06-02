@@ -174,8 +174,8 @@ export const ProxyGroup = connect((s, { name, delay }) => {
   const group = proxies[name];
   const { all, type, now, icon } = group;
   let nowProxy = now;
-  while (proxies[nowProxy].now) {
-    nowProxy = proxies[nowProxy].now;
+  while (proxies[nowProxy]?.now) {
+    nowProxy = proxies[nowProxy]?.now;
   }
 
   return {
