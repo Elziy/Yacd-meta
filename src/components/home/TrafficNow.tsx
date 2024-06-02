@@ -37,14 +37,18 @@ function TrafficNow({ apiConfig }) {
         <div>{t('Download Total')}</div>
         <div>{dlTotal}</div>
       </div>
-      <div className={s0.sec}>
-        <div>{t('Proxy Upload Total')}</div>
-        <div>{proxyUpTotal}</div>
-      </div>
-      <div className={s0.sec}>
-        <div>{t('Proxy Download Total')}</div>
-        <div>{proxyDlTotal}</div>
-      </div>
+      {proxyUpTotal ?
+        <div className={s0.sec}>
+          <div>{t('Proxy Upload Total')}</div>
+          <div>{proxyUpTotal}</div>
+        </div> : null
+      }
+      {proxyDlTotal ?
+        <div className={s0.sec}>
+          <div>{t('Proxy Download Total')}</div>
+          <div>{proxyDlTotal}</div>
+        </div> : null
+      }
       <div className={s0.sec}>
         <div>{t('Active Connections')}</div>
         <div>{connNumber}</div>

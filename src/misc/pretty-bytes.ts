@@ -3,6 +3,9 @@
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
 export default function prettyBytes(n: number) {
+  if (n === null || n === undefined || isNaN(n)) {
+    return '0 B';
+  }
   if (n < 1000) {
     return n + ' B';
   }
