@@ -17,9 +17,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      short_sha: ${{ steps.get_sha.outputs.short_sha }}
-
     steps:
       # Checkout the repository
       - name: Checkout Dashboard code
@@ -37,11 +34,6 @@ jobs:
           node-version: '18.x'
           cache: pnpm
 
-      # Get short SHA
-      - name: Get short SHA
-        id: get_sha
-        run: echo "::set-output name=short_sha::$(git rev-parse --short HEAD)"
-
       # Install packages and build the project
       - name: Install package and build
         run: |
@@ -52,14 +44,14 @@ jobs:
       - name: Zip build output
         id: zip_output
         run: |
-          zip -r yacd-${{ steps.get_sha.outputs.short_sha }}.zip ./public
+          zip -r yacd.zip ./public
 
       # Upload the artifact
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-artifact
-          path: yacd*.zip
+          path: yacd.zip
 
   Upload-Prerelease:
     runs-on: ubuntu-latest
@@ -98,20 +90,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build-artifact
-          path: ./build
+          path: ./build/
 
-      # Rename the build artifact for release
-      - name: Rename build artifact
-        run: |
-          mv ./build/yacd*.zip ./build/yacd-${{ github.event.inputs.version }}.zip
-
-      # Upload artifact to GitHub release
-      - name: Upload to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release
+        uses: softprops/action-gh-release@v2
+        if: ${{ success() }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/yacd-${{ github.event.inputs.version }}.zip
-          asset_name: yacd-*.zip
-          asset_content_type: application/zip
+          tag_name: ${{ github.event.inputs.version }}
+          files: |
+            ./build/*.zip
