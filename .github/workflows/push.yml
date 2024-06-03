@@ -1,49 +1,110 @@
-name: Deploy
+name: Build and Release Frontend
 
-on: [ push ]
+on:
+  push:
+    branches:
+      - master
+  release:
+    types:
+      - created
+      - published
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      build_path: ${{ steps.build_output.outputs.build_path }}
+
     steps:
+      # Checkout the repository
       - name: Checkout Dashboard code
         uses: actions/checkout@v3
+
+      # Set up pnpm
       - uses: pnpm/action-setup@v2
         with:
           version: latest
-      - name: Setup Nodejs
+
+      # Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           cache: pnpm
+
+      # Install packages and build the project
       - name: Install package and build
         run: |
           pnpm install --no-frozen-lockfile
           pnpm build
 
-      - name: Zip the build
-        run: zip -r yacd.zip public
+      # Zip the build output
+      - name: Zip build output
+        id: build_output
+        run: |
+          zip -r yacd-${{ github.sha }}.zip ./build
+          echo "::set-output name=build_path::$(pwd)/yacd-${{ github.sha }}.zip"
+
+      # Upload the artifact
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: yacd-${{ github.sha }}.zip
 
   Upload-Prerelease:
-    permissions: write-all
-    if: ${{ github.event_name != 'workflow_dispatch' }}
-    needs: build
     runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push'
     steps:
-      - name: Delete current release assets
-        uses: 8Mi-Tech/delete-release-assets-action@main
+      # Download build artifact from build job
+      - name: Download build artifact
+        uses: actions/download-artifact@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: Prerelease
-          deleteOnlyFromDrafts: false
-      - name: Upload Prerelease
-        uses: softprops/action-gh-release@v1
-        if: ${{ success() }}
-        with:
-          tag_name: Prerelease
-          files: |
-            yacd.zip
-          prerelease: true
-          generate_release_notes: true
-          body_path: release.txt
+          name: build-artifact
+          path: ./build
 
+      # Upload artifact as a pre-release
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: prerelease-${{ github.sha }}
+          release_name: "Pre-release ${{ github.sha }}"
+          draft: false
+          prerelease: true
+          files: ./build/yacd-${{ github.sha }}.zip
+
+  Upload-Release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      # Download build artifact from build job
+      - name: Download build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifact
+          path: ./build
+
+      # Rename the build artifact for release
+      - name: Rename build artifact
+        run: |
+          mv ./build/yacd-${{ github.sha }}.zip ./build/yacd-${{ github.event.inputs.version }}.zip
+
+      # Upload artifact to GitHub release
+      - name: Upload to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./build/yacd-${{ github.event.inputs.version }}.zip
+          asset_name: yacd-${{ github.event.inputs.version }}.zip
+          asset_content_type: application/zip
