@@ -1,6 +1,6 @@
 name: Deploy
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
@@ -20,3 +20,30 @@ jobs:
         run: |
           pnpm install --no-frozen-lockfile
           pnpm build
+
+      - name: Zip the build
+        run: zip -r yacd.zip public
+
+  Upload-Prerelease:
+    permissions: write-all
+    if: ${{ github.event_name != 'workflow_dispatch' }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete current release assets
+        uses: 8Mi-Tech/delete-release-assets-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: Prerelease
+          deleteOnlyFromDrafts: false
+      - name: Upload Prerelease
+        uses: softprops/action-gh-release@v1
+        if: ${{ success() }}
+        with:
+          tag_name: Prerelease
+          files: |
+            yacd.zip
+          prerelease: true
+          generate_release_notes: true
+          body_path: release.txt
+
