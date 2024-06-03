@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       short_sha: ${{ steps.get_sha.outputs.short_sha }}
-      build_path: ${{ steps.zip_output.outputs.build_path }}
 
     steps:
       # Checkout the repository
@@ -54,14 +53,13 @@ jobs:
         id: zip_output
         run: |
           zip -r yacd-${{ steps.get_sha.outputs.short_sha }}.zip ./public
-          echo "::set-output name=build_path::$(pwd)/yacd-${{ steps.get_sha.outputs.short_sha }}.zip"
 
       # Upload the artifact
       - name: Upload build artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifact
-          path: yacd-${{ steps.get_sha.outputs.short_sha }}.zip
+          path: yacd*.zip
 
   Upload-Prerelease:
     runs-on: ubuntu-latest
@@ -70,10 +68,17 @@ jobs:
     steps:
       # Download build artifact from build job
       - name: Download build artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: build-artifact
           path: ./build
+
+      - name: Delete current release assets
+        uses: 8Mi-Tech/delete-release-assets-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: Prerelease
+          deleteOnlyFromDrafts: false
 
       # Upload artifact as a pre-release
       - name: Create GitHub Release
@@ -81,8 +86,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: prerelease-${{ needs.build.outputs.short_sha }}
-          release_name: "Pre-release ${{ needs.build.outputs.short_sha }}"
+          tag_name: Prerelease
+          release_name: "Prerelease"
           draft: false
           prerelease: true
           files: ./build/*.zip
@@ -102,7 +107,7 @@ jobs:
       # Rename the build artifact for release
       - name: Rename build artifact
         run: |
-          mv ./build/yacd-${{ needs.build.outputs.short_sha }}.zip ./build/yacd-${{ github.event.inputs.version }}.zip
+          mv ./build/yacd*.zip ./build/yacd-${{ github.event.inputs.version }}.zip
 
       # Upload artifact to GitHub release
       - name: Upload to Release
@@ -112,5 +117,5 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./build/yacd-${{ github.event.inputs.version }}.zip
-          asset_name: yacd-${{ github.event.inputs.version }}.zip
+          asset_name: yacd-*.zip
           asset_content_type: application/zip
