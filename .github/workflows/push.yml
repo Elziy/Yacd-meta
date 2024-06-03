@@ -18,7 +18,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      build_path: ${{ steps.build_output.outputs.build_path }}
+      short_sha: ${{ steps.get_sha.outputs.short_sha }}
+      build_path: ${{ steps.zip_output.outputs.build_path }}
 
     steps:
       # Checkout the repository
@@ -37,6 +38,11 @@ jobs:
           node-version: '18.x'
           cache: pnpm
 
+      # Get short SHA
+      - name: Get short SHA
+        id: get_sha
+        run: echo "::set-output name=short_sha::$(git rev-parse --short HEAD)"
+
       # Install packages and build the project
       - name: Install package and build
         run: |
@@ -45,17 +51,17 @@ jobs:
 
       # Zip the build output
       - name: Zip build output
-        id: build_output
+        id: zip_output
         run: |
-          zip -r yacd-${{ github.sha }}.zip ./build
-          echo "::set-output name=build_path::$(pwd)/yacd-${{ github.sha }}.zip"
+          zip -r yacd-${{ steps.get_sha.outputs.short_sha }}.zip ./public
+          echo "::set-output name=build_path::$(pwd)/yacd-${{ steps.get_sha.outputs.short_sha }}.zip"
 
       # Upload the artifact
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
           name: build-artifact
-          path: yacd-${{ github.sha }}.zip
+          path: yacd-${{ steps.get_sha.outputs.short_sha }}.zip
 
   Upload-Prerelease:
     runs-on: ubuntu-latest
@@ -75,11 +81,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: prerelease-${{ github.sha }}
-          release_name: "Pre-release ${{ github.sha }}"
+          tag_name: prerelease-${{ needs.build.outputs.short_sha }}
+          release_name: "Pre-release ${{ needs.build.outputs.short_sha }}"
           draft: false
           prerelease: true
-          files: ./build/yacd-${{ github.sha }}.zip
+          files: ./build/yacd-${{ needs.build.outputs.short_sha }}.zip
 
   Upload-Release:
     runs-on: ubuntu-latest
@@ -96,7 +102,7 @@ jobs:
       # Rename the build artifact for release
       - name: Rename build artifact
         run: |
-          mv ./build/yacd-${{ github.sha }}.zip ./build/yacd-${{ github.event.inputs.version }}.zip
+          mv ./build/yacd-${{ needs.build.outputs.short_sha }}.zip ./build/yacd-${{ github.event.inputs.version }}.zip
 
       # Upload artifact to GitHub release
       - name: Upload to Release
