@@ -71,7 +71,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
-          path: ./build
+          path: ./build/
 
       - name: Delete current release assets
         uses: 8Mi-Tech/delete-release-assets-action@main
@@ -80,17 +80,13 @@ jobs:
           tag: Prerelease
           deleteOnlyFromDrafts: false
 
-      # Upload artifact as a pre-release
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Prerelease
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: Prerelease
-          release_name: "Prerelease"
-          draft: false
+          files: |
+            ./build/*.zip
           prerelease: true
-          files: ./build/*.zip
 
   Upload-Release:
     runs-on: ubuntu-latest
