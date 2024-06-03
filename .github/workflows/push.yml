@@ -85,7 +85,7 @@ jobs:
           release_name: "Pre-release ${{ needs.build.outputs.short_sha }}"
           draft: false
           prerelease: true
-          files: ./build/yacd-${{ needs.build.outputs.short_sha }}.zip
+          files: ./build/*.zip
 
   Upload-Release:
     runs-on: ubuntu-latest
