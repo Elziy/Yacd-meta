@@ -263,13 +263,6 @@ function Conn({ apiConfig }) {
     setModalColumn(false);
   };
 
-  const resetColumns = () => {
-    setHiddenColumns([...hiddenColumnsOrigin]);
-    setColumns([...columnsOrigin]);
-    localStorage.removeItem('hiddenColumns');
-    localStorage.removeItem('columns');
-  };
-
   const [sourceMapModal, setSourceMapModal] = useState(false);
   const [sourceMap, setSourceMap] = useState(sourceMapInit);
   const [refContainer, containerHeight] = useRemainingViewPortHeight();
@@ -463,9 +456,6 @@ function Conn({ apiConfig }) {
                 <Action text={t('manage_column')} onClick={() => setModalColumn(true)}>
                   <Settings size={10} />
                 </Action>
-                <Action text={t('reset_column')} onClick={resetColumns}>
-                  <RefreshCcw size={10} />
-                </Action>
                 <Action text={t('client_tag')} onClick={openModalSource}>
                   <Tag size={10} />
                 </Action>
@@ -485,9 +475,6 @@ function Conn({ apiConfig }) {
                 text={t('manage_column')}
                 onClick={() => setModalColumn(true)}
               >
-                <Action text={t('reset_column')} onClick={resetColumns}>
-                  <RefreshCcw size={10} />
-                </Action>
                 <Action text={t('client_tag')} onClick={openModalSource}>
                   <Tag size={10} />
                 </Action>
