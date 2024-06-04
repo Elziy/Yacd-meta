@@ -8,6 +8,7 @@ const flushFakeIPPoolEndpoint = '/cache/fakeip/flush';
 const flushTrafficStatisticEndpoint = '/resetStatistic';
 const restartCoreEndpoint = '/restart';
 const upgradeCoreEndpoint = '/upgrade';
+const upgradeUIEndpoint = '/upgrade/ui';
 
 export async function fetchConfigs(apiConfig: ClashAPIConfig) {
   const { url, init } = getURLAndInit(apiConfig);
@@ -54,7 +55,7 @@ export async function restartCore(apiConfig: ClashAPIConfig) {
 
 export async function upgradeUI(apiConfig: ClashAPIConfig) {
   const { url, init } = getURLAndInit(apiConfig);
-  return await fetch(url + upgradeCoreEndpoint, { ...init, method: 'POST' });
+  return await fetch(url + upgradeUIEndpoint, { ...init, method: 'POST' });
 }
 
 export async function upgradeCore(apiConfig: ClashAPIConfig) {

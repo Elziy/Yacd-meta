@@ -72,6 +72,18 @@ jobs:
           tag: Prerelease
           deleteOnlyFromDrafts: false
 
+      - name: Set Env
+        run: |
+          echo "BUILDTIME=$(TZ=Asia/Shanghai date)" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: Prerelease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload Prerelease
         uses: softprops/action-gh-release@v1
         with:

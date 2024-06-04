@@ -174,12 +174,7 @@ export function upgradeUI(apiConfig: ClashAPIConfig) {
           if (res.ok === false) {
             // eslint-disable-next-line no-console
             console.log('Error upgrade UI', res.statusText);
-            if (res.status === 500) {
-              const json = await res.json();
-              if ("update error: already using latest version" === json.message) {
-                notifyError('面板界面已经是最新版本');
-              }
-            }
+            notifyError('面板界面更新失败');
           } else {
             notifySuccess('面板界面已升级');
           }
