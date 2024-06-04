@@ -26,7 +26,7 @@ function ModalReloadConfig({ dispatch, apiConfig, isOpen, onRequestClose, unRelo
       isOpen={isOpen}
       onRequestClose={onRequestClose}>
       <div style={{ textAlign: 'center', fontSize: '1.2em' }}>
-        <span>未重载的配置</span>
+        <span>{unReloadConfig?.length === 0 ? '没有未重载的配置' : '未重载的配置'}</span>
       </div>
       <div className={s.main}>
         <div className={s.configs}>
@@ -36,7 +36,7 @@ function ModalReloadConfig({ dispatch, apiConfig, isOpen, onRequestClose, unRelo
             </div>)}
         </div>
       </div>
-      <Button isLoading={submitting} className={s.submit} onClick={submit}>{t('reload_config_file')}</Button>
+      <Button disabled={unReloadConfig?.length === 0} isLoading={submitting} className={s.submit} onClick={submit}>{t('reload_config_file')}</Button>
     </BaseModal>
   );
 }
