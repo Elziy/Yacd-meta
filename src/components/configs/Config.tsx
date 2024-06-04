@@ -18,7 +18,7 @@ import {
   restartCore,
   updateConfigs,
   updateGeoDatabasesFile,
-  upgradeCore
+  upgradeCore, upgradeUI
 } from '~/store/configs';
 import { openModal } from '~/store/modals';
 import Button from '../shared/Button';
@@ -244,6 +244,10 @@ function ConfigImpl({
     dispatch(upgradeCore(apiConfig));
   }, [apiConfig, dispatch]);
 
+  const handleUpgradeUI = useCallback(() => {
+    dispatch(upgradeUI(apiConfig));
+  }, [apiConfig, dispatch]);
+
   const handleUpdateGeoDatabasesFile = useCallback(() => {
     dispatch(updateGeoDatabasesFile(apiConfig));
   }, [apiConfig, dispatch]);
@@ -273,6 +277,7 @@ function ConfigImpl({
   const [userIpFilterModel, setUserIpFilterModel] = useState(false);
   const [restartCoreModel, setRestartCoreModel] = useState(false);
   const [upgradeCoreModel, setUpgradeCoreModel] = useState(false);
+  const [updateUIModel, setUpdateUIModel] = useState(false);
 
 
   return (
@@ -518,6 +523,27 @@ function ConfigImpl({
                     setUpgradeCoreModel(false);
                   }}
                   onRequestClose={() => setUpgradeCoreModel(false)}
+                />
+              </div>
+            )}
+            {version.meta && !version.premium && (
+              <div>
+                <div className={s0.label}> 升级UI</div>
+                <Button
+                  start={<RotateCw size={16} />}
+                  label={t('upgrade_ui')}
+                  onClick={() => {
+                    setUpdateUIModel(true);
+                  }}
+                />
+                <ModalCloseAllConnections
+                  confirm={'upgrade_ui'}
+                  isOpen={updateUIModel}
+                  primaryButtonOnTap={() => {
+                    handleUpgradeUI();
+                    setUpdateUIModel(false);
+                  }}
+                  onRequestClose={() => setUpdateUIModel(false)}
                 />
               </div>
             )}

@@ -52,6 +52,11 @@ export async function restartCore(apiConfig: ClashAPIConfig) {
   return await fetch(url + restartCoreEndpoint, { ...init, body, method: 'POST' });
 }
 
+export async function upgradeUI(apiConfig: ClashAPIConfig) {
+  const { url, init } = getURLAndInit(apiConfig);
+  return await fetch(url + upgradeCoreEndpoint, { ...init, method: 'POST' });
+}
+
 export async function upgradeCore(apiConfig: ClashAPIConfig) {
   const { url, init } = getURLAndInit(apiConfig);
   const body = '{"path": "", "payload": ""}';

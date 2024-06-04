@@ -4,7 +4,7 @@ import { ClashAPIConfig } from '~/types';
 import * as configsAPI from '../api/configs';
 import * as trafficAPI from '../api/traffic';
 import { openModal } from './modals';
-import { notifySuccess } from '~/misc/message';
+import { notifyError, notifySuccess } from '~/misc/message';
 import { resetUnReloadConfig } from '~/store/app';
 
 export const getConfigs = (s: State) => s.configs.configs;
@@ -156,6 +156,38 @@ export function upgradeCore(apiConfig: ClashAPIConfig) {
         (err) => {
           // eslint-disable-next-line no-console
           console.log('Error upgrade core', err);
+          throw err;
+        }
+      )
+      .then(() => {
+        dispatch(fetchConfigs(apiConfig));
+      });
+  };
+}
+
+export function upgradeUI(apiConfig: ClashAPIConfig) {
+  return async (dispatch: DispatchFn) => {
+    configsAPI
+      .upgradeUI(apiConfig)
+      .then(
+        async (res) => {
+          if (res.ok === false) {
+            // eslint-disable-next-line no-console
+            console.log('Error upgrade UI', res.statusText);
+            if (res.status === 500) {
+              const json = await res.json();
+              if ("update error: already using latest version" === json.message) {
+                notifyError('面板界面已经是最新版本');
+              }
+            }
+          } else {
+            notifySuccess('面板界面已升级');
+          }
+        },
+        (err) => {
+          // eslint-disable-next-line no-console
+          console.log('Error upgrade UI', err);
+          notifyError('面板界面升级失败');
           throw err;
         }
       )

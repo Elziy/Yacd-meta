@@ -62,6 +62,7 @@ export const data = {
   edit_proxy_provider: 'Chỉnh sửa nhà cung cấp proxy',
   restart_core: 'Khởi động lõi lại Clash',
   upgrade_core: 'Nâng cấp lõi Clash',
+  upgrade_ui: 'Nâng cấp giao diện',
   update_geo_databases_file: 'Cập nhật tệp cơ sở dữ liệu GEO',
   flush_fake_ip_pool: 'Xóa bộ nhớ đệm fake-ip',
   flush_traffic_statistic: 'Xóa thống kê lưu lượng',

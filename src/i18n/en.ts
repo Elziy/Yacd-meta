@@ -62,6 +62,7 @@ export const data = {
   edit_proxy_provider: 'Edit Proxy Provider',
   restart_core: 'Restart clash core',
   upgrade_core: 'Upgrade Alpha core',
+  upgrade_ui: 'Upgrade UI',
   update_geo_databases_file: 'Update GEO Databases ',
   flush_fake_ip_pool: 'Flush fake-ip data',
   flush_traffic_statistic: 'Flush traffic statistic',
