@@ -61,6 +61,7 @@ export const data = {
   add_rule_set: '添加规则资源',
   add_proxy_group: '添加代理组',
   edit_proxy_group: '编辑代理组',
+  remove_proxy_group: '删除代理组',
   add_proxy_provider: '添加代理资源',
   edit_proxy_provider: '编辑代理资源',
   reload_config_file: '重载配置文件',

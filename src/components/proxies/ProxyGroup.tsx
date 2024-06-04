@@ -14,7 +14,9 @@ import { useFilteredAndSorted } from './hooks';
 import s0 from './ProxyGroup.module.scss';
 import { ProxyList, ProxyListSummaryView } from './ProxyList';
 import ModalAddProxyGroup, { defaultProxyGroup } from '~/components/proxies/ModalAddProxyGroup';
-import { notifyError } from '~/misc/message';
+import { notifyError, notifySuccess } from '~/misc/message';
+import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
+import { HiX } from 'react-icons/hi';
 
 const { createElement, useCallback, useMemo, useState, useEffect } = React;
 
@@ -78,6 +80,7 @@ function ProxyGroupImpl({
   }, [all, apiConfig, dispatch, name, version.meta]);
 
   const [addProxyGroupModal, setAddProxyGroupModal] = useState(false);
+  const [removeProxyGroupModal, setRemoveProxyGroupModal] = useState(false);
   const [proxyGroup, setProxyGroup] = useState(null);
   const openAddProxyGroupModal = () => {
     setAddProxyGroupModal(true);
@@ -112,6 +115,26 @@ function ProxyGroupImpl({
     });
   };
 
+  const removeProxyGroup = (name: string) => {
+    fetch('/api/delete_proxy_group', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name })
+    }).then(async (res) => {
+      const response = await res.json();
+      if (response.code === 200) {
+        notifySuccess(response.message);
+        await dispatch(fetchProxies(apiConfig));
+      } else {
+        notifyError(response.message);
+      }
+    }).catch(() => {
+      notifyError('网络错误');
+    });
+  };
+
   return (
     <div className={s0.group}>
       <div
@@ -136,6 +159,7 @@ function ProxyGroupImpl({
                 <Edit size={16} />
               </div>
             </Button>
+
             <Button
               title="Test latency"
               kind="minimal"
@@ -144,6 +168,16 @@ function ProxyGroupImpl({
             >
               <div className={s0.zapWrapper}>
                 <Zap size={16} />
+              </div>
+            </Button>
+            <Button
+              kind="minimal"
+              onClick={() => setRemoveProxyGroupModal(true)}
+              className={s0.btn}
+              isLoading={removeProxyGroupModal}
+            >
+              <div className={s0.zapWrapper}>
+                <HiX size={18} />
               </div>
             </Button>
           </>
@@ -156,6 +190,16 @@ function ProxyGroupImpl({
         isSelectable,
         itemOnTapCallback
       })}
+
+      <ModalCloseAllConnections
+        confirm={'remove_proxy_group'}
+        isOpen={removeProxyGroupModal}
+        primaryButtonOnTap={() => {
+          removeProxyGroup(name);
+          setRemoveProxyGroupModal(false);
+        }}
+        onRequestClose={() => setRemoveProxyGroupModal(false)}
+      />
 
       <ModalAddProxyGroup nowProxyGroup={proxyGroup} isOpen={addProxyGroupModal} onRequestClose={() => {
         setAddProxyGroupModal(false);

@@ -54,6 +54,7 @@ export const data = {
   update_all_rule_provider: 'Cập nhật tất cả nhà cung cấp quy tắc',
   update_all_proxy_provider: 'Cập nhật tất cả nhà cung cấp proxy',
   reload_config_file: 'Tải lại tệp cấu hình',
+  remove_proxy_group: 'Xóa nhóm proxy',
   add_rule: 'Thêm quy tắc',
   add_rule_set: 'Thêm bộ quy tắc',
   add_proxy_group: 'Thêm nhóm proxy',
