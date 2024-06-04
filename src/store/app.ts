@@ -142,12 +142,6 @@ export function updateAppConfig(name: string, value: unknown) {
   };
 }
 
-export function resetUnReloadConfig() {
-  let s = loadState();
-  s.unReloadConfig = [];
-  saveState(s);
-}
-
 export function updateCollapsibleIsOpen(prefix: string, name: string, v: boolean) {
   return (dispatch: DispatchFn, getState: GetStateFn) => {
     dispatch('updateCollapsibleIsOpen', (s: State) => {

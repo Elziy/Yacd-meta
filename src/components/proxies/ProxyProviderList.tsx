@@ -8,10 +8,10 @@ import { FiPlusCircle, FiRepeat } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import ModalAddProxyProvider from '~/components/proxies/ModalAddProxyProvider';
 import React, { useCallback, useState } from 'react';
-import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
 import { reloadConfigFile } from '~/store/configs';
 import { connect } from '~/components/StateProvider';
 import { getClashAPIConfig } from '~/store/app';
+import ModalReloadConfig from '~/components/sideBar/ModalReloadConfig';
 
 
 function ProxyProviderList({ apiConfig, items, dispatch }) {
@@ -56,15 +56,9 @@ function ProxyProviderList({ apiConfig, items, dispatch }) {
           />
         ))}
       </div>
-      <ModalCloseAllConnections
-        confirm={'reload_config_file'}
-        isOpen={reload_config}
-        primaryButtonOnTap={() => {
-          handleReloadConfigFile();
-          setReloadConfig(false);
-        }}
-        onRequestClose={() => setReloadConfig(false)}
-      />
+
+      <ModalReloadConfig isOpen={reload_config} onRequestClose={() => setReloadConfig(false)} />
+
       <ModalAddProxyProvider
         isOpen={addProxyProviderModal}
         onRequestClose={() => setAddProxyProviderModal(false)} />

@@ -20,7 +20,6 @@ import s from './Rules.module.scss';
 import { connect, useStoreActions } from '../StateProvider';
 import { fetchProxies, getProxyGroupNames } from '~/store/proxies';
 import ModalAddRule from '~/components/rules/ModalAddRule';
-import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
 import { reloadConfigFile } from '~/store/configs';
 import ModalAddRuleSet from '~/components/rules/ModalAddRuleSet';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
@@ -29,6 +28,7 @@ import { RotateIcon } from '~/components/shared/RotateIcon';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 import { Tooltip } from '@reach/tooltip';
 import { FiRepeat, FiFilePlus, FiPlusCircle } from 'react-icons/fi';
+import ModalReloadConfig from '~/components/sideBar/ModalReloadConfig';
 
 
 const { memo } = React;
@@ -317,15 +317,7 @@ function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
         }}
       />
 
-      <ModalCloseAllConnections
-        confirm={'reload_config_file'}
-        isOpen={reload_config}
-        primaryButtonOnTap={() => {
-          handleReloadConfigFile();
-          setReloadConfig(false);
-        }}
-        onRequestClose={() => setReloadConfig(false)}
-      />
+      <ModalReloadConfig isOpen={reload_config} onRequestClose={() => setReloadConfig(false)} />
     </div>
   );
 }

@@ -28,8 +28,8 @@ import s0 from './Proxies.module.scss';
 import { FiPlusCircle, FiRepeat } from 'react-icons/fi';
 import Equalizer from '~/components/svg/Equalizer';
 import ModalAddProxyGroup from '~/components/proxies/ModalAddProxyGroup';
-import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
 import { reloadConfigFile } from '~/store/configs';
+import ModalReloadConfig from '~/components/sideBar/ModalReloadConfig';
 
 const { useState, useEffect, useCallback, useRef } = React;
 
@@ -115,19 +115,12 @@ function Proxies({
         setAddProxyGroupModal(false);
       }} />
 
-      <ModalCloseAllConnections
-        confirm={'reload_config_file'}
-        isOpen={reload_config}
-        primaryButtonOnTap={() => {
-          handleReloadConfigFile();
-          setReloadConfig(false);
-        }}
-        onRequestClose={() => setReloadConfig(false)}
-      />
+      <ModalReloadConfig isOpen={reload_config} onRequestClose={() => setReloadConfig(false)} />
 
       <BaseModal isOpen={isSettingsModalOpen} onRequestClose={closeSettingsModal}>
         <Settings />
       </BaseModal>
+
       <BaseModal isOpen={showModalClosePrevConns} onRequestClose={closeModalClosePrevConns}>
         <ClosePrevConns
           onClickPrimaryButton={() => closePrevConnsAndTheModal(apiConfig)}

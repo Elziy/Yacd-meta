@@ -5,7 +5,7 @@ import * as configsAPI from '../api/configs';
 import * as trafficAPI from '../api/traffic';
 import { openModal } from './modals';
 import { notifyError, notifySuccess } from '~/misc/message';
-import { resetUnReloadConfig } from '~/store/app';
+import { updateAppConfig } from '~/store/app';
 
 export const getConfigs = (s: State) => s.configs.configs;
 export const getHaveFetched = (s: State) => s.configs.haveFetchedConfig;
@@ -99,7 +99,7 @@ export function reloadConfigFile(apiConfig: ClashAPIConfig) {
             // eslint-disable-next-line no-console
             console.log('Error reload config file', res.statusText);
           } else {
-            resetUnReloadConfig();
+            // resetUnReloadConfig();
             notifySuccess('配置文件已重新加载');
           }
         },
@@ -110,8 +110,11 @@ export function reloadConfigFile(apiConfig: ClashAPIConfig) {
         }
       )
       .then(() => {
+        dispatch(updateAppConfig('unReloadConfig', []));
         dispatch(fetchConfigs(apiConfig));
-      });
+      }).catch(() =>{
+        notifyError("重载配置文件失败")
+    });
   };
 }
 
