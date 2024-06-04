@@ -126,7 +126,6 @@ function ProxyGroupImpl({
       const response = await res.json();
       if (response.code === 200) {
         notifySuccess(response.message);
-        await dispatch(fetchProxies(apiConfig));
       } else {
         notifyError(response.message);
       }

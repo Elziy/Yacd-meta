@@ -56,6 +56,7 @@ export const data = {
   update_all_proxy_provider: '更新所有代理伺服器提供者',
   reload_config_file: '重新載入設定檔',
   remove_proxy_group: '移除代理群組',
+  remove_proxy_provider: '移除代理伺服器提供者',
   add_rule: '新增規則',
   add_rule_set: '新增規則集',
   add_proxy_group: '新增代理群組',

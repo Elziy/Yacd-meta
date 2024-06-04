@@ -18,7 +18,9 @@ import s from './ProxyProvider.module.scss';
 import { useTranslation } from 'react-i18next';
 import { formatTime } from '~/api/proxies';
 import ModalAddProxyProvider, { defaultProxyProvider } from '~/components/proxies/ModalAddProxyProvider';
-import { notifyError } from '~/misc/message';
+import { notifyError, notifySuccess } from '~/misc/message';
+import { HiX } from 'react-icons/hi';
+import ModalCloseAllConnections from '~/components/connections/ModalCloseAllConnections';
 
 const { useState, useCallback } = React;
 
@@ -97,6 +99,7 @@ function ProxyProviderImpl({
   };
 
   const [addProxyProviderModal, setAddProxyProviderModal] = useState(false);
+  const [removeProxyProviderModal, setRemoveProxyProviderModal] = useState(false);
   const [proxyProvider, setProxyProvider] = useState(null);
   const openAddProxyProviderModal = () => {
     setAddProxyProviderModal(true);
@@ -118,7 +121,7 @@ function ProxyProviderImpl({
           'health-check': {
             enable: false,
             url: defaultProxyProvider['health-check'].url,
-            interval: defaultProxyProvider['health-check'].interval,
+            interval: defaultProxyProvider['health-check'].interval
           },
           override: {
             'additional-prefix': response.data.override?.['additional-prefix'] || ''
@@ -133,6 +136,24 @@ function ProxyProviderImpl({
     }).catch(() => {
       notifyError('网络错误');
       setAddProxyProviderModal(false);
+    });
+  };
+  const removeProxyProvider = (name: string) => {
+    fetch('/api/delete_proxy_provider', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name })
+    }).then(async (res) => {
+      const response = await res.json();
+      if (response.code === 200) {
+        notifySuccess(response.message);
+      } else {
+        notifyError(response.message);
+      }
+    }).catch(() => {
+      notifyError('网络错误');
     });
   };
 
@@ -168,10 +189,17 @@ function ProxyProviderImpl({
           <Button kind="minimal" start={<Refresh />} onClick={updateProvider} />
           <Button
             kind="minimal"
-            start={<Zap size={16} />}
-            onClick={healthcheckProvider}
-            isLoading={isHealthcheckLoading}
+            start={<HiX size={18} />}
+            onClick={() => setRemoveProxyProviderModal(true)}
+            className={s0.btn}
+            isLoading={removeProxyProviderModal}
           />
+          {/*<Button*/}
+          {/*  kind="minimal"*/}
+          {/*  start={<Zap size={16} />}*/}
+          {/*  onClick={healthcheckProvider}*/}
+          {/*  isLoading={isHealthcheckLoading}*/}
+          {/*/>*/}
         </div>
       </div>
       <div className={s.updatedAt}>
@@ -187,7 +215,7 @@ function ProxyProviderImpl({
       <Collapsible isOpen={isOpen}>
         <ProxyList all={proxies} latencyTestUrl={latencyTestUrl} />
         <div className={s.actionFooter}>
-          <Button text="Update" start={<Refresh />} onClick={updateProvider} />
+          {/*<Button text="Update" start={<Refresh />} onClick={updateProvider} />*/}
           <Button
             text="Health Check"
             start={<Zap size={16} />}
@@ -204,6 +232,14 @@ function ProxyProviderImpl({
         nowProxyProvider={proxyProvider}
         isOpen={addProxyProviderModal}
         onRequestClose={() => setAddProxyProviderModal(false)} />
+      <ModalCloseAllConnections
+        confirm={'remove_proxy_provider'}
+        isOpen={removeProxyProviderModal}
+        primaryButtonOnTap={() => {
+          removeProxyProvider(name);
+          setRemoveProxyProviderModal(false);
+        }}
+        onRequestClose={() => setRemoveProxyProviderModal(false)} />
     </div>
   );
 }

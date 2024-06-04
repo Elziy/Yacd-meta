@@ -55,6 +55,7 @@ export const data = {
   update_all_proxy_provider: 'Update all proxy providers',
   reload_config_file: 'Reload config file',
   remove_proxy_group: 'Remove Proxy Group',
+  remove_proxy_provider: 'Remove Proxy Provider',
   add_rule: 'Add Rule',
   add_rule_set: 'Add Rule Set',
   add_proxy_group: 'Add Proxy Group',
@@ -87,7 +88,7 @@ export const data = {
   c_type: 'Type',
   c_ctrl: 'Close',
   close_all_confirm: 'Are you sure you want to close all connections?',
-  close_all_confirm_yes: "I'm sure",
+  close_all_confirm_yes: 'I\'m sure',
   close_all_confirm_no: 'No',
   manage_column: 'Custom columns',
   reset_column: 'Reset columns',
@@ -96,7 +97,7 @@ export const data = {
   add_tag: 'Add tag',
   get_tag: 'Get tag',
   client_tag: 'Client tags',
-  sourceip_tip: "Prefix with / for regular expressions, otherwise it's a complete match",
+  sourceip_tip: 'Prefix with / for regular expressions, otherwise it\'s a complete match',
   disconnect: 'Close Connection',
-  internel: 'Internal Connection',
+  internel: 'Internal Connection'
 };
