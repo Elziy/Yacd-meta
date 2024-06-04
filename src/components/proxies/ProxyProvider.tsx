@@ -8,7 +8,14 @@ import { useUpdateProviderItem } from '~/components/proxies/proxies.hooks';
 import s0 from '~/components/proxies/ProxyGroup.module.scss';
 import { connect, useStoreActions } from '~/components/StateProvider';
 import { framerMotionResouce } from '~/misc/motion';
-import { getClashAPIConfig, getCollapsibleIsOpen, getHideUnavailableProxies, getLatencyTestUrl, getProxySortBy } from '~/store/app';
+import {
+  getClashAPIConfig,
+  getCollapsibleIsOpen,
+  getHideUnavailableProxies,
+  getLatencyTestUrl,
+  getProxySortBy,
+  getUnreloadConfig
+} from '~/store/app';
 import { getDelay, healthcheckProviderByName } from '~/store/proxies';
 import { DelayMapping, SubscriptionInfo } from '~/store/types';
 
@@ -37,6 +44,7 @@ type Props = {
   subscriptionInfo?: SubscriptionInfo;
   dispatch: (x: any) => Promise<any>;
   isOpen: boolean;
+  unReloadConfig: string[];
   apiConfig: any;
 };
 
@@ -51,10 +59,12 @@ function ProxyProviderImpl({
                              updatedAt,
                              subscriptionInfo,
                              isOpen,
+                             unReloadConfig,
                              dispatch,
                              apiConfig
                            }: Props) {
   const { t } = useTranslation();
+  const { updateAppConfig } = useStoreActions();
   const proxies = useFilteredAndSorted(all, delay, hideUnavailableProxies, proxySortBy);
   const [isHealthcheckLoading, setIsHealthcheckLoading] = useState(false);
 
@@ -149,6 +159,8 @@ function ProxyProviderImpl({
       const response = await res.json();
       if (response.code === 200) {
         notifySuccess(response.message);
+        unReloadConfig?.push('删除代理资源 : ' + name);
+        updateAppConfig('unReloadConfig', unReloadConfig);
       } else {
         notifyError(response.message);
       }
@@ -286,6 +298,7 @@ const mapState = (s, { proxies, name }) => {
   const collapsibleIsOpen = getCollapsibleIsOpen(s);
   const apiConfig = getClashAPIConfig(s);
   const latencyTestUrl = getLatencyTestUrl(s);
+  const unReloadConfig = getUnreloadConfig(s);
 
   const proxySortBy = getProxySortBy(s);
 
@@ -296,7 +309,8 @@ const mapState = (s, { proxies, name }) => {
     latencyTestUrl,
     hideUnavailableProxies,
     proxySortBy,
-    isOpen: collapsibleIsOpen[`proxyProvider:${name}`]
+    isOpen: collapsibleIsOpen[`proxyProvider:${name}`],
+    unReloadConfig: unReloadConfig
   };
 };
 

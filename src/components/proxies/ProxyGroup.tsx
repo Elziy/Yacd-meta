@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 
 import * as proxiesAPI from '~/api/proxies';
 import { fetchVersion } from '~/api/version';
-import { getCollapsibleIsOpen, getHideUnavailableProxies, getLatencyTestUrl, getProxySortBy } from '~/store/app';
+import { getCollapsibleIsOpen, getHideUnavailableProxies, getLatencyTestUrl, getProxySortBy, getUnreloadConfig } from '~/store/app';
 import { fetchProxies, getProxies, switchProxy } from '~/store/proxies';
 
 import Button from '../shared/Button';
@@ -33,6 +33,7 @@ function ProxyGroupImpl({
                           icon,
                           isOpen,
                           latencyTestUrl,
+                          unReloadConfig,
                           apiConfig,
                           dispatch
                         }) {
@@ -41,6 +42,8 @@ function ProxyGroupImpl({
   const { data: version } = useQuery(['/version', apiConfig], () =>
     fetchVersion('/version', apiConfig)
   );
+
+  const { updateAppConfig } = useStoreActions();
 
   const isSelectable = useMemo(
     () => ['Selector', version.meta && 'Fallback', version.meta && 'URLTest'].includes(type),
@@ -126,6 +129,8 @@ function ProxyGroupImpl({
       const response = await res.json();
       if (response.code === 200) {
         notifySuccess(response.message);
+        unReloadConfig?.push('删除代理组 : ' + name);
+        updateAppConfig('unReloadConfig', unReloadConfig);
       } else {
         notifyError(response.message);
       }
@@ -213,6 +218,7 @@ export const ProxyGroup = connect((s, { name, delay }) => {
   const proxySortBy = getProxySortBy(s);
   const hideUnavailableProxies = getHideUnavailableProxies(s);
   const latencyTestUrl = getLatencyTestUrl(s);
+  const unReloadConfig = getUnreloadConfig(s);
 
   const group = proxies[name];
   const { all, type, now, icon } = group;
@@ -232,6 +238,7 @@ export const ProxyGroup = connect((s, { name, delay }) => {
     nowProxy,
     icon,
     isOpen: collapsibleIsOpen[`proxyGroup:${name}`],
-    latencyTestUrl
+    latencyTestUrl,
+    unReloadConfig
   };
 })(ProxyGroupImpl);
