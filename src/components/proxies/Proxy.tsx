@@ -10,7 +10,7 @@ import { connect } from '../StateProvider';
 import s0 from './Proxy.module.scss';
 import { ProxyLatency } from './ProxyLatency';
 import * as proxiesAPI from '~/api/proxies';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ClashAPIConfig } from '~/types';
 
 const { useMemo } = React;
@@ -161,6 +161,10 @@ function ProxyImpl({
                    }: ProxyProps) {
   const delay = proxy.history[proxy.history.length - 1]?.delay;
   const [latencyNumber, setLatencyNumber] = useState(latency?.number ?? delay);
+  useEffect(() => {
+    const delay = proxy.history[proxy.history.length - 1]?.delay;
+    setLatencyNumber(latency?.number ?? delay);
+  }, [proxy, delay]);
   const [isTestingLatency, setIsTestingLatency] = useState(false);
   const color = useMemo(
     () => getLabelColor({ number: latencyNumber }, httpsLatencyTest),
