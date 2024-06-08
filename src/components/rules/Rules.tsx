@@ -52,15 +52,8 @@ function itemKey(index: number, { rules, provider }: ItemData) {
   return item.id;
 }
 
-function getItemSizeFactory({ provider }) {
-  return function getItemSize(idx: number) {
-    // const providerQty = provider.names.length;
-    // if (idx < providerQty) {
-    //   // provider
-    //   return 66;
-    // }
-    // // rule
-    // return 70;
+function getItemSizeFactory() {
+  return function getItemSize() {
     return 70;
   };
 }
@@ -90,18 +83,16 @@ const Row = memo(({ index, style, data }) => {
 
 // 只有规则列表的行
 const RuleRow = ({ index, style, data }) => {
-  const { rules, provider, groups } = data;
-  const providerQty = provider.names.length;
-  index += providerQty;
-  const r = rules[index - providerQty];
+  const { rules, groups, unReloadConfig } = data;
+  const r = rules[index];
   return (
     <div style={style}>
-      < Rule {...r} groups={groups} />
+      < Rule {...r} groups={groups} unReloadConfig={unReloadConfig} />
     </div>
   );
 };
 
-const DraggableRuleRow = ({ index, style, data }) => {
+/*const DraggableRuleRow = ({ index, style, data }) => {
   const { rules, groups, unReloadConfig } = data;
   const r = rules[index];
   return (
@@ -126,7 +117,7 @@ const RuleProviderRow = ({ index, style, data }) => {
       <RuleProviderItem apiConfig={apiConfig} {...item} unReloadConfig={unReloadConfig} />
     </div>
   );
-};
+};*/
 
 const mapState = (s: State) => ({
   apiConfig: getClashAPIConfig(s),
@@ -149,7 +140,7 @@ function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
   useEffect(() => {
     fetchProxiesHooked();
   }, [fetchProxiesHooked]);
-  const getItemSize = getItemSizeFactory({ provider });
+  const getItemSize = getItemSizeFactory();
   const [addRuleModal, setAddRuleModal] = useState(false);
   const [addRuleSetModal, setAddRuleSetModal] = useState(false);
   const [reload_config, setReloadConfig] = useState(false);
@@ -251,45 +242,50 @@ function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
           <div>
             <TabPanel>
               <div ref={refRulesContainer} style={{ paddingBottom, userSelect: 'none' }}>
-                <DragDropContext onDragEnd={onDragEnd}>
-                  <Droppable droppableId="droppable-rules" mode="virtual" renderClone={(provided, snapshot, rubric) => {
-                    return (
-                      <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                        < Rule {...rules[rubric.source.index]} groups={groups} />
-                      </div>
-                    );
-                  }}>
-                    {(provided) => (
-                      <div {...provided.droppableProps} ref={provided.innerRef}>
-                        <VariableSizeList
-                          height={containerHeight - paddingBottom}
-                          width="100%"
-                          itemCount={rules.length}
-                          itemSize={getItemSize}
-                          outerRef={provided.innerRef}
-                          itemData={{ rules, groups, unReloadConfig }}
-                        >
-                          {DraggableRuleRow}
-                        </VariableSizeList>
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
+                {rules.length <= 100 ?
+                  <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="droppable-rules">
+                      {(provided: any) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                          {rules.map((rule, index) => (
+                            <Draggable draggableId={`rule-${index}`} index={index} key={index}>
+                              {(provided: any) => (
+                                <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
+                                     style={{ ...provided.draggableProps.style }}>
+                                  < Rule {...rule} groups={groups} unReloadConfig={unReloadConfig} />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+                  :
+                  // 规则过多则使用VariableSizeList
+                  <VariableSizeList
+                    height={containerHeight - paddingBottom}
+                    width="100%"
+                    itemCount={rules.length}
+                    itemSize={getItemSize}
+                    itemData={{ rules, groups, unReloadConfig }}
+                  >
+                    {RuleRow}
+                  </VariableSizeList>
+                }
               </div>
             </TabPanel>
             <TabPanel>
               <div ref={refRulesContainer} style={{ paddingBottom }}>
-                <VariableSizeList
-                  height={containerHeight - paddingBottom - 66}
-                  width="100%"
-                  itemCount={provider.names.length}
-                  itemSize={getItemSize}
-                  itemData={{ provider, apiConfig, unReloadConfig }}
-                  itemKey={itemKey}
-                >
-                  {RuleProviderRow}
-                </VariableSizeList>
+                {provider.names.map((name, index) => {
+                  const item = provider.byName[name];
+                  return (
+                    <div key={index} className={s.RuleProviderItemWrapper}>
+                      <RuleProviderItem apiConfig={apiConfig} {...item} unReloadConfig={unReloadConfig} />
+                    </div>
+                  );
+                })}
                 {provider && provider.names && provider.names.length > 0 ? (
                   <div className={s.update}>
                     <Button onClick={update}>
