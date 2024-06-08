@@ -50,7 +50,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifact
+          name: yacd
           path: yacd.zip
 
   Upload-Prerelease:
@@ -62,7 +62,7 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: build-artifact
+          name: yacd
           path: ./build/
 
       - name: Delete current release assets
@@ -99,9 +99,9 @@ jobs:
     steps:
       # Download build artifact from build job
       - name: Download build artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
-          name: build-artifact
+          name: yacd
           path: ./build/
 
       - name: Upload Release
