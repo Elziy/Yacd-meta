@@ -35,6 +35,7 @@ type Props = {
   name: string;
   proxies: Array<string>;
   delay: DelayMapping;
+  icon: string;
   latencyTestUrl?: string;
   hideUnavailableProxies: boolean;
   proxySortBy: string;
@@ -52,6 +53,7 @@ function ProxyProviderImpl({
                              name,
                              proxies: all,
                              delay,
+                             icon,
                              latencyTestUrl,
                              hideUnavailableProxies,
                              proxySortBy,
@@ -183,6 +185,7 @@ function ProxyProviderImpl({
           name={name}
           toggle={toggle}
           type={vehicleType}
+          icon={icon}
           isOpen={isOpen}
           qty={proxies.length}
         />

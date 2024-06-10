@@ -24,7 +24,7 @@ export function SectionNameType({ name, type, now, nowProxy, icon }) {
 
   if (name === 'GLOBAL')
     src = 'Global.png';
-  else if (type === 'HTTP' || type === 'HTTPS')
+  else if ((type === 'HTTP' || type === 'HTTPS') && !icon)
     src = 'yacd.png';
   else if (icon) {
     let cacheObj = JSON.parse(localStorage.getItem('iconCache') || '{}');

@@ -48,6 +48,7 @@ function ProxyProviderList({ apiConfig, items, dispatch }) {
           <ProxyProvider
             key={item.name}
             name={item.name}
+            icon={item.icon}
             proxies={item.proxies}
             type={item.type}
             vehicleType={item.vehicleType}
