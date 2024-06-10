@@ -17,6 +17,7 @@ export const defaultProxyProvider = {
   type: 'http',
   url: '',
   path: 'proxy_provider',
+  icon: '',
   interval: 86400,
   proxy: 'DIRECT',
   'health-check': {
@@ -68,6 +69,10 @@ function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, no
     }
     if (!proxyProvider.url || !proxyProvider.url.startsWith('http')) {
       notifyWarning('请输入正确资源组URL');
+      return;
+    }
+    if (!proxyProvider.icon || !proxyProvider.icon.startsWith('https')) {
+      notifyWarning('请输入正确资源组图标');
       return;
     }
     if (!proxyProvider.interval) {
@@ -143,6 +148,18 @@ function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, no
               placeholder={defaultProxyProvider.interval.toString()}
               value={proxyProvider.interval}
               onChange={(e) => setProxyProvider({ ...proxyProvider, interval: e.target.value ? Number(e.target.value) : null })
+              } />
+          </div>
+
+          <div className={s.row}>
+            资源组图标:
+            <Input
+              type="text"
+              name="group_icon"
+              autoComplete="off"
+              placeholder="https://"
+              value={proxyProvider.icon}
+              onChange={(e) => setProxyProvider({ ...proxyProvider, icon: e.target.value })
               } />
           </div>
 

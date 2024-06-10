@@ -127,6 +127,7 @@ function ProxyProviderImpl({
           name: name,
           type: 'http',
           url: response.data.url,
+          icon: response.data.icon || '',
           path: defaultProxyProvider.path,
           interval: response.data.interval || defaultProxyProvider.interval,
           proxy: response.data.proxy || '',
