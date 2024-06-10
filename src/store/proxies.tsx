@@ -369,7 +369,7 @@ function formatProxyProviders(providersInput: ProvidersRaw): {
     }
     const proxiesArr = provider.proxies;
     const names = [];
-    for (let j = 0; j < proxiesArr.length; j++) {
+    for (let j = 0; j < proxiesArr?.length; j++) {
       const proxy = proxiesArr[j];
       proxies[proxy.name] = proxy;
       names.push(proxy.name);
