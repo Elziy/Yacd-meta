@@ -153,7 +153,7 @@ function ProxyGroupImpl({
         </div>
         <div style={{ display: 'flex' }}>
           <>
-            <Button
+            {name !== 'GLOBAL' && (<Button
               kind="minimal"
               onClick={openAddProxyGroupModal}
               className={s0.btn}
@@ -162,7 +162,7 @@ function ProxyGroupImpl({
               <div className={s0.zapWrapper}>
                 <Edit size={16} />
               </div>
-            </Button>
+            </Button>)}
 
             <Button
               title="Test latency"
@@ -174,7 +174,8 @@ function ProxyGroupImpl({
                 <Zap size={16} />
               </div>
             </Button>
-            <Button
+
+            {name !== 'GLOBAL' && (<Button
               kind="minimal"
               onClick={() => setRemoveProxyGroupModal(true)}
               className={s0.btn}
@@ -183,7 +184,7 @@ function ProxyGroupImpl({
               <div className={s0.zapWrapper}>
                 <HiX size={18} />
               </div>
-            </Button>
+            </Button>)}
           </>
         </div>
       </div>
