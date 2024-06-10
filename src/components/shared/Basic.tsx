@@ -50,8 +50,8 @@ export function SectionNameType({ name, type, now, nowProxy, icon }) {
         <div className={s.proxyMain}>
           {now ? <div className={s.proxy}>
               <span>{now}</span>
-              {now !== nowProxy ? <><HiArrowNarrowRight size={16} />
-                <span>{nowProxy}</span></> : null}
+              {now !== nowProxy ? <><HiArrowNarrowRight className={s.disabled} size={16} />
+                <span className={s.disabled}>{nowProxy}</span></> : null}
             </div>
             : null}
           <span className={s.disabled}>{type.toUpperCase()}</span>
