@@ -11,7 +11,7 @@ import { State } from '~/store/types';
 
 import * as connAPI from '../../api/connections';
 import useRemainingViewPortHeight from '../../hooks/useRemainingViewPortHeight';
-import { getClashAPIConfig } from '~/store/app';
+import { getClashAPIConfig, getUtilsApiUrl } from '~/store/app';
 import s from './Connections.module.scss';
 import ConnectionTable from './ConnectionTable';
 import ContentHeader from '../sideBar/ContentHeader';
@@ -253,7 +253,7 @@ const columnsInit = columnOrder
   })
   : [...columnsOrigin];
 
-function Conn({ apiConfig }) {
+function Conn({ apiConfig, utilsApiUrl }) {
   const { t } = useTranslation();
   const [showModalColumn, setModalColumn] = useState(false);
   const [hiddenColumns, setHiddenColumns] = useState(hiddenColumnsInit);
@@ -509,6 +509,7 @@ function Conn({ apiConfig }) {
           sourceMap={sourceMap}
           setSourceMap={setSourceMap}
           ips={ips}
+          utilsApiUrl={utilsApiUrl}
         />
       </Tabs>
     </div>
@@ -516,7 +517,8 @@ function Conn({ apiConfig }) {
 }
 
 const mapState = (s: State) => ({
-  apiConfig: getClashAPIConfig(s)
+  apiConfig: getClashAPIConfig(s),
+  utilsApiUrl: getUtilsApiUrl(s)
 });
 
 export default connect(mapState)(Conn);

@@ -47,6 +47,7 @@ export const data = {
   latency_test_url: 'Latency Test URL',
   lang: 'Language',
   check: 'check',
+  utils_api_url: 'Utils API URL',
   'min_traffic': 'Min Traffic (MB)',
   expire: 'Expire',
   rule_list: 'Rule List',

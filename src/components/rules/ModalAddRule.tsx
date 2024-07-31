@@ -26,7 +26,7 @@ const ruleTypes = [
 ];
 
 
-export default function ModalAddRule({ dispatch, apiConfig, isOpen, onRequestClose, groups, rules, provider, unReloadConfig }) {
+export default function ModalAddRule({ dispatch, apiConfig, utilsApiUrl, isOpen, onRequestClose, groups, rules, provider, unReloadConfig }) {
   const { t } = useTranslation();
 
   const [submitting, setSubmitting] = useState(false);
@@ -50,7 +50,7 @@ export default function ModalAddRule({ dispatch, apiConfig, isOpen, onRequestClo
 
   const rule_sets = provider.names.map((name: any) => [name, name]);
   const addRule = async (body: BodyInit) => {
-    const res = await fetch('/api/add_rule', {
+    const res = await fetch(utilsApiUrl + '/add_rule', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

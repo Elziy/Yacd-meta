@@ -8,8 +8,8 @@ import Input from '../shared/Input';
 import s from './ModalSourceIP.module.scss';
 import { notifyError } from '~/misc/message';
 
-async function reverseDNS(ips: string[]) {
-  const res = await fetch('/api/dns', {
+async function reverseDNS(utilsApiUrl: string, ips: string[]) {
+  const res = await fetch(utilsApiUrl + '/dns', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -19,7 +19,7 @@ async function reverseDNS(ips: string[]) {
   return await res.json();
 }
 
-export default function ModalSourceIP({ isOpen, onRequestClose, sourceMap, setSourceMap, ips }) {
+export default function ModalSourceIP({ isOpen, onRequestClose, sourceMap, setSourceMap, ips, utilsApiUrl }) {
   const { t } = useTranslation();
   const setSource = (key, index, val) => {
     sourceMap[index][key] = val;
@@ -71,7 +71,7 @@ export default function ModalSourceIP({ isOpen, onRequestClose, sourceMap, setSo
           <Button onClick={() => sourceMap.push({ reg: '', name: '' })}>{t('add_tag')}</Button>
           <Button disabled={submitting} onClick={() => {
             setSubmitting(true);
-            reverseDNS(ips).then((res) => {
+            reverseDNS(utilsApiUrl, ips).then((res) => {
               res.code === 200 && res.data.forEach((item) => {
                 if (item.code == 200) {
                   let hostname = item.hostname || '';

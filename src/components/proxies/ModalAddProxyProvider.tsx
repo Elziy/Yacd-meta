@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import type { State } from '~/store/types';
-import { getClashAPIConfig, getUnreloadConfig } from '~/store/app';
+import { getClashAPIConfig, getUnreloadConfig, getUtilsApiUrl } from '~/store/app';
 import { getProxyGroupNames, getProxyProviderNames } from '~/store/proxies';
 import { connect, useStoreActions } from '~/components/StateProvider';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,17 @@ export const defaultProxyProvider = {
   'exclude-filter': ''
 };
 
-function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, nowProxyProvider, groupNames, proxyProviderNames, unReloadConfig }) {
+function ModalAddProxyProvider({
+                                 dispatch,
+                                 apiConfig,
+                                 utilsApiUrl,
+                                 isOpen,
+                                 onRequestClose,
+                                 nowProxyProvider,
+                                 groupNames,
+                                 proxyProviderNames,
+                                 unReloadConfig
+                               }) {
   const { t } = useTranslation();
   const { updateAppConfig } = useStoreActions();
   const [submitting, setSubmitting] = useState(false);
@@ -81,7 +91,7 @@ function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, no
     }
     proxyProvider.path = './' + proxyProvider.path + '/' + proxyProvider.name + '.yaml';
     setSubmitting(true);
-    fetch('/api/edit_proxy_provider', {
+    fetch(utilsApiUrl + '/edit_proxy_provider', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -219,6 +229,7 @@ function ModalAddProxyProvider({ dispatch, apiConfig, isOpen, onRequestClose, no
 
 const mapState = (s: State) => ({
   apiConfig: getClashAPIConfig(s),
+  utilsApiUrl: getUtilsApiUrl(s),
   groupNames: getProxyGroupNames(s),
   proxyProviderNames: getProxyProviderNames(s),
   unReloadConfig: getUnreloadConfig(s)

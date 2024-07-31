@@ -13,7 +13,7 @@ import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 import { fixedRuleCount } from '~/components/rules/Rule';
 import { useStoreActions } from '~/components/StateProvider';
 
-export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequestClose, groups, rules, unReloadConfig }) {
+export default function ModalAddRuleSet({ dispatch, apiConfig, utilsApiUrl, isOpen, onRequestClose, groups, rules, unReloadConfig }) {
   const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [index, setIndex] = useState(5);
@@ -39,8 +39,8 @@ export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequest
   }, [apiConfig, dispatch]);
 
 
-  const addRuleSet = async (body: BodyInit) => {
-    const res = await fetch('/api/add_rule_set', {
+  const addRuleSet = async (utilsApiUrl: string, body: BodyInit) => {
+    const res = await fetch(utilsApiUrl + '/add_rule_set', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequest
   };
 
   const addRule = async (body: BodyInit) => {
-    const res = await fetch('/api/add_rule', {
+    const res = await fetch(utilsApiUrl + '/add_rule', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -110,7 +110,7 @@ export default function ModalAddRuleSet({ dispatch, apiConfig, isOpen, onRequest
       ruleSetBody.path = ruleSetBody.url;
       delete ruleSetBody.url;
     }
-    addRuleSet(JSON.stringify(ruleSetBody)).then((response) => {
+    addRuleSet(utilsApiUrl, JSON.stringify(ruleSetBody)).then((response) => {
       if (response.code === 200) {
         addRule(JSON.stringify(ruleBody)).then((res) => {
           if (res.code === 200) {

@@ -14,7 +14,7 @@ import {
   getHideUnavailableProxies,
   getLatencyTestUrl,
   getProxySortBy,
-  getUnreloadConfig
+  getUnreloadConfig, getUtilsApiUrl
 } from '~/store/app';
 import { getDelay, healthcheckProviderByName } from '~/store/proxies';
 import { DelayMapping, SubscriptionInfo } from '~/store/types';
@@ -47,6 +47,7 @@ type Props = {
   isOpen: boolean;
   unReloadConfig: string[];
   apiConfig: any;
+  utilsApiUrl: string;
 };
 
 function ProxyProviderImpl({
@@ -63,7 +64,8 @@ function ProxyProviderImpl({
                              isOpen,
                              unReloadConfig,
                              dispatch,
-                             apiConfig
+                             apiConfig,
+                             utilsApiUrl
                            }: Props) {
   const { t } = useTranslation();
   const { updateAppConfig } = useStoreActions();
@@ -115,7 +117,7 @@ function ProxyProviderImpl({
   const [proxyProvider, setProxyProvider] = useState(null);
   const openAddProxyProviderModal = () => {
     setAddProxyProviderModal(true);
-    fetch('/api/get_proxy_provider?name=' + name, {
+    fetch(utilsApiUrl + '/get_proxy_provider?name=' + name, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -152,7 +154,7 @@ function ProxyProviderImpl({
     });
   };
   const removeProxyProvider = (name: string) => {
-    fetch('/api/delete_proxy_provider', {
+    fetch(utilsApiUrl + '/delete_proxy_provider', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -308,6 +310,7 @@ const mapState = (s, { proxies, name }) => {
 
   return {
     apiConfig,
+    utilsApiUrl: getUtilsApiUrl(s),
     proxies,
     delay,
     latencyTestUrl,

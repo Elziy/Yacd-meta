@@ -11,6 +11,7 @@ export const getClashAPIConfig = (s: State) => {
 };
 export const getSelectedClashAPIConfigIndex = (s: State) => s.app.selectedClashAPIConfigIndex;
 export const getClashAPIConfigs = (s: State) => s.app.clashAPIConfigs;
+export const getUtilsApiUrl = (s: State) => s.app.utilsApiUrl;
 export const getTheme = (s: State) => s.app.theme;
 export const getSelectedChartStyleIndex = (s: State) => s.app.selectedChartStyleIndex;
 export const getLatencyTestUrl = (s: State) => s.app.latencyTestUrl;
@@ -161,6 +162,7 @@ const defaultClashAPIConfig = {
 const defaultState: StateApp = {
   selectedClashAPIConfigIndex: 0,
   clashAPIConfigs: [defaultClashAPIConfig],
+  utilsApiUrl: '/',
 
   latencyTestUrl: 'https://www.gstatic.com/generate_204',
   selectedChartStyleIndex: 0,

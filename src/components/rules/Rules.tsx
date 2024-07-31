@@ -13,7 +13,7 @@ import { ClashAPIConfig } from '~/types';
 
 import useRemainingViewPortHeight from '../../hooks/useRemainingViewPortHeight';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { getClashAPIConfig, getUnreloadConfig } from '~/store/app';
+import { getClashAPIConfig, getUnreloadConfig, getUtilsApiUrl } from '~/store/app';
 import ContentHeader from '../sideBar/ContentHeader';
 import Rule, { editRule, fixedRuleCount } from './Rule';
 import s from './Rules.module.scss';
@@ -58,36 +58,36 @@ function getItemSizeFactory() {
   };
 }
 
-// @ts-expect-error ts-migrate(2339) FIXME: Property 'index' does not exist on type '{ childre... Remove this comment to see the full error message
-const Row = memo(({ index, style, data }) => {
-  const { rules, provider, apiConfig, groups } = data;
-  const providerQty = provider.names.length;
-
-  if (index < providerQty) {
-    const name = provider.names[index];
-    const item = provider.byName[name];
-    return (
-      <div style={style} className={s.RuleProviderItemWrapper}>
-        <RuleProviderItem apiConfig={apiConfig} {...item} />
-      </div>
-    );
-  }
-
-  const r = rules[index - providerQty];
-  return (
-    <div style={style}>
-      < Rule {...r} groups={groups} />
-    </div>
-  );
-}, areEqual);
+// ts-expect-error ts-migrate(2339) FIXME: Property 'index' does not exist on type '{ childre... Remove this comment to see the full error message
+// const Row = memo(({ index, style, data }) => {
+//   const { rules, provider, apiConfig, groups } = data;
+//   const providerQty = provider.names.length;
+//
+//   if (index < providerQty) {
+//     const name = provider.names[index];
+//     const item = provider.byName[name];
+//     return (
+//       <div style={style} className={s.RuleProviderItemWrapper}>
+//         <RuleProviderItem apiConfig={apiConfig} {...item} />
+//       </div>
+//     );
+//   }
+//
+//   const r = rules[index - providerQty];
+//   return (
+//     <div style={style}>
+//       < Rule {...r} groups={groups} />
+//     </div>
+//   );
+// }, areEqual);
 
 // 只有规则列表的行
 const RuleRow = ({ index, style, data }) => {
-  const { rules, groups, unReloadConfig } = data;
+  const { rules, groups, utilsApiUrl, unReloadConfig } = data;
   const r = rules[index];
   return (
     <div style={style}>
-      < Rule {...r} groups={groups} unReloadConfig={unReloadConfig} />
+      < Rule {...r} groups={groups} unReloadConfig={unReloadConfig} utilsApiUrl={utilsApiUrl} />
     </div>
   );
 };
@@ -122,12 +122,13 @@ const RuleProviderRow = ({ index, style, data }) => {
 const mapState = (s: State) => ({
   apiConfig: getClashAPIConfig(s),
   groups: getProxyGroupNames(s),
+  utilsApiUrl: getUtilsApiUrl(s),
   unReloadConfig: getUnreloadConfig(s)
 });
 
 export default connect(mapState)(Rules);
 
-function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
+function Rules({ dispatch, apiConfig, groups, utilsApiUrl, unReloadConfig }) {
   const [refRulesContainer, containerHeight] = useRemainingViewPortHeight();
 
   const { rules, provider } = useRuleAndProvider(apiConfig);
@@ -153,6 +154,7 @@ function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
   }
   const mapState = (s: State) => ({
     apiConfig: getClashAPIConfig(s),
+    utilsApiUrl: getUtilsApiUrl(s),
     unReloadConfig: getUnreloadConfig(s),
     groups: groups,
     rules: rules,
@@ -187,7 +189,7 @@ function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
       index2: result.destination.index
     };
 
-    editRule(JSON.stringify(body)).then((res) => {
+    editRule(utilsApiUrl, JSON.stringify(body)).then((res) => {
       if (res.code === 200) {
         unReloadConfig?.push('拖动规则 : ' + removed.payload + ' => ' + destinationRule.payload);
         updateAppConfig('unReloadConfig', unReloadConfig);
@@ -252,7 +254,7 @@ function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
                               {(provided: any) => (
                                 <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
                                      style={{ ...provided.draggableProps.style }}>
-                                  < Rule {...rule} groups={groups} unReloadConfig={unReloadConfig} />
+                                  < Rule {...rule} groups={groups} utilsApiUrl={utilsApiUrl} unReloadConfig={unReloadConfig} />
                                 </div>
                               )}
                             </Draggable>
@@ -269,7 +271,7 @@ function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
                     width="100%"
                     itemCount={rules.length}
                     itemSize={getItemSize}
-                    itemData={{ rules, groups, unReloadConfig }}
+                    itemData={{ rules, groups, utilsApiUrl, unReloadConfig }}
                   >
                     {RuleRow}
                   </VariableSizeList>
@@ -282,17 +284,17 @@ function Rules({ dispatch, apiConfig, groups, unReloadConfig }) {
                   const item = provider.byName[name];
                   return (
                     <div key={index} className={s.RuleProviderItemWrapper}>
-                      <RuleProviderItem apiConfig={apiConfig} {...item} unReloadConfig={unReloadConfig} />
+                      <RuleProviderItem apiConfig={apiConfig} utilsApiUrl={utilsApiUrl} {...item} unReloadConfig={unReloadConfig} />
                     </div>
                   );
                 })}
-                {provider && provider.names && provider.names.length > 0 ? (
-                  <div className={s.update}>
-                    <Button onClick={update}>
-                      <RotateIcon isRotating={isLoading} />
-                    </Button>
-                  </div>
-                ) : null}
+                {/*{provider && provider.names && provider.names.length > 0 ? (*/}
+                {/*  <div className={s.update}>*/}
+                {/*    <Button onClick={update}>*/}
+                {/*      <RotateIcon isRotating={isLoading} />*/}
+                {/*    </Button>*/}
+                {/*  </div>*/}
+                {/*) : null}*/}
               </div>
             </TabPanel>
           </div>

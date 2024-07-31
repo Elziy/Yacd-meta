@@ -47,6 +47,7 @@ export const data = {
   latency_test_url: 'URL kiểm tra độ trễ',
   lang: 'Ngôn ngữ',
   check: 'Đo tốc độ',
+  utils_api_url: 'URL API công cụ',
   'min_traffic': 'Lưu lượng tối thiểu (MB)',
   expire: 'Hết hạn',
   rule_list: 'Danh sách quy tắc',

@@ -24,6 +24,7 @@ export function RuleProviderItem(
     updatedAt,
     ruleCount,
     apiConfig,
+    utilsApiUrl,
     unReloadConfig
   }) {
   const [onClickRefreshButton, isRefreshing] = useUpdateRuleProviderItem(name, apiConfig);
@@ -35,7 +36,7 @@ export function RuleProviderItem(
   // const timeAgo = formatDistance(new Date(updatedAt), new Date());
 
   const delete_rule_set = async (name: string) => {
-    fetch('/api/delete_rule_set', {
+    fetch(utilsApiUrl + '/delete_rule_set', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -58,7 +59,7 @@ export function RuleProviderItem(
 
   function get_rule_set() {
     setIsModalOpen(true);
-    fetch('/api/get_rule_set?name=' + name, {
+    fetch(utilsApiUrl + '/get_rule_set?name=' + name, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

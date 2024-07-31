@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 
 import * as proxiesAPI from '~/api/proxies';
 import { fetchVersion } from '~/api/version';
-import { getCollapsibleIsOpen, getHideUnavailableProxies, getLatencyTestUrl, getProxySortBy, getUnreloadConfig } from '~/store/app';
+import { getCollapsibleIsOpen, getHideUnavailableProxies, getLatencyTestUrl, getProxySortBy, getUnreloadConfig, getUtilsApiUrl } from '~/store/app';
 import { fetchProxies, getProxies, switchProxy } from '~/store/proxies';
 
 import Button from '../shared/Button';
@@ -35,6 +35,7 @@ function ProxyGroupImpl({
                           latencyTestUrl,
                           unReloadConfig,
                           apiConfig,
+                          utilsApiUrl,
                           dispatch
                         }) {
   const all = useFilteredAndSorted(allItems, delay, hideUnavailableProxies, proxySortBy, proxies);
@@ -87,7 +88,7 @@ function ProxyGroupImpl({
   const [proxyGroup, setProxyGroup] = useState(null);
   const openAddProxyGroupModal = () => {
     setAddProxyGroupModal(true);
-    fetch('/api/get_proxy_group?name=' + name, {
+    fetch(utilsApiUrl + '/get_proxy_group?name=' + name, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -119,7 +120,7 @@ function ProxyGroupImpl({
   };
 
   const removeProxyGroup = (name: string) => {
-    fetch('/api/delete_proxy_group', {
+    fetch(utilsApiUrl + '/delete_proxy_group', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -240,6 +241,7 @@ export const ProxyGroup = connect((s, { name, delay }) => {
     icon,
     isOpen: collapsibleIsOpen[`proxyGroup:${name}`],
     latencyTestUrl,
-    unReloadConfig
+    unReloadConfig,
+    utilsApiUrl: getUtilsApiUrl(s)
   };
 })(ProxyGroupImpl);

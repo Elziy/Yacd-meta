@@ -4,6 +4,7 @@ export type ClashAPIConfigWithAddedAt = ClashAPIConfig & { addedAt?: number };
 export type StateApp = {
   selectedClashAPIConfigIndex: number;
   clashAPIConfigs: ClashAPIConfigWithAddedAt[];
+  utilsApiUrl: string;
 
   latencyTestUrl: string;
   selectedChartStyleIndex: number;

@@ -51,6 +51,7 @@ export const data = {
   latency_test_url: '延迟测速 URL',
   lang: '语言',
   check: '测速',
+  utils_api_url: '工具 API URL',
   'min_traffic': '最小流量(MB)',
   expire: '过期时间',
   rule_list: '规则列表',

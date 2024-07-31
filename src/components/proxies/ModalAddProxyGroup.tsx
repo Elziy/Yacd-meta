@@ -10,7 +10,7 @@ import Select from '~/components/shared/Select';
 import { reloadConfigFile } from '~/store/configs';
 import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 import type { State } from '~/store/types';
-import { getClashAPIConfig, getUnreloadConfig } from '~/store/app';
+import { getClashAPIConfig, getUnreloadConfig, getUtilsApiUrl } from '~/store/app';
 import { getProxyGroupNames, getProxyProviderNames } from '~/store/proxies';
 import { connect, useStoreActions } from '~/components/StateProvider';
 import MultiSelect from '~/components/shared/MultiSelect';
@@ -29,7 +29,17 @@ export const defaultProxyGroup = {
   timeout: 5000
 };
 
-function ModalAddProxyGroup({ dispatch, apiConfig, isOpen, onRequestClose, nowProxyGroup, groupNames, proxyProviderNames, unReloadConfig }) {
+function ModalAddProxyGroup({
+                              dispatch,
+                              apiConfig,
+                              utilsApiUrl,
+                              isOpen,
+                              onRequestClose,
+                              nowProxyGroup,
+                              groupNames,
+                              proxyProviderNames,
+                              unReloadConfig
+                            }) {
   const { t } = useTranslation();
   const { updateAppConfig } = useStoreActions();
   const [submitting, setSubmitting] = useState(false);
@@ -95,7 +105,7 @@ function ModalAddProxyGroup({ dispatch, apiConfig, isOpen, onRequestClose, nowPr
     }
     proxyGroup['index'] = index;
     setSubmitting(true);
-    fetch('/api/edit_proxy_group', {
+    fetch(utilsApiUrl + '/edit_proxy_group', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -253,6 +263,7 @@ function ModalAddProxyGroup({ dispatch, apiConfig, isOpen, onRequestClose, nowPr
 
 const mapState = (s: State) => ({
   apiConfig: getClashAPIConfig(s),
+  utilsApiUrl: getUtilsApiUrl(s),
   groupNames: getProxyGroupNames(s),
   proxyProviderNames: getProxyProviderNames(s),
   unReloadConfig: getUnreloadConfig(s)

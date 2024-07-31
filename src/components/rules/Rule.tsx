@@ -25,8 +25,8 @@ function getStyleFor({ proxy }) {
   return { color, paddingLeft: '1em' };
 }
 
-const deleteRule = async (body: BodyInit) => {
-  const res = await fetch('/api/delete_rule', {
+const deleteRule = async (url: string, body: BodyInit) => {
+  const res = await fetch(url + '/delete_rule', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
@@ -36,8 +36,8 @@ const deleteRule = async (body: BodyInit) => {
   return await res.json();
 };
 
-export const editRule = async (body: BodyInit) => {
-  const res = await fetch('/api/edit_rule', {
+export const editRule = async (url: string, body: BodyInit) => {
+  const res = await fetch(url + '/edit_rule', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -54,10 +54,11 @@ type Props = {
   proxy?: string;
   size?: number;
   groups: string[];
+  utilsApiUrl: string;
   unReloadConfig?: string[];
 };
 
-function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props) {
+function Rule({ type, payload, proxy, id, size, groups, utilsApiUrl, unReloadConfig }: Props) {
   const styleProxy = getStyleFor({ proxy });
   const { updateAppConfig } = useStoreActions();
 
@@ -83,7 +84,7 @@ function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props)
     const body = {
       index: id
     };
-    deleteRule(JSON.stringify(body)).then((res) => {
+    deleteRule(utilsApiUrl, JSON.stringify(body)).then((res) => {
       if (res.code === 200) {
         notifySuccess(res.message);
         unReloadConfig?.push('删除规则 : ' + type + ', ' + payload);
@@ -103,7 +104,7 @@ function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props)
       policy: policy,
       index: id
     };
-    editRule(JSON.stringify(body)).then((res) => {
+    editRule(utilsApiUrl, JSON.stringify(body)).then((res) => {
       if (res.code === 200) {
         notifySuccess(res.message);
         unReloadConfig?.push('修改规则 : ' + type + ', ' + payload);
@@ -119,7 +120,7 @@ function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props)
     });
   };
 
-  function get_rule() {
+  function get_rule(url: string) {
     const t = type.toLowerCase();
     if (t !== 'geosite' && t !== 'geoip') {
       notifyError('不支持的类型');
@@ -130,7 +131,7 @@ function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props)
       return;
     }
     setIsModalOpen(true);
-    fetch('/api/get_rule', {
+    fetch(url + '/get_rule', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -163,7 +164,7 @@ function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props)
           </div>
           {(type === 'GeoSite' || type === 'GeoIP') && (
             <div style={{ margin: '0 0 0 0.4em' }} className={s0.size}>
-              <span onClick={get_rule} className={s.qty}>{size}</span>
+              <span onClick={() => get_rule(utilsApiUrl)} className={s.qty}>{size}</span>
             </div>
           )}
         </div>
@@ -223,4 +224,4 @@ function Rule({ type, payload, proxy, id, size, groups, unReloadConfig }: Props)
 
 export default Rule;
 
-export const fixedRuleCount = 5;
+export const fixedRuleCount = 0;

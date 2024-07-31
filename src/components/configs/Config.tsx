@@ -9,7 +9,7 @@ import Select from '~/components/shared/Select';
 import { ClashGeneralConfig, DispatchFn, State } from '~/store/types';
 import { ClashAPIConfig } from '~/types';
 
-import { getClashAPIConfig, getLatencyTestUrl, getMinTraffic, getSelectedChartStyleIndex, getUserIpFilter } from '~/store/app';
+import { getClashAPIConfig, getLatencyTestUrl, getMinTraffic, getSelectedChartStyleIndex, getUserIpFilter, getUtilsApiUrl } from '~/store/app';
 import {
   fetchConfigs,
   flushFakeIPPool, flushTrafficStatistic,
@@ -81,6 +81,7 @@ const mapState = (s: State) => ({
 
 const mapState2 = (s: State) => ({
   selectedChartStyleIndex: getSelectedChartStyleIndex(s),
+  utilsApiUrl: getUtilsApiUrl(s),
   latencyTestUrl: getLatencyTestUrl(s),
   minTraffic: getMinTraffic(s),
   userIpFilter: getUserIpFilter(s),
@@ -101,6 +102,7 @@ type ConfigImplProps = {
   dispatch: DispatchFn;
   configs: ClashGeneralConfig;
   selectedChartStyleIndex: number;
+  utilsApiUrl: string;
   latencyTestUrl: string;
   minTraffic: number;
   userIpFilter: string[];
@@ -121,6 +123,7 @@ function ConfigImpl({
                       dispatch,
                       configs,
                       selectedChartStyleIndex,
+                      utilsApiUrl,
                       latencyTestUrl,
                       minTraffic,
                       userIpFilter,
@@ -213,6 +216,7 @@ function ConfigImpl({
           dispatch(updateConfigs(apiConfig, { [name]: num }));
           break;
         }
+        case 'utilsApiUrl':
         case 'latencyTestUrl': {
           updateAppConfig(name, value);
           break;
@@ -592,6 +596,16 @@ function ConfigImpl({
             name="minTraffic"
             type="number"
             value={minTraffic}
+            onChange={handleInputOnBlur}
+          />
+        </div>
+
+        <div>
+          <div className={s0.label}>{t('min_traffic')}</div>
+          <Input
+            name="utilsApiUrl"
+            type="text"
+            value={utilsApiUrl}
             onChange={handleInputOnBlur}
           />
         </div>
