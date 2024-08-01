@@ -29,7 +29,7 @@ export const defaultProxyProvider = {
     'additional-prefix': ''
   },
   filter: '',
-  'exclude-filter': ''
+  'exclude-filter': '剩余|到期|官网|更新'
 };
 
 function ModalAddProxyProvider({
@@ -81,7 +81,7 @@ function ModalAddProxyProvider({
       notifyWarning('请输入正确资源组URL');
       return;
     }
-    if (!proxyProvider.icon || !proxyProvider.icon.startsWith('https')) {
+    if (proxyProvider.icon && !proxyProvider.icon.startsWith('https')) {
       notifyWarning('请输入正确资源组图标');
       return;
     }
