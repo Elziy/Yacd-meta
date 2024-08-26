@@ -290,7 +290,7 @@ function Rules({ dispatch, apiConfig, groups, utilsApiUrl, unReloadConfig }) {
                   const item = provider.byName[name];
                   return (
                     <div key={index} className={s.RuleProviderItemWrapper}>
-                      <RuleProviderItem apiConfig={apiConfig} utilsApiUrl={utilsApiUrl} {...item} unReloadConfig={unReloadConfig} />
+                      <RuleProviderItem sing_box={version.premium && version.meta} apiConfig={apiConfig} utilsApiUrl={utilsApiUrl} {...item} unReloadConfig={unReloadConfig} />
                     </div>
                   );
                 })}
