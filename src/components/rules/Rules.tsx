@@ -29,6 +29,8 @@ import { notifyError, notifySuccess, notifyWarning } from '~/misc/message';
 import { Tooltip } from '@reach/tooltip';
 import { FiRepeat, FiFilePlus, FiPlusCircle } from 'react-icons/fi';
 import ModalReloadConfig from '~/components/sideBar/ModalReloadConfig';
+import { useQuery } from 'react-query';
+import { fetchVersion } from '~/api/version';
 
 
 const { memo } = React;
@@ -87,7 +89,7 @@ const RuleRow = ({ index, style, data }) => {
   const r = rules[index];
   return (
     <div style={style}>
-      < Rule {...r} groups={groups} unReloadConfig={unReloadConfig} utilsApiUrl={utilsApiUrl} />
+      < Rule sing_box={true} {...r} groups={groups} unReloadConfig={unReloadConfig} utilsApiUrl={utilsApiUrl} />
     </div>
   );
 };
@@ -137,6 +139,10 @@ function Rules({ dispatch, apiConfig, groups, utilsApiUrl, unReloadConfig }) {
   const fetchProxiesHooked = useCallback(() => {
     dispatch(fetchProxies(apiConfig));
   }, [apiConfig, dispatch]);
+
+  const { data: version } = useQuery(['/version', apiConfig], () =>
+    fetchVersion('/version', apiConfig)
+  );
 
   useEffect(() => {
     fetchProxiesHooked();
@@ -244,7 +250,7 @@ function Rules({ dispatch, apiConfig, groups, utilsApiUrl, unReloadConfig }) {
           <div>
             <TabPanel>
               <div ref={refRulesContainer} style={{ paddingBottom, userSelect: 'none' }}>
-                {rules.length <= 100 ?
+                {rules.length <= 100 && version.meta && !version.premium ?
                   <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable-rules">
                       {(provided: any) => (

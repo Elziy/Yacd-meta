@@ -9,16 +9,25 @@ import Select from '~/components/shared/Select';
 import { ClashGeneralConfig, DispatchFn, State } from '~/store/types';
 import { ClashAPIConfig } from '~/types';
 
-import { getClashAPIConfig, getLatencyTestUrl, getMinTraffic, getSelectedChartStyleIndex, getUserIpFilter, getUtilsApiUrl } from '~/store/app';
+import {
+  getClashAPIConfig,
+  getLatencyTestUrl,
+  getMinTraffic,
+  getSelectedChartStyleIndex,
+  getUserIpFilter,
+  getUtilsApiUrl,
+} from '~/store/app';
 import {
   fetchConfigs,
-  flushFakeIPPool, flushTrafficStatistic,
+  flushFakeIPPool,
+  flushTrafficStatistic,
   getConfigs,
   reloadConfigFile,
   restartCore,
   updateConfigs,
   updateGeoDatabasesFile,
-  upgradeCore, upgradeUI
+  upgradeCore,
+  upgradeUI,
 } from '~/store/configs';
 import { openModal } from '~/store/modals';
 import Button from '../shared/Button';
@@ -42,7 +51,7 @@ const logLeveOptions = [
   ['info', 'Info'],
   ['warning', 'Warning'],
   ['error', 'Error'],
-  ['silent', 'Silent']
+  ['silent', 'Silent'],
 ];
 
 const portFields = [
@@ -50,33 +59,33 @@ const portFields = [
   { key: 'socks-port', label: 'Socks5 Port' },
   { key: 'mixed-port', label: 'Mixed Port' },
   { key: 'redir-port', label: 'Redir Port' },
-  { key: 'mitm-port', label: 'MITM Port' }
+  { key: 'mitm-port', label: 'MITM Port' },
 ];
 
 const langOptions = [
   ['zh-cn', '简体中文'],
   ['zh-tw', '繁體中文'],
   ['en', 'English'],
-  ['vi', 'Vietnamese']
+  ['vi', 'Vietnamese'],
 ];
 
 const modeOptions = [
   ['direct', 'Direct'],
   ['rule', 'Rule'],
   ['script', 'Script'],
-  ['global', 'Global']
+  ['global', 'Global'],
 ];
 
 const tunStackOptions = [
   ['gvisor', 'gVisor'],
   ['mixed', 'Mixed'],
   ['system', 'System'],
-  ['lwip', 'LWIP']
+  ['lwip', 'LWIP'],
 ];
 
 const mapState = (s: State) => ({
   configs: getConfigs(s),
-  apiConfig: getClashAPIConfig(s)
+  apiConfig: getClashAPIConfig(s),
 });
 
 const mapState2 = (s: State) => ({
@@ -85,7 +94,7 @@ const mapState2 = (s: State) => ({
   latencyTestUrl: getLatencyTestUrl(s),
   minTraffic: getMinTraffic(s),
   userIpFilter: getUserIpFilter(s),
-  apiConfig: getClashAPIConfig(s)
+  apiConfig: getClashAPIConfig(s),
 });
 
 const Config = connect(mapState2)(ConfigImpl);
@@ -120,15 +129,15 @@ function getBackendContent(version: any): string {
 }
 
 function ConfigImpl({
-                      dispatch,
-                      configs,
-                      selectedChartStyleIndex,
-                      utilsApiUrl,
-                      latencyTestUrl,
-                      minTraffic,
-                      userIpFilter,
-                      apiConfig
-                    }: ConfigImplProps) {
+  dispatch,
+  configs,
+  selectedChartStyleIndex,
+  utilsApiUrl,
+  latencyTestUrl,
+  minTraffic,
+  userIpFilter,
+  apiConfig,
+}: ConfigImplProps) {
   const { t, i18n } = useTranslation();
 
   const [configState, setConfigStateInternal] = useState(configs);
@@ -282,7 +291,6 @@ function ConfigImpl({
   const [restartCoreModel, setRestartCoreModel] = useState(false);
   const [upgradeCoreModel, setUpgradeCoreModel] = useState(false);
   const [updateUIModel, setUpdateUIModel] = useState(false);
-
 
   return (
     <div>
@@ -485,7 +493,6 @@ function ConfigImpl({
               />
             </div>
 
-
             {version.meta && !version.premium && (
               <div>
                 <div className={s0.label}>重启核心</div>
@@ -592,23 +599,20 @@ function ConfigImpl({
 
         <div>
           <div className={s0.label}>{t('min_traffic')}</div>
-          <Input
-            name="minTraffic"
-            type="number"
-            value={minTraffic}
-            onChange={handleInputOnBlur}
-          />
+          <Input name="minTraffic" type="number" value={minTraffic} onChange={handleInputOnBlur} />
         </div>
 
-        <div>
-          <div className={s0.label}>{t('min_traffic')}</div>
-          <Input
-            name="utilsApiUrl"
-            type="text"
-            value={utilsApiUrl}
-            onChange={handleInputOnBlur}
-          />
-        </div>
+        {(version.meta && version.premium) || (
+          <div>
+            <div className={s0.label}>{t('min_traffic')}</div>
+            <Input
+              name="utilsApiUrl"
+              type="text"
+              value={utilsApiUrl}
+              onChange={handleInputOnBlur}
+            />
+          </div>
+        )}
 
         <div>
           <div className={s0.label}>
