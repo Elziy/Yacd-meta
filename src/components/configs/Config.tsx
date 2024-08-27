@@ -537,7 +537,7 @@ function ConfigImpl({
                 />
               </div>
             )}
-            {version.meta && !version.premium && (
+            {version.meta && (
               <div>
                 <div className={s0.label}> 升级UI</div>
                 <Button
