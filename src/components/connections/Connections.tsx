@@ -147,6 +147,10 @@ function formatConnectionDataItem(
   // host could be an empty string if it's direct IP connection
   let host2 = host;
   if (host2 === '') host2 = destinationIP;
+  if (!host2.includes('http')) {
+    host2 = `${host2}:${destinationPort}`
+  }
+
   const prev = prevKv[id];
   const source = `${sourceIP}:${sourcePort}`;
 
@@ -159,7 +163,7 @@ function formatConnectionDataItem(
     chains: modifyChains(chains),
     rule: !rulePayload ? rule : `${rule} :: ${rulePayload}`,
     ...metadata,
-    host: `${host2}:${destinationPort}`,
+    host: host2,
     sniffHost: sniffHost ? sniffHost : '-',
     type: `${type}(${network})`,
     source: getNameFromSource(sourceIP, sourceMap, source),
